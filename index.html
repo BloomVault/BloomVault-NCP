@@ -1,151 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BloomVault Farms - Coming Soon</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BloomVault Farms - Coming Soon</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Background Image Styling -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #D4AF37; /* Dull metallic gold color */
+            background-image: url('IMG_5822.PNG'); /* Your image filename */
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+            animation: subtleBackgroundMove 60s ease-in-out infinite; /* Slow, subtle movement */
+        }
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+        @keyframes subtleBackgroundMove {
+            0% {
+                background-position: center center;
+            }
+            50% {
+                background-position: 0% 5%; /* Very small shift */
+            }
+            100% {
+                background-position: center center;
+            }
+        }
 
-  <!-- Preload the background image (faster load) -->
-  <link rel="preload" as="image" href="./img/IMG_5822.PNG" />
+        .top-banner {
+            background-color: #4CAF50;
+            color: #D4AF37; /* Dull metallic gold */
+            text-align: center;
+            padding: 20px 0;
+            font-size: 2.5em;
+            font-weight: bold;
+            text-transform: uppercase;
+            animation: bannerPop 1.5s ease-in-out infinite;
+        }
 
-  <style>
-    :root {
-      --gold: #D4AF37;
-      --green: #4CAF50;
-    }
-    * { box-sizing: border-box; }
-    html, body { height: 100%; margin: 0; padding: 0; }
-    body {
-      font-family: Arial, sans-serif;
-      color: var(--gold);
-      background-image: url('./img/IMG_5822.PNG'); /* ✅ Points to img folder */
-      background-size: cover;
-      background-position: center center;
-      background-attachment: scroll; /* more mobile-friendly */
-      animation: subtleBackgroundMove 60s ease-in-out infinite;
-    }
+        @keyframes bannerPop {
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+        }
 
-    @keyframes subtleBackgroundMove {
-      0%   { background-position: center center; }
-      50%  { background-position: 0% 5%; }
-      100% { background-position: center center; }
-    }
+        .hero {
+            position: relative;
+            height: 70vh; /* Adjusted height to allow space for mission section */
+            display: flex;
+            justify-content: center; /* Center content horizontally */
+            align-items: center; /* Center content vertically */
+            text-align: center;
+            color: #D4AF37; /* Dull metallic gold */
+            padding-top: 20px; /* Adjust padding */
+            flex-direction: column; /* Align elements vertically */
+        }
 
-    .top-banner {
-      background-color: var(--green);
-      color: var(--gold);
-      text-align: center;
-      padding: 20px 0;
-      font-size: 2.2em;
-      font-weight: bold;
-      text-transform: uppercase;
-      animation: bannerPop 1.5s ease-in-out infinite;
-    }
-    @keyframes bannerPop {
-      0%   { transform: scale(1);   opacity: 0.8; }
-      50%  { transform: scale(1.1); opacity: 1;   }
-      100% { transform: scale(1);   opacity: 0.8; }
-    }
+        .hero h1 {
+            font-size: 4em;
+            font-weight: 900;
+            margin: 0;
+            font-family: 'Pacifico', cursive;
+            color: #D4AF37; /* Dull metallic gold */
+            text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.8), 0 0 10px rgba(0, 128, 0, 0.6); /* Dark green outline */
+        }
 
-    .hero {
-      position: relative;
-      min-height: 70vh;
-      display: flex;
-      justify-content: flex-start;
-      align-items: flex-start;
-      text-align: center;
-      padding-top: 20px;
-    }
-    .hero h1 {
-      font-size: 4em;
-      font-weight: 900;
-      margin: 0;
-      font-family: 'Pacifico', cursive;
-      color: var(--gold);
-      text-shadow: 3px 3px 5px rgba(0,0,0,0.8), 0 0 10px rgba(0,128,0,0.6);
-    }
-    .btn-contact {
-      background-color: var(--green);
-      color: #000;
-      padding: 15px 32px;
-      text-decoration: none;
-      display: inline-block;
-      font-size: 18px;
-      margin-top: 20px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .hero .tagline {
-      margin-top: 20px;
-      font-size: 1.2em;
-      font-family: 'Poppins', sans-serif;
-      color: var(--gold);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      font-weight: 600;
-    }
-    .hero .tagline:before,
-    .hero .tagline:after {
-      content: '"';
-      font-size: 1.5em;
-      color: var(--gold);
-      margin: 0 5px;
-    }
+        .btn-contact {
+            background-color: #4CAF50;
+            color: black; /* Black text */
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px;
+            margin-top: 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
-    .mission, .compliance {
-      padding: 30px;
-      text-align: center;
-      background-color: rgba(0, 0, 0, 0.6);
-      margin: 20px auto 40px;
-      max-width: 800px;
-      border-radius: 8px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .mission h2, .compliance h2 {
-      font-size: 2.2em;
-      margin-bottom: 20px;
-    }
-    .mission p, .compliance p {
-      font-size: 1.2em;
-      line-height: 1.4;
-      max-width: 900px;
-      word-wrap: break-word;
-    }
+        .hero .tagline {
+            margin-top: 20px;
+            font-size: 1.2em; /* Reduced font size */
+            font-family: 'Poppins', sans-serif; /* Changed to Poppins font */
+            color: #D4AF37; /* Dull metallic gold */
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            text-align: center; /* Center the tagline */
+        }
 
-    @media (max-width: 768px) {
-      .hero h1 { font-size: 3em; }
-      .top-banner { font-size: 1.8em; }
-    }
-  </style>
+        .hero .tagline:before, .hero .tagline:after {
+            content: '"';
+            font-size: 1.5em;
+            color: #D4AF37; /* Dull metallic gold */
+            margin: 0 5px;
+        }
+
+        .mission, .compliance {
+            padding: 30px; /* Increased padding to fit content */
+            text-align: center; /* Centered the text */
+            background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent background for readability */
+            margin: 20px auto;
+            max-width: 800px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: -10px; /* Pull the mission section closer */
+            height: auto; /* Allow mission section to expand naturally */
+            word-spacing: normal; /* Reset word-spacing */
+            letter-spacing: normal; /* Reset letter-spacing */
+        }
+
+        .mission h2, .compliance h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .mission p, .compliance p {
+            font-size: 1.2em;
+            line-height: 1.4; /* Adjusted line-height for better spacing */
+            text-align: center; /* Center the text within sections */
+            max-width: 900px;
+            letter-spacing: normal; /* Reset letter-spacing */
+            word-spacing: normal; /* Reset word-spacing */
+            word-wrap: break-word; /* Ensure long words break properly */
+        }
+
+        .mission {
+            margin-bottom: 40px; /* Added space between mission and compliance sections */
+        }
+    </style>
 </head>
 <body>
-  <div class="top-banner">Coming Soon</div>
 
-  <div class="hero">
-    <div>
-      <h1>BloomVault Farms</h1>
-      <a href="mailto:Bloomvaultfarms@gmail.com" class="btn-contact">Contact Us</a>
-      <div class="tagline">Unlock Premium Hemp Plants for Consistent, Reliable Growth</div>
+    <!-- Top Banner Section -->
+    <div class="top-banner">
+        Coming Soon
     </div>
-  </div>
 
-  <div class="mission">
-    <h2>Our Mission</h2>
-    <p>
-      At BloomVault Farms, we are dedicated to providing premium, flower-ready hemp plants that give commercial growers the strong start they need for a successful harvest. Every plant is cultivated with care, using sustainable methods that protect both crop quality and the environment. We operate in full compliance with all Federal and State Hemp Laws, ensuring our customers receive products they can trust. By combining innovation, expertise, and respect for nature, we aim to support the growth of the hemp industry while promoting a responsible, forward-thinking approach to agriculture.
-    </p>
-  </div>
+    <!-- Hero Section -->
+    <div class="hero">
+        <div>
+            <h1>BloomVault Farms</h1>
+            <a href="mailto:Bloomvaultfarms@gmail.com" class="btn-contact">Contact Us</a>
+            <div class="tagline">"Unlock Premium Hemp Plants for Consistent, Reliable Growth"</div> <!-- Tagline Added -->
+        </div>
+    </div>
 
-  <div class="compliance">
-    <h2>Compliance with Hemp Laws</h2>
-    <p>
-      At BloomVault Farms, we are committed to full compliance with federal and state hemp regulations, including the 2018 Farm Bill and state-specific laws. Our operations are carefully aligned with these standards to ensure that our products are not only of superior quality but also legally compliant and safe for both cultivation and distribution. We are dedicated to providing our customers with consistent, trustworthy products that adhere to the highest regulatory standards, ensuring quality and compliance at every stage.
-    </p>
-  </div>
+    <!-- Mission Section -->
+    <div class="mission">
+        <h2>Our Mission</h2>
+        <p>
+            At BloomVault Farms, we are dedicated to providing premium, flower-ready hemp plants that give commercial growers the strong start they need for a successful harvest. Every plant is cultivated with care, using sustainable methods that protect both crop quality and the environment. We operate in full compliance with all Federal and State Hemp Laws, ensuring our customers receive products they can trust. By combining innovation, expertise, and respect for nature, we aim to support the growth of the hemp industry while promoting a responsible, forward-thinking approach to agriculture.
+        </p>
+    </div>
+
+    <!-- Compliance Section -->
+    <div class="compliance">
+        <h2>Compliance with Hemp Laws</h2>
+        <p>
+            At BloomVault Farms, we are committed to full compliance with federal and state hemp regulations, including the 2018 Farm Bill and state-specific laws. Our operations are carefully aligned with these standards to ensure that our products are not only of superior quality but also legally compliant and safe for both cultivation and distribution. We are dedicated to providing our customers with consistent, trustworthy products that adhere to the highest regulatory standards, ensuring quality and compliance at every stage.
+        </p>
+    </div>
+
 </body>
 </html>
