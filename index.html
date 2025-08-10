@@ -16,19 +16,18 @@
             background-image: url('IMG_5822.PNG'); /* Your image filename */
             background-size: cover;
             background-position: center center;
-            background-attachment: fixed;
-            animation: subtleBackgroundMove 60s ease-in-out infinite; /* Slow, subtle movement */
+            animation: backgroundMove 60s ease-in-out infinite; /* Smooth background movement */
         }
 
-        @keyframes subtleBackgroundMove {
+        @keyframes backgroundMove {
             0% {
-                background-position: center center;
+                transform: translateY(0);
             }
             50% {
-                background-position: 0% 5%; /* Very small shift */
+                transform: translateY(-2%); /* Small vertical shift */
             }
             100% {
-                background-position: center center;
+                transform: translateY(0);
             }
         }
 
@@ -60,14 +59,15 @@
 
         .hero {
             position: relative;
-            height: 70vh; /* Adjusted height to allow space for mission section */
+            height: 70vh; /* Adjusted height */
             display: flex;
             justify-content: center; /* Center content horizontally */
             align-items: center; /* Center content vertically */
             text-align: center;
             color: #D4AF37; /* Dull metallic gold */
-            padding-top: 20px; /* Adjust padding */
-            flex-direction: column; /* Align elements vertically */
+            padding-top: 20px;
+            flex-direction: column;
+            width: 100%; /* Ensure full width of the container */
         }
 
         .hero h1 {
