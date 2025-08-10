@@ -16,7 +16,12 @@
             background-image: url('IMG_5822.PNG'); /* Your image filename */
             background-size: cover;
             background-position: center center;
+            background-attachment: fixed;
             animation: backgroundMove 60s ease-in-out infinite; /* Smooth background movement */
+            height: 100vh; /* Ensure the body takes full height */
+            display: flex; /* Flex for overall centering */
+            justify-content: center;
+            align-items: center;
         }
 
         @keyframes backgroundMove {
@@ -60,14 +65,14 @@
         .hero {
             position: relative;
             height: 70vh; /* Adjusted height */
+            width: 100%;
+            max-width: 1200px; /* Ensure container width doesn't stretch too much */
             display: flex;
             justify-content: center; /* Center content horizontally */
             align-items: center; /* Center content vertically */
             text-align: center;
             color: #D4AF37; /* Dull metallic gold */
-            padding-top: 20px;
             flex-direction: column;
-            width: 100%; /* Ensure full width of the container */
         }
 
         .hero h1 {
