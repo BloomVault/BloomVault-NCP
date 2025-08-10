@@ -11,7 +11,8 @@
     "terpenes": "Terpene profile: placeholder",
     "moq": "MOQ: placeholder",
     "lead": "Lead time: placeholder days",
-    "compliance": "Compliance: placeholder"
+    "compliance": "Compliance: placeholder",
+    "image": "assets/img/strain_1.jpg"
   },
   {
     "id": 2,
@@ -25,7 +26,8 @@
     "terpenes": "Terpene profile: placeholder",
     "moq": "MOQ: placeholder",
     "lead": "Lead time: placeholder days",
-    "compliance": "Compliance: placeholder"
+    "compliance": "Compliance: placeholder",
+    "image": "assets/img/strain_2.jpg"
   },
   {
     "id": 3,
@@ -39,7 +41,8 @@
     "terpenes": "Terpene profile: placeholder",
     "moq": "MOQ: placeholder",
     "lead": "Lead time: placeholder days",
-    "compliance": "Compliance: placeholder"
+    "compliance": "Compliance: placeholder",
+    "image": "assets/img/strain_3.jpg"
   },
   {
     "id": 4,
@@ -53,7 +56,8 @@
     "terpenes": "Terpene profile: placeholder",
     "moq": "MOQ: placeholder",
     "lead": "Lead time: placeholder days",
-    "compliance": "Compliance: placeholder"
+    "compliance": "Compliance: placeholder",
+    "image": "assets/img/strain_4.jpg"
   },
   {
     "id": 5,
@@ -67,7 +71,8 @@
     "terpenes": "Terpene profile: placeholder",
     "moq": "MOQ: placeholder",
     "lead": "Lead time: placeholder days",
-    "compliance": "Compliance: placeholder"
+    "compliance": "Compliance: placeholder",
+    "image": "assets/img/strain_5.jpg"
   },
   {
     "id": 6,
@@ -81,7 +86,8 @@
     "terpenes": "Terpene profile: placeholder",
     "moq": "MOQ: placeholder",
     "lead": "Lead time: placeholder days",
-    "compliance": "Compliance: placeholder"
+    "compliance": "Compliance: placeholder",
+    "image": "assets/img/strain_6.jpg"
   },
   {
     "id": 7,
@@ -95,7 +101,8 @@
     "terpenes": "Terpene profile: placeholder",
     "moq": "MOQ: placeholder",
     "lead": "Lead time: placeholder days",
-    "compliance": "Compliance: placeholder"
+    "compliance": "Compliance: placeholder",
+    "image": "assets/img/strain_7.jpg"
   },
   {
     "id": 8,
@@ -109,7 +116,8 @@
     "terpenes": "Terpene profile: placeholder",
     "moq": "MOQ: placeholder",
     "lead": "Lead time: placeholder days",
-    "compliance": "Compliance: placeholder"
+    "compliance": "Compliance: placeholder",
+    "image": "assets/img/strain_8.jpg"
   },
   {
     "id": 9,
@@ -123,7 +131,8 @@
     "terpenes": "Terpene profile: placeholder",
     "moq": "MOQ: placeholder",
     "lead": "Lead time: placeholder days",
-    "compliance": "Compliance: placeholder"
+    "compliance": "Compliance: placeholder",
+    "image": "assets/img/strain_9.jpg"
   },
   {
     "id": 10,
@@ -137,7 +146,8 @@
     "terpenes": "Terpene profile: placeholder",
     "moq": "MOQ: placeholder",
     "lead": "Lead time: placeholder days",
-    "compliance": "Compliance: placeholder"
+    "compliance": "Compliance: placeholder",
+    "image": "assets/img/strain_10.jpg"
   },
   {
     "id": 11,
@@ -151,7 +161,8 @@
     "terpenes": "Terpene profile: placeholder",
     "moq": "MOQ: placeholder",
     "lead": "Lead time: placeholder days",
-    "compliance": "Compliance: placeholder"
+    "compliance": "Compliance: placeholder",
+    "image": "assets/img/strain_11.jpg"
   },
   {
     "id": 12,
@@ -165,6 +176,7 @@
     "terpenes": "Terpene profile: placeholder",
     "moq": "MOQ: placeholder",
     "lead": "Lead time: placeholder days",
-    "compliance": "Compliance: placeholder"
+    "compliance": "Compliance: placeholder",
+    "image": "assets/img/strain_12.jpg"
   }
 ]

@@ -5,29 +5,32 @@
 }
 *{box-sizing:border-box}
 html,body{
-  margin:0;height:100%;
-  background: #0b110c url('../img/background.jpg') center/cover fixed no-repeat;
+  margin:0;min-height:100%;
+  background:linear-gradient(180deg,#0c110d,#0a0f0b 40%, #0c110d);
   color:var(--text);
   font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif
 }
 a{color:var(--gold);text-decoration:none} a:hover{text-decoration:underline}
 small,.small{color:var(--muted)}
+
+/* Layout */
 .wrapper{
   display:grid;
   grid-template-columns:260px 1fr;
   min-height:100vh;
-  background:linear-gradient( to right, rgba(11,17,12,.9) 0, rgba(11,17,12,.88) 260px, rgba(11,17,12,.82) 100% );
 }
-.sidebar{position:sticky;top:0;height:100vh;padding:20px;border-right:1px solid rgba(0,0,0,.25)}
+.sidebar{position:sticky;top:0;height:100vh;padding:20px;border-right:1px solid rgba(0,0,0,.25);background:#0b120d}
 .brand{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:18px}
 .brand img{width:180px;height:auto;filter:drop-shadow(0 8px 16px rgba(0,0,0,.4))}
+
+/* Metallic gold buttons (tabs + .btn) */
 .tabs{display:flex;flex-direction:column;gap:12px;margin-top:8px}
 .tab,.btn{
   display:block;
   color:#111;
   text-align:center;
   padding:14px 18px;
-  border-radius:14px;
+  border-radius:14px; /* rectangular with rounded corners */
   border:2px solid var(--charcoal);
   background:
     linear-gradient(180deg, var(--gold-hi), var(--gold-mid) 35%, var(--gold) 60%, var(--gold-low));
@@ -51,29 +54,34 @@ small,.small{color:var(--muted)}
 
 .main{padding:28px}
 .card{
-  background:rgba(20,25,20,.85);
+  background:rgba(20,25,20,.9);
   border:1px solid var(--border);
-  backdrop-filter: blur(2px);
   padding:18px;border-radius:14px;
   box-shadow:0 10px 25px rgba(0,0,0,.25)
 }
 .h1{font-family:'Bebas Neue',system-ui,Arial,sans-serif;font-size:56px;letter-spacing:.5px;margin:0 0 6px}
 .tagline{font-size:22px;color:var(--muted);margin:4px 0 14px}
+
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
 .featured{display:grid;grid-template-columns:1fr 1.2fr;gap:16px;align-items:center}
 .featured img{width:100%;height:auto;border-radius:12px;border:3px solid var(--charcoal)}
-.card .imgph{width:100%;height:160px;border-radius:10px;background:linear-gradient(135deg,#1a231b,#101710);border:1px dashed #2a3a2d}
+
+.card .imgph, .card img.card-img{width:100%;height:160px;border-radius:10px;background:linear-gradient(135deg,#1a231b,#101710);border:1px dashed #2a3a2d;object-fit:cover}
 .card h3{margin:8px 0}
 .actions{display:flex;gap:8px;align-items:center}
 .qty{width:100%}
 input[type=range]{width:140px}
+
 .cart{position:sticky;top:20px}
 .table{width:100%;border-collapse:collapse}
 .table th,.table td{border-bottom:1px solid var(--border);padding:8px;text-align:left}
+
 .input, select, textarea{width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:#0a0f0b;color:var(--text)}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
 .footer-note{margin-top:18px;color:var(--muted);font-size:12px}
 .notice{background:#112014;border:1px solid #21452a;padding:10px;border-radius:10px;color:#cfead4}
+
 @media (max-width:840px){
   .wrapper{grid-template-columns:1fr}
   .sidebar{position:relative;height:auto}

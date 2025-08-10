@@ -9,7 +9,7 @@ el.innerHTML = `
     <h1>${s.name}</h1>
     <div class="grid">
       <div class="card">
-        <div class="imgph" style="height:220px"></div>
+        <img class="card-img" style="height:220px" src="${s.image}" alt="${s.name}">
         <div class="actions" style="margin-top:10px">
           <label class="small">Qty</label>
           <input id="qty" type="range" min="1" max="20" value="1">

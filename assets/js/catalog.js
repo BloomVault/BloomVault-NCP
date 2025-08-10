@@ -4,7 +4,7 @@ import { addItem } from './cart.js';
 const wrap = document.getElementById('catalog');
 wrap.innerHTML = strains.map(s=>`
   <div class="card">
-    <div class="imgph"></div>
+    <img class="card-img" src="${s.image}" alt="${s.name}">
     <h3>${s.name}</h3>
     <div class="actions">
       <a class="btn" href="strain.html?id=${s.id}">Details</a>
