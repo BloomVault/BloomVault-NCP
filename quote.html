@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en"><head>
+<title>Get a Quote · BloomVault Farms</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="assets/css/styles.css" rel="stylesheet">
+</head><body>
+<div class="wrapper">
+  <div class="sidebar">
+    <div class="brand"><img src="assets/img/logo.png" alt="BloomVault Farms"></div>
+    <nav class="tabs">
+      <a class="tab" href="index.html">Home</a>
+      <a class="tab" href="catalog.html">Strain Catalog</a>
+      <a class="tab" href="quote.html">Get a Quote</a>
+      <a class="tab" href="contact.html">Contact Us</a>
+    </nav>
+    <div class="badge small">Serving Virginia commercial growers only</div>
+  </div>
+  <main class="main">
+    <section class="card">
+      <h1>How Ordering Works</h1>
+      <ol class="small" style="line-height:1.6">
+        <li>Browse the <b>Strain Catalog</b> and add selections to your quote (quantities are in increments of 50 plants).</li>
+        <li>We are currently serving <b>commercial growers in Virginia</b> only.</li>
+        <li>Payments accepted: <b>Cash</b> or <b>Money Order</b> in person at delivery, or <b>Zelle</b>.</li>
+        <li>Submit the form below. We’ll review availability and email you next steps.</li>
+      </ol>
+    </section>
+
+    <section class="card" style="margin-top:16px">
+      <h1>Your Quote</h1>
+      <div class="grid">
+        <div class="card cart">
+          <h3>Cart</h3>
+          <table class="table" id="cart-table">
+            <thead><tr><th>Strain</th><th>Qty (50 each)</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table>
+          <div class="notice" style="margin-top:10px">Orders are at a <b>50 plant min</b>. 1 = 50, 2 = 100, etc.</div>
+        </div>
+        <div class="card">
+          <h3>Request a Quote</h3>
+          <form id="quote-form" name="quote" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+            <input type="hidden" name="form-name" value="quote">
+            <p style="display:none"><label>Don’t fill this out: <input name="bot-field"></label></p>
+            <div class="form-row">
+              <input class="input" name="businessName" placeholder="Legal Business Name*" required>
+              <input class="input" name="contactName" placeholder="Contact Name*" required>
+            </div>
+            <div class="form-row">
+              <input class="input" name="email" type="email" placeholder="Email*" required>
+              <input class="input" name="phone" placeholder="Phone*" required>
+            </div>
+            <div class="form-row">
+              <input class="input" name="street" placeholder="Business Street Address (Virginia)*" required>
+              <input class="input" name="city" placeholder="City*" required>
+            </div>
+            <div class="form-row">
+              <input class="input" name="state" value="VA" required>
+              <input class="input" name="zip" placeholder="ZIP*" required>
+            </div>
+            <div class="form-row">
+              <input class="input" name="license" placeholder="VA Hemp License # or 'Pending'*" required>
+              <input class="input" name="resale" placeholder="Resale certificate (optional)">
+            </div>
+            <textarea class="input" name="notes" rows="4" placeholder="Notes (optional)"></textarea>
+            <div class="notice" style="margin-top:10px">Currently serving <b>commercial growers in Virginia</b> only.</div>
+            <button class="btn" type="submit" style="margin-top:12px">Request Quote</button>
+            <div class="small" id="quote-result" style="margin-top:8px"></div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+<script type="module" src="assets/js/cart.js"></script>
+<script type="module" src="assets/js/quote.js"></script>
+</body></html>
