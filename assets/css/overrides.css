@@ -9,6 +9,7 @@
 .qty-wrap input[type="range"] { width:220px; }
 .qty-num { min-width:2ch; text-align:right; font-variant-numeric:tabular-nums; }
 .small { font-size:.9rem; color:#666; }
+
 /* ===== Strain Catalog: medium cards, 2 per row ===== */
 
 /* Keep the page background the same as the rest of the site */
