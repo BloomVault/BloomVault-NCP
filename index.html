@@ -14,21 +14,32 @@
     .featured { display:grid; gap:1rem; align-items:center; grid-template-columns:1fr; }
     @media (min-width:780px){ .featured{ grid-template-columns:auto 1fr; } }
 
-    /* Frame wrapper uses the PNG as background */
+    /* Frame wrapper: uses absolute children and z-index to put frame above photo */
     .featured-media{
       width: min(100%, var(--frame-max, 420px));
       aspect-ratio: 1 / 1; /* frame is square */
       margin: 0 auto;
-      background: url("assets/img/featured-frame.png") center / contain no-repeat;
-      display: grid; place-items: center;
+      position: relative;
     }
-    /* Photo sits inside the frame with equal padding */
+    /* Photo area inset so the frame isn’t crowded */
     .featured-media .featured-photo{
-      width: calc(100% - (var(--inner-pad, 22%) * 2));
-      height: calc(100% - (var(--inner-pad, 22%) * 2));
+      position: absolute;
+      inset: var(--inner-pad, 19%);
+      width: calc(100% - (var(--inner-pad, 19%) * 2));
+      height: calc(100% - (var(--inner-pad, 19%) * 2));
       object-fit: cover;
       border-radius: 12px;
       box-shadow: 0 6px 16px rgba(0,0,0,.25);
+      z-index: 1;
+    }
+    /* Frame sits on top */
+    .featured-media .featured-frame{
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+      z-index: 2;
     }
   </style>
 </head>
@@ -57,9 +68,10 @@
     <section class="card" style="margin-top:16px">
       <h2>Featured Strain</h2>
       <div class="featured">
-        <!-- Tweaked size: medium, responsive; a bit less padding so image appears larger -->
+        <!-- Medium size + a bit less padding so image appears larger -->
         <div class="featured-media" style="--frame-max:clamp(320px, 46vw, 520px); --inner-pad:19%;">
           <img class="featured-photo" src="assets/img/sticky-icky.jpg" alt="Sticky Icky">
+          <img class="featured-frame" src="assets/img/featured-frame.png" alt="" aria-hidden="true">
         </div>
         <div>
           <h3>Sticky Icky — Farmer's Favorites</h3>
