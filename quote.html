@@ -42,16 +42,16 @@
           <h3>Request a Quote</h3>
           <form id="quote-form" name="quote" method="POST" data-netlify="true" netlify-honeypot="bot-field">
             <input type="hidden" name="form-name" value="quote">
-            <!-- honeypot -->
-            <p style="display:none">
-              <label>
-                <div class="hp" aria-hidden="true" tabindex="-1">
-                  <label>Don’t fill this out:</label>
-                  <input type="text" name="website">
-                </div>
-                <input name="bot-field">
+
+            <!-- Honeypot (off-screen text input so bots will fill it; humans won’t see it) -->
+            <div class="hp" aria-hidden="true" tabindex="-1">
+              <label>Don’t fill this out:
+                <input type="text" name="bot-field" autocomplete="off">
               </label>
-            </p>
+            </div>
+
+            <!-- Time-on-form (ms). Filled by script; helps with spam filtering -->
+            <input type="hidden" name="submit_ms" value="0">
 
             <div class="form-row">
               <input class="input" name="businessName" placeholder="Legal Business Name*" required>
@@ -79,7 +79,7 @@
             <!-- hidden cart payload (kept in sync by script) -->
             <input type="hidden" name="cart" value="[]">
 
-            <button class="btn" type="submit" style="margin-top:12px">Request Quote</button>
+            <button class="btn" type="submit" id="quote-submit" style="margin-top:12px">Request Quote</button>
             <div class="small" id="quote-result" style="margin-top:8px"></div>
           </form>
         </div>
@@ -119,7 +119,7 @@
     let cart = readCart();
     const i = cart.findIndex(it => it.name === add);
     if (i >= 0) cart[i].qty = (cart[i].qty || 0) + 1;
-    else cart.push({ id: add, name: add, qty: 1 }); // if id unknown, store name as id too
+    else cart.push({ id: add, name: add, qty: 1 });
     writeCart(cart);
     params.delete("add");
     const url = location.pathname + (params.toString() ? "?" + params.toString() : "");
@@ -185,6 +185,33 @@
   // Initial render + refresh if user returns from catalogue
   render();
   window.addEventListener("focus", render);
+})();
+</script>
+
+<!-- Anti-spam: submitted-too-fast check -->
+<script>
+(function () {
+  const form = document.getElementById("quote-form");
+  const submitBtn = document.getElementById("quote-submit");
+  const result = document.getElementById("quote-result");
+  const msField = form.querySelector('input[name="submit_ms"]');
+  const START = Date.now();
+  const MIN_MS = 4000; // require at least 4s on the page
+
+  form.addEventListener("submit", function (e) {
+    const elapsed = Date.now() - START;
+    if (msField) msField.value = String(elapsed);
+
+    if (elapsed < MIN_MS) {
+      e.preventDefault();
+      if (submitBtn) submitBtn.disabled = true;
+      if (result) result.textContent = "Please take a moment to complete the form before submitting.";
+      setTimeout(() => {
+        if (submitBtn) submitBtn.disabled = false;
+        if (result) result.textContent = "";
+      }, Math.max(1500, MIN_MS - elapsed)); // brief pause, then let them try again
+    }
+  });
 })();
 </script>
 
