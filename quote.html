@@ -7,6 +7,34 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
   <link rel="stylesheet" href="assets/css/overrides.css">
+
+  <!-- "SENT" bubble style (matches +1 look) -->
+  <style>
+    #quote-submit { position: relative; }
+    .sent-bubble {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translate(-50%, 6px) scale(.9);
+      font-size: 12px;
+      font-weight: 700;
+      opacity: 0;
+      pointer-events: none;
+      background: linear-gradient(#caa95a,#b58c2b);
+      color: #111;
+      border: 1px solid #8b6b18;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      white-space: nowrap;
+      box-shadow: 0 1px 2px rgba(0,0,0,.25);
+      animation: popFade .85s ease-out forwards;
+    }
+    @keyframes popFade {
+      0%   { opacity: 0; transform: translate(-50%, 6px) scale(.9); }
+      20%  { opacity: 1; transform: translate(-50%, 0) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -8px) scale(1); }
+    }
+  </style>
 </head>
 <body>
 <div class="wrapper">
@@ -93,9 +121,10 @@
   </main>
 </div>
 
-<!-- Optional: keep your modules if used elsewhere -->
+<!-- Keep cart.js if needed elsewhere -->
 <script type="module" src="assets/js/cart.js"></script>
-<script type="module" src="assets/js/quote.js"></script>
+<!-- REMOVED: old mailto handler -->
+<!-- <script type="module" src="assets/js/quote.js"></script> -->
 
 <!-- Cart render (no sliders) + per-row "Remove -1" + hidden fields sync -->
 <script>
@@ -166,7 +195,7 @@
     updateHidden(items);
 
     if (!items.length) {
-      mount.innerHTML = '<p class="small">Your cart is empty. Go back to the <a href="catalogue.html">catalogue</a> to add strains.</p>';
+      mount.innerHTML = ''; // no default message when empty
       return;
     }
 
@@ -215,7 +244,7 @@
 <!-- EmailJS SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
-<!-- Anti-spam + EmailJS submit (no redirect) + success reset -->
+<!-- Anti-spam + EmailJS submit (no redirect) + success reset + SENT bubble -->
 <script>
 (function () {
   const STORAGE_KEY = "quoteCart";
@@ -254,8 +283,10 @@
 
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
+    e.stopPropagation();
+    e.stopImmediatePropagation(); // ensure no other handler runs
 
-    // Slow-submit + human checks
+    // time-on-form & human checks
     const elapsed = Date.now() - START;
     if (msField) msField.value = String(elapsed);
 
@@ -273,20 +304,30 @@
       return;
     }
 
-    // Build payload for EmailJS
-    const fd = new FormData(form);
+    // Only show empty-cart message on submit
     const items = readCart();
+    if (!items.length) {
+      result.textContent = "Your cart is empty. Please add strains from the catalogue first.";
+      document.querySelector(".card.cart")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+
+    const fd = new FormData(form);
+
+    // Honeypot
+    if (fd.get("bot-field")) {
+      result.textContent = "Submission blocked.";
+      return;
+    }
+
+    // Build payload for EmailJS
     const payload = {
       to_email: "bloomvaultfarms@gmail.com",
       submitted_at: new Date().toLocaleString(),
       submit_ms: fd.get("submit_ms") || "",
-
-      // Contact info
       from_name: fd.get("contactName") || "",
       from_email: fd.get("email") || "",
       phone: fd.get("phone") || "",
-
-      // Business info
       businessName: fd.get("businessName") || "",
       street: fd.get("street") || "",
       city: fd.get("city") || "",
@@ -295,29 +336,27 @@
       license: fd.get("license") || "",
       resale: fd.get("resale") || "",
       notes: fd.get("notes") || "",
-
-      // Cart
       cart_readable: cartReadable(items),
       cart_json: JSON.stringify(items)
     };
-
-    // Honeypot
-    if (fd.get("bot-field")) {
-      result.textContent = "Submission blocked.";
-      return;
-    }
 
     try {
       submitBtn.disabled = true;
       result.textContent = "Sending your request…";
       await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, payload);
 
-      // Success: clear cart + form, show confirmation
+      // Success: clear + hide cart panel, reset form, show success + "SENT" bubble
       localStorage.removeItem(STORAGE_KEY);
       form.reset();
       result.textContent = "Thanks! Your quote request has been sent. We’ll be in touch soon.";
-      const cartMount = document.getElementById("quote-cart");
-      if (cartMount) cartMount.innerHTML = '<p class="small">Your cart is empty. Go back to the <a href="catalogue.html">catalogue</a> to add strains.</p>';
+      const cartCard = document.querySelector(".card.cart");
+      if (cartCard) cartCard.style.display = "none";
+
+      const tag = document.createElement("span");
+      tag.className = "sent-bubble";
+      tag.textContent = "SENT";
+      submitBtn.appendChild(tag);
+      setTimeout(() => tag.remove(), 900);
     } catch (err) {
       console.error(err);
       result.textContent = "Sorry—couldn’t send just now. Please try again.";
