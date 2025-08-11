@@ -1,25 +1,45 @@
 <!doctype html>
 <html lang="en"><head>
-<title>BloomVault Farms</title>
+  <title>BloomVault Farms</title>
 
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css">
-<link rel="stylesheet" href="assets/css/overrides.css">
-</head><body>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/overrides.css">
+
+  <!-- "+1" bubble (scoped for this page; safe to leave here even if also in overrides.css) -->
+  <style>
+    .add-to-quote { position: relative; }
+    .add-to-quote .plus-one {
+      position: absolute; left: 100%; margin-left: 6px; top: 50%;
+      transform: translateY(-50%) translateY(6px);
+      font-size: 12px; font-weight: 700; opacity: 0; pointer-events: none;
+      background: linear-gradient(#caa95a,#b58c2b); color:#111; border:1px solid #8b6b18;
+      padding: 2px 6px; border-radius: 9999px; white-space: nowrap;
+      animation: popFade .8s ease-out forwards;
+      box-shadow: 0 1px 2px rgba(0,0,0,.25);
+    }
+    @keyframes popFade {
+      0%   { opacity: 0; transform: translateY(-50%) translateY(6px) scale(.9); }
+      20%  { opacity: 1; transform: translateY(-50%) translateY(-2px) scale(1); }
+      100% { opacity: 0; transform: translateY(-50%) translateY(-12px) scale(1); }
+    }
+  </style>
+</head>
+<body>
 <div class="wrapper">
   
-<div class="sidebar">
-  <div class="brand"><img src="assets/img/logo.png" alt="BloomVault Farms"></div>
-  <nav class="tabs">
-    <a class="tab" href="index.html">Home</a>
-    <a class="tab" href="catalogue.html">Strain Catalogue</a>
-    <a class="tab" href="quote.html">Get a Quote</a>
-    <a class="tab" href="contact.html">Contact Us</a>
-  </nav>
-  <div class="badge small">Serving Virginia commercial growers only</div>
-</div>
+  <div class="sidebar">
+    <div class="brand"><img src="assets/img/logo.png" alt="BloomVault Farms"></div>
+    <nav class="tabs">
+      <a class="tab" href="index.html">Home</a>
+      <a class="tab" href="catalogue.html">Strain Catalogue</a>
+      <a class="tab" href="quote.html">Get a Quote</a>
+      <a class="tab" href="contact.html">Contact Us</a>
+    </nav>
+    <div class="badge small">Serving Virginia commercial growers only</div>
+  </div>
 
   <main class="main">
     <section class="card" style="text-align:center">
@@ -29,22 +49,22 @@
     </section>
 
     <section class="card" style="margin-top:16px">
-  <h2>Featured Strain</h2>
-  <div class="featured">
-    <img src="assets/img/sticky-icky.jpg" alt="Sticky Icky">
-    <div>
-      <h3>Sticky Icky — Farmer's Favorites</h3>
-      <p class="small">Gorilla Glue #4 X Animal Cookies.</p>
-      <div class="actions">
-        <a class="btn" href="strain.html?id=1">View Details</a>
-        <!-- New: no redirect, adds +1 to cart -->
-        <button type="button" class="btn add-to-quote" data-id="1" data-name="Sticky Icky">
-          Add to Quote +1
-        </button>
+      <h2>Featured Strain</h2>
+      <div class="featured">
+        <img src="assets/img/sticky-icky.jpg" alt="Sticky Icky">
+        <div>
+          <h3>Sticky Icky — Farmer's Favorites</h3>
+          <p class="small">Gorilla Glue #4 X Animal Cookies.</p>
+          <div class="actions">
+            <a class="btn" href="strain.html?id=1">View Details</a>
+            <!-- No redirect, adds +1 to shared cart -->
+            <button type="button" class="btn add-to-quote" data-id="1" data-name="Sticky Icky">
+              Add to Quote +1
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</section>
+    </section>
 
     <section class="card" style="margin-top:16px">
       <h2>Compliance</h2>
@@ -64,19 +84,4 @@
 
       <h3 style="margin-top:.6rem">Greenpoint Seeds — Contact</h3>
       <p class="small" style="margin:.25rem 0 0">
-        For cultivar questions or collaboration, reach out via Greenpoint’s official contact page
-        (Attn: <strong>Anthony Gualdi</strong>) and we’ll coordinate selections and availability:
-        <a href="https://greenpointseeds.com/contact-us/" target="_blank" rel="noopener">greenpointseeds.com/contact-us</a>.
-      </p>
-
-      <p style="margin-top:.6rem">
-        <a class="btn" href="https://greenpointseeds.com" target="_blank" rel="noopener">Visit Greenpoint Seeds</a>
-        <a class="btn" href="https://greenpointseeds.com/contact-us/" target="_blank" rel="noopener">Contact Anthony</a>
-      </p>
-    </section>
-    <!-- /About Our Genetics -->
-  </main>
-</div>
-<script type="module" src="assets/js/app.js"></script>
-<script type="module" src="assets/js/cart.js"></script>
-</body></html>
+        For cultivar questi
