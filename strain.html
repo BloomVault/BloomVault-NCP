@@ -8,12 +8,28 @@
   <link rel="stylesheet" href="assets/css/styles.css" />
   <link rel="stylesheet" href="assets/css/overrides.css" />
   <style>
-    .container { max-width:1000px; margin:0 auto; padding:1rem; }
-    .detail-wrap { display:grid; gap:2rem; grid-template-columns:1fr; }
-    .detail-img { width:100%; height:auto; border-radius:12px; display:block; }
-    .detail-meta { line-height:1.8; }
-    @media (min-width:800px){ .detail-wrap{ grid-template-columns:1fr 1fr; } }
-    .errbox{ background:#fee; color:#900; padding:1rem; border-radius:8px; white-space:pre-wrap; }
+    .container { max-width: 1000px; margin: 0 auto; padding: 1rem; }
+    .detail-wrap { display: grid; gap: 2rem; grid-template-columns: 1fr; }
+    .detail-img { width: 100%; height: auto; border-radius: 12px; display: block; }
+    .detail-meta { line-height: 1.8 }
+    @media (min-width: 800px) { .detail-wrap { grid-template-columns: 1fr 1fr; } }
+
+    /* "+1" bubble (scoped to this page) */
+    .add-to-quote { position: relative; }
+    .add-to-quote .plus-one {
+      position: absolute; left: 100%; margin-left: 6px; top: 50%;
+      transform: translateY(-50%) translateY(6px);
+      font-size: 12px; font-weight: 700; opacity: 0; pointer-events: none;
+      background: linear-gradient(#caa95a,#b58c2b); color:#111; border:1px solid #8b6b18;
+      padding: 2px 6px; border-radius: 9999px; white-space: nowrap;
+      animation: popFade .8s ease-out forwards;
+      box-shadow: 0 1px 2px rgba(0,0,0,.25);
+    }
+    @keyframes popFade {
+      0%   { opacity: 0; transform: translateY(-50%) translateY(6px) scale(.9); }
+      20%  { opacity: 1; transform: translateY(-50%) translateY(-2px) scale(1); }
+      100% { opacity: 0; transform: translateY(-50%) translateY(-12px) scale(1); }
+    }
   </style>
 </head>
 <body>
@@ -36,61 +52,98 @@
     </main>
   </div>
 
-  <!-- Keep ONLY this script on this page (no type="module" includes here) -->
   <script>
   (function () {
     try {
-      var el = document.getElementById("strain-detail");
-      if (!el) { document.body.innerHTML += '<div class="errbox">Error: #strain-detail not found.</div>'; return; }
+      const el = document.getElementById("strain-detail");
+      if (!el) return;
 
-      // Show something immediately
-      el.textContent = "Loading…";
+      const FALLBACK_IMG = "assets/img/strain-placeholder.svg";
+      const id = (new URLSearchParams(location.search).get("id") || "1").trim();
 
-      var FALLBACK_IMG = "assets/img/strain-placeholder.svg";
-      var id = (new URLSearchParams(location.search).get("id") || "1").trim();
-
-      // Simple data map keyed by id
-      var STRAINS = {
+      // -------- Data --------
+      const STRAINS = {
         "1": {
           name: "Sticky Icky",
           image: "assets/img/sticky-icky.jpg",
           type: "Hybrid",
-          flowering: "8-9 Weeks",
-          yield: "Medium-High",
+          flowering: "—",
+          yield: "—",
           terpenes: "—",
           desc: "Gorilla Glue #4 X Animal Cookies."
         }
-        // Add more like: "2": { name:"...", image:"...", ... }
+        // Add more entries as needed, keyed by id: { name, image, ... }
       };
 
-      var data = STRAINS[id];
+      const data = STRAINS[id];
       if (!data) {
         el.innerHTML = '<h1>Strain not found</h1><p><a href="catalogue.html">Back to catalogue</a></p>';
         return;
       }
 
-      var imgSrc = (data.image && data.image.trim()) ? data.image : FALLBACK_IMG;
+      const imgSrc = (data.image && data.image.trim()) ? data.image : FALLBACK_IMG;
 
-      el.innerHTML =
-        '<div class="detail-wrap">' +
-          '<img class="detail-img" src="' + imgSrc + '" alt="' + data.name + '" onerror="this.src=\'' + FALLBACK_IMG + '\'" />' +
-          '<div>' +
-            '<h1 class="heading-brand" style="margin:0 0 .5rem">' + data.name + '</h1>' +
-            '<p>' + data.desc + '</p>' +
-            '<ul class="detail-meta">' +
-              '<li><strong>Type:</strong> ' + data.type + '</li>' +
-              '<li><strong>Flowering:</strong> ' + data.flowering + '</li>' +
-              '<li><strong>Yield:</strong> ' + data.yield + '</li>' +
-              '<li><strong>Terpenes:</strong> ' + data.terpenes + '</li>' +
-            '</ul>' +
-            '<a class="btn" href="quote.html?add=' + encodeURIComponent(data.name) + '">Add to Quote</a>' +
-            '<p class="small"><a href="catalogue.html">← Back to catalogue</a></p>' +
-          '</div>' +
-        '</div>';
+      // -------- Render --------
+      el.innerHTML = `
+        <div class="detail-wrap">
+          <img class="detail-img" src="${imgSrc}" alt="${data.name}"
+               onerror="this.src='${FALLBACK_IMG}'">
+          <div>
+            <h1 class="heading-brand" style="margin:0 0 .5rem">${data.name}</h1>
+            <p>${data.desc}</p>
+            <ul class="detail-meta">
+              <li><strong>Type:</strong> ${data.type}</li>
+              <li><strong>Flowering:</strong> ${data.flowering}</li>
+              <li><strong>Yield:</strong> ${data.yield}</li>
+              <li><strong>Terpenes:</strong> ${data.terpenes}</li>
+            </ul>
+            <div class="actions" style="margin-top:.75rem">
+              <button type="button" class="btn add-to-quote"
+                      data-id="${id}" data-name="${data.name}">
+                Add to Quote +1
+              </button>
+            </div>
+            <p class="small" style="margin-top:.5rem"><a href="catalogue.html">← Back to catalogue</a></p>
+          </div>
+        </div>
+      `;
 
+      // -------- Cart helpers (shared with catalogue) --------
+      const STORAGE_KEY = "quoteCart";
+      function readCart() {
+        try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); }
+        catch (e) { return []; }
+      }
+      function writeCart(cart) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+      }
+      function addOne(itemId, name) {
+        let cart = readCart();
+        const i = cart.findIndex(it => String(it.id) === String(itemId) && it.name === name);
+        if (i >= 0) cart[i].qty = (cart[i].qty || 0) + 1;
+        else cart.push({ id: String(itemId), name, qty: 1 });
+        writeCart(cart);
+      }
+      function plusOneBubble(btn) {
+        const b = document.createElement("span");
+        b.className = "plus-one";
+        b.textContent = "+1";
+        btn.appendChild(b);
+        setTimeout(() => b.remove(), 850);
+      }
+
+      // -------- Wire button (no redirect) --------
+      const btn = el.querySelector(".add-to-quote");
+      if (btn) {
+        btn.addEventListener("click", function () {
+          addOne(this.dataset.id, this.dataset.name);
+          plusOneBubble(this);
+        });
+      }
     } catch (e) {
-      var target = document.getElementById("strain-detail") || document.body;
-      target.innerHTML = '<div class="errbox">JavaScript error:\n' + (e && e.message ? e.message : e) + '</div>';
+      (document.getElementById("strain-detail") || document.body)
+        .innerHTML = '<div style="background:#fee;color:#900;padding:1rem;border-radius:8px">Error rendering details.</div>';
+      console.error(e);
     }
   })();
   </script>
