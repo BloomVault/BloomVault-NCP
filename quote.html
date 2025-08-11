@@ -40,9 +40,7 @@
         <!-- Request form (right column) -->
         <div class="card">
           <h3>Request a Quote</h3>
-          <form id="quote-form" name="quote" method="POST" data-netlify="true" netlify-honeypot="bot-field">
-            <input type="hidden" name="form-name" value="quote">
-
+          <form id="quote-form" name="quote" method="POST">
             <!-- Honeypot (off-screen) -->
             <div class="hp" aria-hidden="true" tabindex="-1">
               <label>Don’t fill this out:
@@ -128,7 +126,7 @@
           return `${it.name} × ${qty} (${plants} plants)`;
         });
         const totalPlants = items.reduce((n, it) => n + (it.qty || 0) * 50, 0);
-        hiddenReadable.value = `Cart:\n${lines.join("\\n")}\nTotal plants: ${totalPlants}`;
+        hiddenReadable.value = `Cart:\n${lines.join("\n")}\nTotal plants: ${totalPlants}`;
       }
     }
   }
@@ -214,38 +212,117 @@
 })();
 </script>
 
-<!-- Anti-spam: human checkbox + submitted-too-fast check -->
+<!-- EmailJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<!-- Anti-spam + EmailJS submit (no redirect) + success reset -->
 <script>
 (function () {
+  const STORAGE_KEY = "quoteCart";
   const form = document.getElementById("quote-form");
   const submitBtn = document.getElementById("quote-submit");
   const result = document.getElementById("quote-result");
   const msField = form.querySelector('input[name="submit_ms"]');
   const human = form.querySelector('#human-check');
+
+  /* ====== EmailJS values (filled) ====== */
+  const EMAILJS_PUBLIC_KEY = "Iph-DFQJujXfJ_gni";
+  const EMAILJS_SERVICE_ID = "service_5n04n5s";
+  const EMAILJS_TEMPLATE_ID = "template_sujzntx";
+  /* ===================================== */
+
+  // init EmailJS
+  emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+
   const START = Date.now();
   const MIN_MS = 4000; // require at least 4s on the page
 
-  form.addEventListener("submit", function (e) {
+  function readCart() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); }
+    catch (e) { return []; }
+  }
+  function cartReadable(items) {
+    if (!items.length) return "Cart: (empty)";
+    const lines = items.map(it => {
+      const qty = it.qty || 0;
+      const plants = qty * 50;
+      return `${it.name} × ${qty} (${plants} plants)`;
+    });
+    const totalPlants = items.reduce((n, it) => n + (it.qty || 0) * 50, 0);
+    return `Cart:\n${lines.join("\n")}\nTotal plants: ${totalPlants}`;
+  }
+
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    // Slow-submit + human checks
     const elapsed = Date.now() - START;
     if (msField) msField.value = String(elapsed);
 
-    // Require human checkbox
     if (human && !human.checked) {
-      e.preventDefault();
-      if (result) result.textContent = "Please confirm you're human.";
+      result.textContent = "Please confirm you're human.";
       human.focus();
       return;
     }
-
-    // Minimum time-on-form
     if (elapsed < MIN_MS) {
-      e.preventDefault();
-      if (submitBtn) submitBtn.disabled = true;
-      if (result) result.textContent = "Please take a moment to complete the form before submitting.";
-      setTimeout(() => {
-        if (submitBtn) submitBtn.disabled = false;
-        if (result) result.textContent = "";
-      }, Math.max(1500, MIN_MS - elapsed));
+      submitBtn.disabled = true;
+      result.textContent = "Please take a moment to complete the form before submitting.";
+      await new Promise(r => setTimeout(r, Math.max(1500, MIN_MS - elapsed)));
+      submitBtn.disabled = false;
+      result.textContent = "";
+      return;
+    }
+
+    // Build payload for EmailJS
+    const fd = new FormData(form);
+    const items = readCart();
+    const payload = {
+      to_email: "bloomvaultfarms@gmail.com",
+      submitted_at: new Date().toLocaleString(),
+      submit_ms: fd.get("submit_ms") || "",
+
+      // Contact info
+      from_name: fd.get("contactName") || "",
+      from_email: fd.get("email") || "",
+      phone: fd.get("phone") || "",
+
+      // Business info
+      businessName: fd.get("businessName") || "",
+      street: fd.get("street") || "",
+      city: fd.get("city") || "",
+      state: fd.get("state") || "",
+      zip: fd.get("zip") || "",
+      license: fd.get("license") || "",
+      resale: fd.get("resale") || "",
+      notes: fd.get("notes") || "",
+
+      // Cart
+      cart_readable: cartReadable(items),
+      cart_json: JSON.stringify(items)
+    };
+
+    // Honeypot
+    if (fd.get("bot-field")) {
+      result.textContent = "Submission blocked.";
+      return;
+    }
+
+    try {
+      submitBtn.disabled = true;
+      result.textContent = "Sending your request…";
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, payload);
+
+      // Success: clear cart + form, show confirmation
+      localStorage.removeItem(STORAGE_KEY);
+      form.reset();
+      result.textContent = "Thanks! Your quote request has been sent. We’ll be in touch soon.";
+      const cartMount = document.getElementById("quote-cart");
+      if (cartMount) cartMount.innerHTML = '<p class="small">Your cart is empty. Go back to the <a href="catalogue.html">catalogue</a> to add strains.</p>';
+    } catch (err) {
+      console.error(err);
+      result.textContent = "Sorry—couldn’t send just now. Please try again.";
+    } finally {
+      submitBtn.disabled = false;
     }
   });
 })();
