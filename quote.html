@@ -43,14 +43,14 @@
           <form id="quote-form" name="quote" method="POST" data-netlify="true" netlify-honeypot="bot-field">
             <input type="hidden" name="form-name" value="quote">
 
-            <!-- Honeypot (off-screen text input so bots will fill it; humans won’t see it) -->
+            <!-- Honeypot (off-screen) -->
             <div class="hp" aria-hidden="true" tabindex="-1">
               <label>Don’t fill this out:
                 <input type="text" name="bot-field" autocomplete="off">
               </label>
             </div>
 
-            <!-- Time-on-form (ms). Filled by script; helps with spam filtering -->
+            <!-- Time-on-form (ms) -->
             <input type="hidden" name="submit_ms" value="0">
 
             <div class="form-row">
@@ -76,8 +76,15 @@
             <textarea class="input" name="notes" rows="4" placeholder="Notes (optional)"></textarea>
             <div class="notice" style="margin-top:10px">Currently serving <b>commercial growers in Virginia</b> only.</div>
 
-            <!-- hidden cart payload (kept in sync by script) -->
+            <!-- Hidden cart payloads (kept in sync by script) -->
             <input type="hidden" name="cart" value="[]">
+            <input type="hidden" name="cart_readable" value="">
+
+            <!-- Human check -->
+            <label for="human-check" class="small" style="display:flex;gap:.5rem;align-items:center;margin-top:.6rem">
+              <input type="checkbox" id="human-check" name="human_check" value="1" required>
+              <span>I am human (no bots)</span>
+            </label>
 
             <button class="btn" type="submit" id="quote-submit" style="margin-top:12px">Request Quote</button>
             <div class="small" id="quote-result" style="margin-top:8px"></div>
@@ -92,23 +99,42 @@
 <script type="module" src="assets/js/cart.js"></script>
 <script type="module" src="assets/js/quote.js"></script>
 
-<!-- Cart render (no sliders) + per-row "Remove -1" -->
+<!-- Cart render (no sliders) + per-row "Remove -1" + hidden fields sync -->
 <script>
 (function () {
   const STORAGE_KEY = "quoteCart";
   const mount = document.getElementById("quote-cart");
 
-  // hidden field for form submit
+  // Hidden fields for form submit
   const form = document.getElementById("quote-form") || document.querySelector("form") || document.body;
-  const hidden = form.querySelector('input[name="cart"]');
+  const hiddenJson = form.querySelector('input[name="cart"]');
+  const hiddenReadable = form.querySelector('input[name="cart_readable"]');
 
   function readCart() {
     try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); }
     catch (e) { return []; }
   }
+  function updateHidden(items) {
+    if (hiddenJson) hiddenJson.value = JSON.stringify(items);
+
+    // Human-friendly summary for emails
+    if (hiddenReadable) {
+      if (!items.length) {
+        hiddenReadable.value = "Cart: (empty)";
+      } else {
+        const lines = items.map(it => {
+          const qty = it.qty || 0;
+          const plants = qty * 50;
+          return `${it.name} × ${qty} (${plants} plants)`;
+        });
+        const totalPlants = items.reduce((n, it) => n + (it.qty || 0) * 50, 0);
+        hiddenReadable.value = `Cart:\n${lines.join("\\n")}\nTotal plants: ${totalPlants}`;
+      }
+    }
+  }
   function writeCart(cart) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
-    if (hidden) hidden.value = JSON.stringify(cart);
+    updateHidden(cart);
   }
 
   // Support old ?add=Name links: add one, then clean the URL once
@@ -139,7 +165,7 @@
 
   function render() {
     const items = readCart();
-    if (hidden) hidden.value = JSON.stringify(items);
+    updateHidden(items);
 
     if (!items.length) {
       mount.innerHTML = '<p class="small">Your cart is empty. Go back to the <a href="catalogue.html">catalogue</a> to add strains.</p>';
@@ -188,13 +214,14 @@
 })();
 </script>
 
-<!-- Anti-spam: submitted-too-fast check -->
+<!-- Anti-spam: human checkbox + submitted-too-fast check -->
 <script>
 (function () {
   const form = document.getElementById("quote-form");
   const submitBtn = document.getElementById("quote-submit");
   const result = document.getElementById("quote-result");
   const msField = form.querySelector('input[name="submit_ms"]');
+  const human = form.querySelector('#human-check');
   const START = Date.now();
   const MIN_MS = 4000; // require at least 4s on the page
 
@@ -202,6 +229,15 @@
     const elapsed = Date.now() - START;
     if (msField) msField.value = String(elapsed);
 
+    // Require human checkbox
+    if (human && !human.checked) {
+      e.preventDefault();
+      if (result) result.textContent = "Please confirm you're human.";
+      human.focus();
+      return;
+    }
+
+    // Minimum time-on-form
     if (elapsed < MIN_MS) {
       e.preventDefault();
       if (submitBtn) submitBtn.disabled = true;
@@ -209,7 +245,7 @@
       setTimeout(() => {
         if (submitBtn) submitBtn.disabled = false;
         if (result) result.textContent = "";
-      }, Math.max(1500, MIN_MS - elapsed)); // brief pause, then let them try again
+      }, Math.max(1500, MIN_MS - elapsed));
     }
   });
 })();
