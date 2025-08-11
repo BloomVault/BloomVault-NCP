@@ -12,31 +12,25 @@
 
 /* ===== Strain Catalog: medium cards, 2 per row ===== */
 
-/* Keep the page background the same as the rest of the site */
+#catalog .container { max-width: 1100px; margin: 0 auto; padding: 1rem; }
 #catalog { background: transparent; }
 
-/* Grid wrapper for the cards */
-#catalog .catalog-grid,
-#catalog .cards,
-#catalog .grid {
+/* Grid: 1 per row on phones, 2 per row from 760px up */
+#catalog .catalog-grid {
   display: grid;
   gap: 1.2rem;
-  grid-template-columns: 1fr;                 /* 1 per row on phones */
+  grid-template-columns: 1fr;
   align-items: start;
 }
-
-/* 2 per row from tablet/desktop up */
 @media (min-width: 760px) {
-  #catalog .catalog-grid,
-  #catalog .cards,
-  #catalog .grid {
+  #catalog .catalog-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-/* Card look (works with original layout) */
+/* Card styling */
 #catalog .card {
-  background: #fff;                            /* change to #151515 for dark cards */
+  background: #fff;               /* change to #151515 if you want dark cards */
   border-radius: 14px;
   overflow: hidden;
   box-shadow: 0 2px 10px rgba(0,0,0,.08);
@@ -44,32 +38,29 @@
   flex-direction: column;
 }
 
-/* Image area: smaller, uniform thumbnails that fit the card */
-#catalog .card .media {                        /* use if you have a wrapper */
+/* Consistent, smaller images that fit the card */
+#catalog .card .media {
   position: relative;
-  aspect-ratio: 4 / 3;                         /* consistent height */
+  aspect-ratio: 4 / 3;            /* controls height; tweak to 16/9 if you prefer */
   overflow: hidden;
-  background: #eee;                            /* subtle placeholder bg */
+  background: #eee;
 }
 #catalog .card .media > img,
-#catalog .card > img {                         /* also handle bare <img> in card */
+#catalog .card > img {            /* also catches bare <img> if any remain */
   width: 100%;
   height: 100%;
-  object-fit: cover;                           /* crop to fill without stretching */
+  object-fit: cover;
   display: block;
 }
 
-/* Card body + actions */
-#catalog .card .content,
-#catalog .card .card-body { padding: .9rem; }
-#catalog .card .actions,
-#catalog .card .btn-row {
+/* Content + actions */
+#catalog .card .content { padding: .9rem; }
+#catalog .card .actions {
   display: flex;
   gap: .6rem;
   margin-top: .6rem;
   flex-wrap: wrap;
 }
 
-/* Keep your gold buttons */
-#catalog .card .btn { /* your .btn gold style already exists; this just scopes safely */ }
+/* Your gold buttons already styled as .btn elsewhere — no change needed */
 
