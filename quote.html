@@ -1,49 +1,58 @@
 <!doctype html>
 <html lang="en"><head>
-<title>Get a Quote · BloomVault Farms</title>
+  <title>Get a Quote · BloomVault Farms</title>
 
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css">
-<link rel="stylesheet" href="assets/css/overrides.css">
-</head><body>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/overrides.css">
+</head>
+<body>
 <div class="wrapper">
   
-<div class="sidebar">
-  <div class="brand"><img src="assets/img/logo.png" alt="BloomVault Farms"></div>
-  <nav class="tabs">
-    <a class="tab" href="index.html">Home</a>
-    <a class="tab" href="catalogue.html">Strain Catalogue</a>
-    <a class="tab" href="quote.html">Get a Quote</a>
-    <a class="tab" href="contact.html">Contact Us</a>
-  </nav>
-  <div class="badge small">Serving Virginia commercial growers only</div>
-</div>
+  <div class="sidebar">
+    <div class="brand"><img src="assets/img/logo.png" alt="BloomVault Farms"></div>
+    <nav class="tabs">
+      <a class="tab" href="index.html">Home</a>
+      <a class="tab" href="catalogue.html">Strain Catalogue</a>
+      <a class="tab" href="quote.html">Get a Quote</a>
+      <a class="tab" href="contact.html">Contact Us</a>
+    </nav>
+    <div class="badge small">Serving Virginia commercial growers only</div>
+  </div>
 
   <main class="main">
     <section class="card">
       <h1>Your Quote</h1>
+
       <div class="grid">
+        <!-- Cart (left column) -->
         <div class="card cart">
           <h3>Cart</h3>
-          <table class="table" id="cart-table">
-            <thead><tr><th>Strain</th><th>Qty (50 each)</th><th></th></tr></thead>
-            <tbody></tbody>
-          </table>
-          <div class="notice" style="margin-top:10px">Orders are at a <b>50 plant min</b>. 1 = 50, 2 = 100, etc.</div>
-        </div>
-        <div class="card">
           <section id="quote-cart"></section>
+          <div class="notice" style="margin-top:10px">
+            Orders are at a <b>50 plant minimum</b>. Quantities reflect how many times you pressed
+            “<b>Add to Quote +1</b>” in the catalogue (1 = 50, 2 = 100, etc.).
+          </div>
+        </div>
 
+        <!-- Request form (right column) -->
+        <div class="card">
           <h3>Request a Quote</h3>
           <form id="quote-form" name="quote" method="POST" data-netlify="true" netlify-honeypot="bot-field">
             <input type="hidden" name="form-name" value="quote">
-            <p style="display:none"><label><div class="hp" aria-hidden="true" tabindex="-1">
-  <label>Don’t fill this out:</label>
-  <input type="text" name="website">
-</div>
- <input name="bot-field"></label></p>
+            <!-- honeypot -->
+            <p style="display:none">
+              <label>
+                <div class="hp" aria-hidden="true" tabindex="-1">
+                  <label>Don’t fill this out:</label>
+                  <input type="text" name="website">
+                </div>
+                <input name="bot-field">
+              </label>
+            </p>
+
             <div class="form-row">
               <input class="input" name="businessName" placeholder="Legal Business Name*" required>
               <input class="input" name="contactName" placeholder="Contact Name*" required>
@@ -66,6 +75,10 @@
             </div>
             <textarea class="input" name="notes" rows="4" placeholder="Notes (optional)"></textarea>
             <div class="notice" style="margin-top:10px">Currently serving <b>commercial growers in Virginia</b> only.</div>
+
+            <!-- hidden cart payload (kept in sync by script) -->
+            <input type="hidden" name="cart" value="[]">
+
             <button class="btn" type="submit" style="margin-top:12px">Request Quote</button>
             <div class="small" id="quote-result" style="margin-top:8px"></div>
           </form>
@@ -74,65 +87,104 @@
     </section>
   </main>
 </div>
+
+<!-- Optional: keep your modules if used elsewhere -->
 <script type="module" src="assets/js/cart.js"></script>
 <script type="module" src="assets/js/quote.js"></script>
-  <script>
-(function () {
-  const mount = document.getElementById("quote-cart");
-  const params = new URLSearchParams(location.search);
-  const prefill = params.get("add");   // e.g., ?add=Strain%20Name
-  let items = prefill ? [{ name: prefill, qty: 1 }] : [];
 
-  // Make sure we have a hidden field named "cart" inside your form
-  const form = document.querySelector("form") || document.body;
-  let hidden = form.querySelector('input[name="cart"]');
-  if (!hidden) {
-    hidden = document.createElement("input");
-    hidden.type = "hidden";
-    hidden.name = "cart";
-    form.appendChild(hidden);
+<!-- Cart render (no sliders) + per-row "Remove -1" -->
+<script>
+(function () {
+  const STORAGE_KEY = "quoteCart";
+  const mount = document.getElementById("quote-cart");
+
+  // hidden field for form submit
+  const form = document.getElementById("quote-form") || document.querySelector("form") || document.body;
+  const hidden = form.querySelector('input[name="cart"]');
+
+  function readCart() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); }
+    catch (e) { return []; }
+  }
+  function writeCart(cart) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+    if (hidden) hidden.value = JSON.stringify(cart);
+  }
+
+  // Support old ?add=Name links: add one, then clean the URL once
+  (function prefillFromQuery() {
+    const params = new URLSearchParams(location.search);
+    const add = params.get("add");
+    if (!add) return;
+    let cart = readCart();
+    const i = cart.findIndex(it => it.name === add);
+    if (i >= 0) cart[i].qty = (cart[i].qty || 0) + 1;
+    else cart.push({ id: add, name: add, qty: 1 }); // if id unknown, store name as id too
+    writeCart(cart);
+    params.delete("add");
+    const url = location.pathname + (params.toString() ? "?" + params.toString() : "");
+    history.replaceState({}, "", url);
+  })();
+
+  function decOne(id, name) {
+    const cart = readCart();
+    const i = cart.findIndex(it => String(it.id) === String(id) && it.name === name);
+    if (i >= 0) {
+      const next = (cart[i].qty || 0) - 1;
+      if (next <= 0) cart.splice(i, 1);
+      else cart[i].qty = next;
+      writeCart(cart);
+    }
   }
 
   function render() {
+    const items = readCart();
+    if (hidden) hidden.value = JSON.stringify(items);
+
     if (!items.length) {
-      mount.innerHTML = `<p class="small">Your cart is empty. Go to the <a href="catalogue.html">catalogue</a> to add items.</p>`;
-      hidden.value = "[]";
+      mount.innerHTML = '<p class="small">Your cart is empty. Go back to the <a href="catalogue.html">catalogue</a> to add strains.</p>';
       return;
     }
 
-    const rows = items.map((it, idx) => `
-      <tr>
+    const rows = items.map(it => `
+      <tr data-id="${it.id}" data-name="${it.name}">
         <td>${it.name}</td>
-        <td>
-          <div class="qty-wrap">
-            <input type="range" min="1" max="20" step="1" value="${it.qty}" data-index="${idx}">
-            <span class="qty-num">${it.qty}</span>
-            <span class="small">× 50 plants each</span>
-          </div>
+        <td style="text-align:right">${it.qty || 0}</td>
+        <td style="text-align:right">
+          <button type="button" class="btn remove-one">Remove -1</button>
         </td>
-      </tr>`).join("");
+      </tr>
+    `).join("");
 
     mount.innerHTML = `
       <table class="table">
-        <thead><tr><th>Strain</th><th>Qty (1 = 50, 2 = 100…)</th></tr></thead>
+        <thead>
+          <tr>
+            <th>Strain</th>
+            <th style="text-align:right">Qty</th>
+            <th style="text-align:right">Action</th>
+          </tr>
+        </thead>
         <tbody>${rows}</tbody>
-      </table>`;
-
-    // keep hidden field updated for form submission
-    hidden.value = JSON.stringify(items);
-
-    // Slider -> update number + hidden field
-    mount.querySelectorAll('input[type="range"]').forEach(slider => {
-      slider.addEventListener("input", (e) => {
-        const i = +e.target.dataset.index;
-        items[i].qty = +e.target.value;
-        e.target.nextElementSibling.textContent = e.target.value;
-        hidden.value = JSON.stringify(items);
-      });
-    });
+      </table>
+      <p class="small">Click “Remove -1” to decrease quantity. When an item reaches 0 it disappears.</p>
+    `;
   }
 
+  // Click handler for Remove -1
+  mount.addEventListener("click", (e) => {
+    const btn = e.target.closest(".remove-one");
+    if (!btn) return;
+    const tr = btn.closest("tr");
+    const id = tr.getAttribute("data-id");
+    const name = tr.getAttribute("data-name");
+    decOne(id, name);
+    render();
+  });
+
+  // Initial render + refresh if user returns from catalogue
   render();
+  window.addEventListener("focus", render);
 })();
 </script>
 
