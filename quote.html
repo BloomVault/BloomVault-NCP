@@ -76,4 +76,64 @@
 </div>
 <script type="module" src="assets/js/cart.js"></script>
 <script type="module" src="assets/js/quote.js"></script>
+  <script>
+(function () {
+  const mount = document.getElementById("quote-cart");
+  const params = new URLSearchParams(location.search);
+  const prefill = params.get("add");   // e.g., ?add=Strain%20Name
+  let items = prefill ? [{ name: prefill, qty: 1 }] : [];
+
+  // Make sure we have a hidden field named "cart" inside your form
+  const form = document.querySelector("form") || document.body;
+  let hidden = form.querySelector('input[name="cart"]');
+  if (!hidden) {
+    hidden = document.createElement("input");
+    hidden.type = "hidden";
+    hidden.name = "cart";
+    form.appendChild(hidden);
+  }
+
+  function render() {
+    if (!items.length) {
+      mount.innerHTML = `<p class="small">Your cart is empty. Go to the <a href="catalog.html">catalog</a> to add items.</p>`;
+      hidden.value = "[]";
+      return;
+    }
+
+    const rows = items.map((it, idx) => `
+      <tr>
+        <td>${it.name}</td>
+        <td>
+          <div class="qty-wrap">
+            <input type="range" min="1" max="20" step="1" value="${it.qty}" data-index="${idx}">
+            <span class="qty-num">${it.qty}</span>
+            <span class="small">× 50 plants each</span>
+          </div>
+        </td>
+      </tr>`).join("");
+
+    mount.innerHTML = `
+      <table class="table">
+        <thead><tr><th>Strain</th><th>Qty (1 = 50, 2 = 100…)</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+
+    // keep hidden field updated for form submission
+    hidden.value = JSON.stringify(items);
+
+    // Slider -> update number + hidden field
+    mount.querySelectorAll('input[type="range"]').forEach(slider => {
+      slider.addEventListener("input", (e) => {
+        const i = +e.target.dataset.index;
+        items[i].qty = +e.target.value;
+        e.target.nextElementSibling.textContent = e.target.value;
+        hidden.value = JSON.stringify(items);
+      });
+    });
+  }
+
+  render();
+})();
+</script>
+
 </body></html>
