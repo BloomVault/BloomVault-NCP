@@ -7,18 +7,23 @@
   <link rel="stylesheet" href="assets/css/styles.css" />
   <link rel="stylesheet" href="assets/css/overrides.css" />
 
-  <!-- Badge styling (scoped to catalog) -->
+  <!-- +1 bubble styling (scoped to catalog) -->
   <style>
     #catalog .add-to-quote { position: relative; }
-    #catalog .add-to-quote .count-badge{
-      position:absolute; top:-8px; right:-8px;
-      min-width:20px; height:20px; padding:0 6px;
-      border-radius:9999px; display:none; align-items:center; justify-content:center;
-      font-size:12px; line-height:1; font-weight:700;
-      background:linear-gradient(#caa95a,#b58c2b); color:#111; border:1px solid #8b6b18;
-      box-shadow:0 1px 2px rgba(0,0,0,.25);
+    #catalog .add-to-quote .plus-one {
+      position: absolute; left: 100%; margin-left: 6px; top: 50%;
+      transform: translateY(-50%) translateY(6px);
+      font-size: 12px; font-weight: 700; opacity: 0; pointer-events: none;
+      background: linear-gradient(#caa95a,#b58c2b); color:#111; border:1px solid #8b6b18;
+      padding: 2px 6px; border-radius: 9999px; white-space: nowrap;
+      animation: popFade .8s ease-out forwards;
+      box-shadow: 0 1px 2px rgba(0,0,0,.25);
     }
-    #catalog .add-to-quote[data-count]:not([data-count="0"]) .count-badge { display:inline-flex; }
+    @keyframes popFade {
+      0%   { opacity: 0; transform: translateY(-50%) translateY(6px) scale(.9); }
+      20%  { opacity: 1; transform: translateY(-50%) translateY(-2px) scale(1); }
+      100% { opacity: 0; transform: translateY(-50%) translateY(-12px) scale(1); }
+    }
   </style>
 </head>
 <body>
@@ -51,9 +56,7 @@
               <p>Gorilla Glue #4 X Animal Cookies.</p>
               <div class="actions">
                 <a class="btn" href="strain.html?id=1">Details</a>
-                <button type="button" class="btn add-to-quote" data-id="1" data-name="Sticky Icky">
-                  Add to Quote +1 <span class="count-badge">0</span>
-                </button>
+                <button type="button" class="btn add-to-quote" data-id="1" data-name="Sticky Icky">Add to Quote +1</button>
               </div>
               <p class="small">Image &amp; details are placeholders.</p>
             </div>
@@ -68,9 +71,7 @@
               <h3>Placeholder Strain #2</h3>
               <div class="actions">
                 <a class="btn" href="strain.html?id=2">Details</a>
-                <button type="button" class="btn add-to-quote" data-id="2" data-name="Placeholder Strain #2">
-                  Add to Quote +1 <span class="count-badge">0</span>
-                </button>
+                <button type="button" class="btn add-to-quote" data-id="2" data-name="Placeholder Strain #2">Add to Quote +1</button>
               </div>
               <p class="small">Image &amp; details are placeholders.</p>
             </div>
@@ -85,9 +86,7 @@
               <h3>Placeholder Strain #3</h3>
               <div class="actions">
                 <a class="btn" href="strain.html?id=3">Details</a>
-                <button type="button" class="btn add-to-quote" data-id="3" data-name="Placeholder Strain #3">
-                  Add to Quote +1 <span class="count-badge">0</span>
-                </button>
+                <button type="button" class="btn add-to-quote" data-id="3" data-name="Placeholder Strain #3">Add to Quote +1</button>
               </div>
               <p class="small">Image &amp; details are placeholders.</p>
             </div>
@@ -102,9 +101,7 @@
               <h3>Placeholder Strain #4</h3>
               <div class="actions">
                 <a class="btn" href="strain.html?id=4">Details</a>
-                <button type="button" class="btn add-to-quote" data-id="4" data-name="Placeholder Strain #4">
-                  Add to Quote +1 <span class="count-badge">0</span>
-                </button>
+                <button type="button" class="btn add-to-quote" data-id="4" data-name="Placeholder Strain #4">Add to Quote +1</button>
               </div>
               <p class="small">Image &amp; details are placeholders.</p>
             </div>
@@ -119,9 +116,7 @@
               <h3>Placeholder Strain #5</h3>
               <div class="actions">
                 <a class="btn" href="strain.html?id=5">Details</a>
-                <button type="button" class="btn add-to-quote" data-id="5" data-name="Placeholder Strain #5">
-                  Add to Quote +1 <span class="count-badge">0</span>
-                </button>
+                <button type="button" class="btn add-to-quote" data-id="5" data-name="Placeholder Strain #5">Add to Quote +1</button>
               </div>
               <p class="small">Image &amp; details are placeholders.</p>
             </div>
@@ -136,9 +131,7 @@
               <h3>Placeholder Strain #6</h3>
               <div class="actions">
                 <a class="btn" href="strain.html?id=6">Details</a>
-                <button type="button" class="btn add-to-quote" data-id="6" data-name="Placeholder Strain #6">
-                  Add to Quote +1 <span class="count-badge">0</span>
-                </button>
+                <button type="button" class="btn add-to-quote" data-id="6" data-name="Placeholder Strain #6">Add to Quote +1</button>
               </div>
               <p class="small">Image &amp; details are placeholders.</p>
             </div>
@@ -153,9 +146,7 @@
               <h3>Placeholder Strain #7</h3>
               <div class="actions">
                 <a class="btn" href="strain.html?id=7">Details</a>
-                <button type="button" class="btn add-to-quote" data-id="7" data-name="Placeholder Strain #7">
-                  Add to Quote +1 <span class="count-badge">0</span>
-                </button>
+                <button type="button" class="btn add-to-quote" data-id="7" data-name="Placeholder Strain #7">Add to Quote +1</button>
               </div>
               <p class="small">Image &amp; details are placeholders.</p>
             </div>
@@ -170,9 +161,7 @@
               <h3>Placeholder Strain #8</h3>
               <div class="actions">
                 <a class="btn" href="strain.html?id=8">Details</a>
-                <button type="button" class="btn add-to-quote" data-id="8" data-name="Placeholder Strain #8">
-                  Add to Quote +1 <span class="count-badge">0</span>
-                </button>
+                <button type="button" class="btn add-to-quote" data-id="8" data-name="Placeholder Strain #8">Add to Quote +1</button>
               </div>
               <p class="small">Image &amp; details are placeholders.</p>
             </div>
@@ -187,9 +176,7 @@
               <h3>Placeholder Strain #9</h3>
               <div class="actions">
                 <a class="btn" href="strain.html?id=9">Details</a>
-                <button type="button" class="btn add-to-quote" data-id="9" data-name="Placeholder Strain #9">
-                  Add to Quote +1 <span class="count-badge">0</span>
-                </button>
+                <button type="button" class="btn add-to-quote" data-id="9" data-name="Placeholder Strain #9">Add to Quote +1</button>
               </div>
               <p class="small">Image &amp; details are placeholders.</p>
             </div>
@@ -204,9 +191,7 @@
               <h3>Placeholder Strain #10</h3>
               <div class="actions">
                 <a class="btn" href="strain.html?id=10">Details</a>
-                <button type="button" class="btn add-to-quote" data-id="10" data-name="Placeholder Strain #10">
-                  Add to Quote +1 <span class="count-badge">0</span>
-                </button>
+                <button type="button" class="btn add-to-quote" data-id="10" data-name="Placeholder Strain #10">Add to Quote +1</button>
               </div>
               <p class="small">Image &amp; details are placeholders.</p>
             </div>
@@ -220,7 +205,7 @@
   <!-- Optional: only needed if other pages use it -->
   <script type="module" src="assets/js/cart.js"></script>
 
-  <!-- Add-to-Quote (no redirect) + badge counter -->
+  <!-- Add-to-Quote (no redirect) + "+1" bubble -->
   <script>
   (function () {
     const STORAGE_KEY = "quoteCart";
@@ -230,31 +215,6 @@
       catch (e) { return []; }
     }
     function writeCart(cart) { localStorage.setItem(STORAGE_KEY, JSON.stringify(cart)); }
-
-    function getQty(id, name) {
-      const cart = readCart();
-      const it = cart.find(x => x.id === String(id) && x.name === name);
-      return it ? (it.qty || 0) : 0;
-    }
-
-    function ensureBadge(btn) {
-      if (!btn.querySelector(".count-badge")) {
-        const span = document.createElement("span");
-        span.className = "count-badge";
-        span.setAttribute("aria-hidden", "true");
-        btn.appendChild(span);
-      }
-      updateBadge(btn);
-    }
-
-    function updateBadge(btn) {
-      const id = btn.getAttribute("data-id");
-      const name = btn.getAttribute("data-name");
-      const qty = getQty(id, name);
-      btn.setAttribute("data-count", String(qty));
-      const span = btn.querySelector(".count-badge");
-      if (span) span.textContent = String(qty);
-    }
 
     function fallbackAdd(id, name) {
       let cart = readCart();
@@ -273,19 +233,13 @@
       }
     }
 
-    function toast(msg) {
-      const t = document.createElement("div");
-      t.textContent = msg;
-      t.style.cssText =
-        "position:fixed;bottom:16px;right:16px;padding:.6rem .8rem;border-radius:8px;" +
-        "background:#1f2937;color:#fff;z-index:9999;opacity:0;transition:opacity .2s";
-      document.body.appendChild(t);
-      requestAnimationFrame(() => (t.style.opacity = "1"));
-      setTimeout(() => { t.style.opacity = "0"; setTimeout(() => t.remove(), 200); }, 1000);
+    function plusOneBubble(btn) {
+      const b = document.createElement("span");
+      b.className = "plus-one";
+      b.textContent = "+1";
+      btn.appendChild(b);
+      setTimeout(() => b.remove(), 850);
     }
-
-    // Initialize badges from existing cart
-    document.querySelectorAll(".add-to-quote").forEach(ensureBadge);
 
     // Click handler (no redirect)
     document.addEventListener("click", function (e) {
@@ -295,13 +249,7 @@
       const id = btn.getAttribute("data-id");
       const name = btn.getAttribute("data-name");
       addOne(id, name);
-      updateBadge(btn);
-      toast("Added 1 × " + name);
-    });
-
-    // If cart changes in another tab, refresh counts on focus
-    window.addEventListener("focus", () => {
-      document.querySelectorAll(".add-to-quote").forEach(updateBadge);
+      plusOneBubble(btn);
     });
   })();
   </script>
