@@ -28,12 +28,12 @@
   }
 }
 
-/* Card styling */
+/* Cards match page background (no box shadow) */
 #catalog .card {
-  background: #fff;               /* change to #151515 if you want dark cards */
+  background: transparent;       /* was #fff */
+  border: none;                  /* remove outline to fully blend */
   border-radius: 14px;
-  overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0,0,0,.08);
+  box-shadow: none;              /* no drop shadow */
   display: flex;
   flex-direction: column;
 }
@@ -41,12 +41,12 @@
 /* Consistent, smaller images that fit the card */
 #catalog .card .media {
   position: relative;
-  aspect-ratio: 4 / 3;            /* controls height; tweak to 16/9 if you prefer */
+  aspect-ratio: 4 / 3;           /* tweak to 16/9 if you prefer */
   overflow: hidden;
-  background: #eee;
+  background: transparent;       /* was #eee */
 }
 #catalog .card .media > img,
-#catalog .card > img {            /* also catches bare <img> if any remain */
+#catalog .card > img {           /* also catches bare <img> if any remain */
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -63,4 +63,3 @@
 }
 
 /* Your gold buttons already styled as .btn elsewhere — no change needed */
-
