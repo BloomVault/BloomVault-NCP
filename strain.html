@@ -35,6 +35,8 @@
 
 <script>
 (function () {
+  const FALLBACK_IMG = "assets/img/strain-placeholder.svg";
+
   const id = new URLSearchParams(location.search).get("id");
   const STRAINS = [
     { id:"1", name:"Placeholder Strain #1", image:"assets/img/placeholder1.jpg",
@@ -54,10 +56,13 @@
   const data = STRAINS.find(s => s.id === id);
   const el = document.getElementById("strain-detail");
   if (!data) { el.innerHTML = '<h1>Strain not found</h1><p><a href="catalog.html">Back to catalog</a></p>'; return; }
+const imgSrc = data.image || FALLBACK_IMG;
 
   el.innerHTML = `
     <div class="detail-wrap" style="display:grid;gap:2rem;grid-template-columns:1fr">
-      <img src="${data.image}" alt="${data.name}" style="width:100%;height:auto;border-radius:12px">
+      <img src="${imgSrc}" alt="${data.name}" onerror="this.src='assets/img/strain-placeholder.svg'"
+     style="width:100%;height:auto;border-radius:12px">
+
       <div>
         <h1 style="margin:0 0 .5rem">${data.name}</h1>
         <p>${data.desc}</p>
