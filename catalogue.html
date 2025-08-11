@@ -205,34 +205,25 @@
   <!-- Optional: only needed if other pages use it -->
   <script type="module" src="assets/js/cart.js"></script>
 
-  <!-- Add-to-Quote (no redirect) + "+1" bubble -->
+  <!-- Add-to-Quote (no redirect) + persist to localStorage + "+1" bubble -->
   <script>
   (function () {
     const STORAGE_KEY = "quoteCart";
 
     function readCart() {
       try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); }
-      catch (e) { return []; }
+      catch { return []; }
     }
-    function writeCart(cart) { localStorage.setItem(STORAGE_KEY, JSON.stringify(cart)); }
-
-    function fallbackAdd(id, name) {
+    function writeCart(cart) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+    }
+    function addOne(id, name) {
       let cart = readCart();
-      const i = cart.findIndex(it => it.id === String(id) && it.name === name);
+      const i = cart.findIndex(it => String(it.id) === String(id) && it.name === name);
       if (i >= 0) cart[i].qty = (cart[i].qty || 0) + 1;
       else cart.push({ id: String(id), name, qty: 1 });
       writeCart(cart);
     }
-
-    function addOne(id, name) {
-      if (window.addToQuote) {
-        try { window.addToQuote(id, name, 1); }
-        catch (e) { console.warn("addToQuote error:", e); fallbackAdd(id, name); }
-      } else {
-        fallbackAdd(id, name);
-      }
-    }
-
     function plusOneBubble(btn) {
       const b = document.createElement("span");
       b.className = "plus-one";
@@ -241,14 +232,12 @@
       setTimeout(() => b.remove(), 850);
     }
 
-    // Click handler (no redirect)
+    // Handle clicks (no redirect)
     document.addEventListener("click", function (e) {
       const btn = e.target.closest(".add-to-quote");
       if (!btn) return;
       e.preventDefault();
-      const id = btn.getAttribute("data-id");
-      const name = btn.getAttribute("data-name");
-      addOne(id, name);
+      addOne(btn.dataset.id, btn.dataset.name);
       plusOneBubble(btn);
     });
   })();
