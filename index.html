@@ -29,19 +29,22 @@
     </section>
 
     <section class="card" style="margin-top:16px">
-      <h2>Featured Strain</h2>
-      <div class="featured">
-        <img src="assets/img/sticky-icky.jpg" alt="Sticky Icky">
-        <div>
-          <h3>Sticky Icky — Farmer's Favorites</h3>
-          <p class="small">Gorilla Glue X Sticky Icky</p>
-          <div class="actions">
-            <a class="btn" href="strain.html?id=1">View Details</a>
-            <button class="btn" onclick="window.addToQuote(1, 'Placeholder Strain #1')">Add to Quote</button>
-          </div>
-        </div>
+  <h2>Featured Strain</h2>
+  <div class="featured">
+    <img src="assets/img/sticky-icky.jpg" alt="Sticky Icky">
+    <div>
+      <h3>Sticky Icky — Farmer's Favorites</h3>
+      <p class="small">Gorilla Glue #4 X Animal Cookies.</p>
+      <div class="actions">
+        <a class="btn" href="strain.html?id=1">View Details</a>
+        <!-- New: no redirect, adds +1 to cart -->
+        <button type="button" class="btn add-to-quote" data-id="1" data-name="Sticky Icky">
+          Add to Quote +1
+        </button>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
     <section class="card" style="margin-top:16px">
       <h2>Compliance</h2>
