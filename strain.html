@@ -1,150 +1,97 @@
 <!doctype html>
-<html lang="en"><head>
-<title>Strain · BloomVault Farms</title>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Strain · BloomVault Farms</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/overrides.css">
+  <style>
+    /* Page-local polish */
+    .container { max-width: 1000px; margin: 0 auto; padding: 1rem; }
+    .detail-wrap { display: grid; gap: 2rem; grid-template-columns: 1fr; }
+    .detail-img { width: 100%; height: auto; border-radius: 12px; display: block; }
+    .detail-meta { line-height: 1.8 }
+    @media (min-width: 800px) { .detail-wrap { grid-template-columns: 1fr 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <!-- Sidebar / Nav (unchanged) -->
+    <div class="sidebar">
+      <div class="brand"><img src="assets/img/logo.png" alt="BloomVault Farms"></div>
+      <nav class="tabs">
+        <a class="tab" href="index.html">Home</a>
+        <a class="tab" href="catalog.html">Strain Catalog</a>
+        <a class="tab" href="quote.html">Get a Quote</a>
+        <a class="tab" href="contact.html">Contact Us</a>
+      </nav>
+      <div class="badge small">Serving Virginia commercial growers only</div>
+    </div>
 
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css">
-<link rel="stylesheet" href="assets/css/overrides.css">
-</head><body>
-<div class="wrapper">
-  
-<div class="sidebar">
-  <div class="brand"><img src="assets/img/logo.png" alt="BloomVault Farms"></div>
-  <nav class="tabs">
-    <a class="tab" href="index.html">Home</a>
-    <a class="tab" href="catalog.html">Strain Catalog</a>
-    <a class="tab" href="quote.html">Get a Quote</a>
-    <a class="tab" href="contact.html">Contact Us</a>
-  </nav>
-  <div class="badge small">Serving Virginia commercial growers only</div>
-</div>
-
-  <main class="main">
-  <div id="strain-main" style="max-width:1000px;margin:0 auto;padding:1rem">
-    <article id="strain-detail"></article>
+    <!-- Main content where details render -->
+    <main class="main">
+      <div id="strain-main" class="container">
+        <article id="strain-detail">
+          <!-- JS will render the strain details here -->
+          <noscript>This page needs JavaScript enabled.</noscript>
+        </article>
+      </div>
+    </main>
   </div>
-</main>
 
-</div>
+  <!-- Inline renderer (keep this; no other scripts needed) -->
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const FALLBACK_IMG = "assets/img/strain-placeholder.svg";
+    const id = new URLSearchParams(location.search).get("id") || "1";
 
-<main id="strain-main" style="max-width:1000px;margin:0 auto;padding:1rem">
-  <article id="strain-detail"></article>
-</main>
+    // ===== Data =====
+    const STRAINS = [
+      {
+        id: "1",
+        name: "Sticky Icky",
+        image: "assets/img/sticky-icky.jpg",
+        type: "Hybrid",
+        flowering: "—",
+        yield: "—",
+        terpenes: "—",
+        desc: "Gorilla Glue #4 X Animal Cookies."
+      },
+      // Keep or add more entries later if you want:
+      { id: "2", name: "Placeholder Strain #2", image: "", type: "Hybrid", flowering: "8–10 weeks", yield: "Medium", terpenes: "—", desc: "Short description." },
+      { id: "3", name: "Placeholder Strain #3", image: "", type: "Sativa-leaning", flowering: "9–10 weeks", yield: "Medium", terpenes: "—", desc: "Short description." }
+    ];
 
-<script>
-(function () {
-  const FALLBACK_IMG = "assets/img/strain-placeholder.svg";
+    const data = STRAINS.find(s => s.id === id);
+    const el = document.getElementById("strain-detail");
 
-  const id = new URLSearchParams(location.search).get("id");
-  const STRAINS = [
-    { id:"1",
-  name:"Sticky Icky",
-  image:"assets/img/sticky-icky.jpg",
-  type:"Hybrid",              
-  flowering:"—",
-  yield:"—",
-  terpenes:"—",
-  desc:"Gorilla Glue #4 X Animal Cookies."}
-    { id:"2", name:"Placeholder Strain #2", image:"assets/img/placeholder2.jpg",
-      type:"Hybrid", flowering:"8–10 weeks", yield:"Medium",
-      terpenes:"Limonene, Linalool",
-      desc:"Short description for Strain #2. Replace with your real content." },
-    { id:"3", name:"Placeholder Strain #3", image:"assets/img/placeholder3.jpg",
-      type:"Sativa-leaning", flowering:"9–10 weeks", yield:"Medium",
-      terpenes:"Terpinolene, Ocimene",
-      desc:"Short description for Strain #3. Replace with your real content." }
-  ];
+    if (!data) {
+      el.innerHTML = '<h1>Strain not found</h1><p><a href="catalog.html">Back to catalog</a></p>';
+      return;
+    }
 
-  const data = STRAINS.find(s => s.id === id);
-  const el = document.getElementById("strain-detail");
-  if (!data) { el.innerHTML = '<h1>Strain not found</h1><p><a href="catalog.html">Back to catalog</a></p>'; return; }
-const imgSrc = data.image || FALLBACK_IMG;
+    const imgSrc = (data.image && data.image.trim()) ? data.image : FALLBACK_IMG;
 
-  el.innerHTML = `
-    <div class="detail-wrap" style="display:grid;gap:2rem;grid-template-columns:1fr">
-      <img src="${imgSrc}" alt="${data.name}" onerror="this.src='assets/img/strain-placeholder.svg'"
-     style="width:100%;height:auto;border-radius:12px">
-
-      <div>
-        <h1 style="margin:0 0 .5rem">${data.name}</h1>
-        <p>${data.desc}</p>
-        <ul style="line-height:1.8">
-          <li><strong>Type:</strong> ${data.type}</li>
-          <li><strong>Flowering:</strong> ${data.flowering}</li>
-          <li><strong>Yield:</strong> ${data.yield}</li>
-          <li><strong>Terpenes:</strong> ${data.terpenes}</li>
-        </ul>
-        <a href="quote.html?add=${encodeURIComponent(data.name)}">Add to Quote</a>
-      </div>
-    </div>`;
-  if (matchMedia("(min-width: 800px)").matches) {
-    document.querySelector(".detail-wrap").style.gridTemplateColumns = "1fr 1fr";
-  }
-})();
-</script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-  // Get ?id=... from the URL
-  const id = new URLSearchParams(location.search).get("id");
-
-  // Make sure our mount exists (create if missing)
-  let mount = document.getElementById("strain-detail");
-  if (!mount) {
-    const main = document.createElement("main");
-    main.id = "strain-main";
-    main.style.cssText = "max-width:1000px;margin:0 auto;padding:1rem";
-    mount = document.createElement("article");
-    mount.id = "strain-detail";
-    main.appendChild(mount);
-    document.body.appendChild(main);
-  }
-
-  // Placeholder data — replace with your real strains when ready
-  const STRAINS = [
-    { id:"1", name:"Sticky Icky, image:"assets/img/sticky_icky.jpg",
-      type:"Hybrid", flowering:"8–9 weeks", yield:"High",
-      terpenes:"-",
-      desc:"Gorilla Glue #4 X Animal Cookies" },
-    { id:"2", name:"Placeholder Strain #2", image:"assets/img/placeholder2.jpg",
-      type:"Hybrid", flowering:"8–10 weeks", yield:"Medium",
-      terpenes:"Limonene, Linalool",
-      desc:"Short description for Strain #2. Replace with your real content." },
-    { id:"3", name:"Placeholder Strain #3", image:"assets/img/placeholder3.jpg",
-      type:"Sativa-leaning", flowering:"9–10 weeks", yield:"Medium",
-      terpenes:"Terpinolene, Ocimene",
-      desc:"Short description for Strain #3. Replace with your real content." }
-  ];
-
-  const data = STRAINS.find(s => s.id === id);
-  if (!data) {
-    mount.innerHTML = '<h1>Strain not found</h1><p><a href="catalog.html">Back to catalog</a></p>';
-    return;
-  }
-
-  mount.innerHTML = `
-    <div class="detail-wrap" style="display:grid;gap:2rem;grid-template-columns:1fr">
-      <img src="${data.image}" alt="${data.name}" style="width:100%;height:auto;border-radius:12px">
-      <div>
-        <h1 style="margin:0 0 .5rem">${data.name}</h1>
-        <p>${data.desc}</p>
-        <ul style="line-height:1.8">
-          <li><strong>Type:</strong> ${data.type}</li>
-          <li><strong>Flowering:</strong> ${data.flowering}</li>
-          <li><strong>Yield:</strong> ${data.yield}</li>
-          <li><strong>Terpenes:</strong> ${data.terpenes}</li>
-        </ul>
-        <a class="btn" href="quote.html?add=${encodeURIComponent(data.name)}">Add to Quote</a>
-      </div>
-    </div>`;
-
-  // make it two columns on wider screens
-  if (matchMedia("(min-width: 800px)").matches) {
-    document.querySelector(".detail-wrap").style.gridTemplateColumns = "1fr 1fr";
-  }
-});
-</script>
-  
-</body></html>
+    el.innerHTML = `
+      <div class="detail-wrap">
+        <img class="detail-img" src="${imgSrc}" alt="${data.name}"
+             onerror="this.src='${FALLBACK_IMG}'">
+        <div>
+          <h1 class="heading-brand" style="margin:0 0 .5rem">${data.name}</h1>
+          <p>${data.desc}</p>
+          <ul class="detail-meta">
+            <li><strong>Type:</strong> ${data.type}</li>
+            <li><strong>Flowering:</strong> ${data.flowering}</li>
+            <li><strong>Yield:</strong> ${data.yield}</li>
+            <li><strong>Terpenes:</strong> ${data.terpenes}</li>
+          </ul>
+          <a class="btn" href="quote.html?add=${encodeURIComponent(data.name)}">Add to Quote</a>
+          <p class="small"><a href="catalog.html">← Back to catalog</a></p>
+        </div>
+      </div>`;
+  });
+  </script>
+</body>
+</html>
