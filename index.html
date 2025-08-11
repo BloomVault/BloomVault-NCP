@@ -7,6 +7,30 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
   <link rel="stylesheet" href="assets/css/overrides.css">
+
+  <!-- Featured framed photo styles -->
+  <style>
+    /* Featured layout */
+    .featured { display:grid; gap:1rem; align-items:center; grid-template-columns:1fr; }
+    @media (min-width:780px){ .featured{ grid-template-columns:auto 1fr; } }
+
+    /* Frame wrapper uses the PNG as background */
+    .featured-media{
+      width: min(100%, var(--frame-max, 420px));
+      aspect-ratio: 1 / 1; /* frame is square */
+      margin: 0 auto;
+      background: url("assets/img/featured-frame.png") center / contain no-repeat;
+      display: grid; place-items: center;
+    }
+    /* Photo sits inside the frame with equal padding */
+    .featured-media .featured-photo{
+      width: calc(100% - (var(--inner-pad, 22%) * 2));
+      height: calc(100% - (var(--inner-pad, 22%) * 2));
+      object-fit: cover;
+      border-radius: 12px;
+      box-shadow: 0 6px 16px rgba(0,0,0,.25);
+    }
+  </style>
 </head>
 <body>
 <div class="wrapper">
@@ -29,11 +53,13 @@
       <p>Our mission is to provide healthy, vigorous, flower-ready hemp plants to Virginia commercial growers with dependable service, transparent compliance, and fair pricing — so you can focus on delivering great harvests.</p>
     </section>
 
-    <!-- Featured Strain (Add to Quote removed; no Featured-specific JS) -->
+    <!-- Featured Strain (framed image; Add to Quote removed) -->
     <section class="card" style="margin-top:16px">
       <h2>Featured Strain</h2>
       <div class="featured">
-        <img src="assets/img/sticky-icky.jpg" alt="Sticky Icky">
+        <div class="featured-media" style="--frame-max:420px; --inner-pad:22%;">
+          <img class="featured-photo" src="assets/img/sticky-icky.jpg" alt="Sticky Icky">
+        </div>
         <div>
           <h3>Sticky Icky — Farmer's Favorites</h3>
           <p class="small">Gorilla Glue #4 X Animal Cookies.</p>
