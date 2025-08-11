@@ -22,7 +22,7 @@
       <div class="brand"><img src="assets/img/logo.png" alt="BloomVault Farms" /></div>
       <nav class="tabs">
         <a class="tab" href="index.html">Home</a>
-        <a class="tab" href="catalog.html">Strain Catalog</a>
+        <a class="tab" href="catalogue.html">Strain Catalogue</a>
         <a class="tab" href="quote.html">Get a Quote</a>
         <a class="tab" href="contact.html">Contact Us</a>
       </nav>
@@ -65,7 +65,7 @@
 
       var data = STRAINS[id];
       if (!data) {
-        el.innerHTML = '<h1>Strain not found</h1><p><a href="catalog.html">Back to catalog</a></p>';
+        el.innerHTML = '<h1>Strain not found</h1><p><a href="catalogue.html">Back to catalogue</a></p>';
         return;
       }
 
@@ -84,7 +84,7 @@
               '<li><strong>Terpenes:</strong> ' + data.terpenes + '</li>' +
             '</ul>' +
             '<a class="btn" href="quote.html?add=' + encodeURIComponent(data.name) + '">Add to Quote</a>' +
-            '<p class="small"><a href="catalog.html">← Back to catalog</a></p>' +
+            '<p class="small"><a href="catalogue.html">← Back to catalogue</a></p>' +
           '</div>' +
         '</div>';
 
