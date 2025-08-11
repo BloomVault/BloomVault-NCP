@@ -1,20 +1,25 @@
+
+import strains from './strains.json' assert { type: 'json' };
 import { addItem } from './cart.js';
-const wrap=document.getElementById('catalog');
-function bindQtyDisplays(scope=document){
-  scope.querySelectorAll('input[type="range"].qty').forEach(slider=>{
-    const id=slider.getAttribute('data-for')||'';
-    let badge=slider.parentElement?.querySelector('.qty-val');
-    if(!badge){badge=document.createElement('span');badge.className='qty-val';slider.insertAdjacentElement('afterend',badge)}
-    const update=()=>badge.textContent=slider.value; slider.addEventListener('input',update); update();
+const wrap = document.getElementById('catalog');
+wrap.innerHTML = strains.map(s=>`
+  <div class="card">
+    <img class="card-img" src="${s.image}" alt="${s.name}">
+    <h3>${s.name}</h3>
+    <div class="actions">
+      <a class="btn" href="strain.html?id=${s.id}">Details</a>
+      <button class="btn" data-id="${s.id}">Add to Quote</button>
+      <input type="range" min="1" max="20" value="1" class="qty" data-for="${s.id}">
+    </div>
+    <div class="small">Qty = multiples of 50 plants</div>
+  </div>
+`).join('');
+wrap.querySelectorAll('button[data-id]').forEach(btn=>{
+  btn.addEventListener('click', e=>{
+    const id = Number(e.currentTarget.getAttribute('data-id'));
+    const s = strains.find(x=>x.id===id);
+    const slider = wrap.querySelector(`input[data-for="${id}"]`);
+    const qty = Number(slider?.value || 1);
+    addItem(id, s.name, qty);
   });
-  scope.querySelectorAll('button[data-id]').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      const id=Number(btn.getAttribute('data-id'));
-      const name=btn.closest('.card')?.querySelector('h3')?.textContent||'Selected Strain';
-      const slider=btn.closest('.card')?.querySelector('.qty');
-      const qty=Number(slider?.value||1);
-      addItem(id,name,qty);
-    });
-  });
-}
-bindQtyDisplays(document);
+});
