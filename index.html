@@ -7,54 +7,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
   <link rel="stylesheet" href="assets/css/overrides.css">
-
-  <!-- Replace your current Featured image block with this -->
-<div class="featured-media" style="--frame-max:clamp(320px, 46vw, 520px); --inner-pad:19%;">
-  <img
-    class="featured-photo"
-    src="assets/img/sticky-icky.jpg"
-    alt="Sticky Icky"
-    onerror="
-      if (!this.dataset.triedPng) { this.dataset.triedPng=1; this.src='assets/img/sticky-icky.png'; }
-      else { this.style.background='#ddd'; this.style.width='100%'; this.style.height='100%'; this.style.objectFit='cover'; this.src=''; }
-    "
-  >
-  <img class="featured-frame" src="assets/img/featured-frame.png" alt="" aria-hidden="true">
-</div>
-
-    /* Featured layout */
-    .featured { display:grid; gap:1rem; align-items:center; grid-template-columns:1fr; }
-    @media (min-width:780px){ .featured{ grid-template-columns:auto 1fr; } }
-
-    /* Frame wrapper — square area, absolutely-positioned children */
-    .featured-media{
-      width: min(100%, var(--frame-max, 420px));
-      aspect-ratio: 1 / 1;      /* frame is square */
-      margin: 0 auto;
-      position: relative;
-    }
-    /* Photo: explicit size + centering for desktop reliability */
-    .featured-media .featured-photo{
-      position: absolute;
-      top: 50%; left: 50%;
-      width: calc(100% - (var(--inner-pad, 19%) * 2));
-      height: calc(100% - (var(--inner-pad, 19%) * 2));
-      transform: translate(-50%, -50%);
-      object-fit: cover;
-      border-radius: 12px;
-      box-shadow: 0 6px 16px rgba(0,0,0,.25);
-      z-index: 1;
-    }
-    /* Frame overlays above the photo */
-    .featured-media .featured-frame{
-      position: absolute;
-      inset: 0;
-      width: 100%; height: 100%;
-      object-fit: contain;
-      pointer-events: none;
-      z-index: 2;
-    }
-  </style>
 </head>
 <body>
 <div class="wrapper">
@@ -67,22 +19,31 @@
       <a class="tab" href="quote.html">Get a Quote</a>
       <a class="tab" href="contact.html">Contact Us</a>
     </nav>
+    <div class="badge small">Serving Virginia commercial growers only</div>
   </div>
 
   <main class="main">
     <section class="card" style="text-align:center">
       <img src="assets/img/logo.png" alt="BloomVault Farms" style="max-width:520px;width:90%;height:auto;display:block;margin:0 auto 8px">
-      <div class="tagline">"Unlock Premium Hemp for Consistent Growth"</div>
+      <div class="tagline">Unlock Premium Hemp for Consistent Growth</div>
       <p>Our mission is to provide healthy, vigorous, flower-ready hemp plants to Virginia commercial growers with dependable service, transparent compliance, and fair pricing — so you can focus on delivering great harvests.</p>
     </section>
 
-    <!-- Featured Strain (framed image; medium size; Add to Quote removed) -->
+    <!-- Featured Strain -->
     <section class="card" style="margin-top:16px">
       <h2>Featured Strain</h2>
       <div class="featured">
-        <!-- Medium size + a bit less padding so image appears larger -->
-        <div class="featured-media" style="--frame-max:clamp(320px, 46vw, 520px); --inner-pad:18%;">
-          <img class="featured-photo" src="assets/img/sticky-icky.jpg" alt="Sticky Icky">
+        <!-- Image + overlay frame (frame sits on top) -->
+        <div class="featured-media" style="--frame-max:clamp(320px, 46vw, 520px); --inner-pad:19%;">
+          <img
+            class="featured-photo"
+            src="assets/img/sticky-icky.jpg"
+            alt="Sticky Icky"
+            onerror="
+              if (!this.dataset.triedPng) { this.dataset.triedPng=1; this.src='assets/img/sticky-icky.png'; }
+              else { this.style.background='#ddd'; this.style.width='100%'; this.style.height='100%'; this.style.objectFit='cover'; this.src=''; }
+            "
+          >
           <img class="featured-frame" src="assets/img/featured-frame.png" alt="" aria-hidden="true">
         </div>
         <div>
@@ -108,19 +69,19 @@
         <a href="https://greenpointseeds.com" target="_blank" rel="noopener">Greenpoint Seeds</a>
         to start with high-quality, proven genetics and deliver uniform, flower-ready plants to our growers.
         By working from well-documented lines and carefully selected phenotypes, we provide starts that establish quickly,
-        grow vigorously, and finish consistently. <em>Strain photos are credited to Greenpoint Seeds unless listed otherwise..</em>
+        grow vigorously, and finish consistently. <em>All strain photos are credited to Greenpoint Seeds.</em>
       </p>
 
       <h3 style="margin-top:.6rem">Greenpoint Seeds — Contact</h3>
       <p class="small" style="margin:.25rem 0 0">
-        For cultivar questions, reach out via Greenpoint’s official contact page
-        (Attn: <strong>Anthony Gu</strong>) and we’ll coordinate selections and availability:
+        For cultivar questions or collaboration, reach out via Greenpoint’s official contact page
+        (Attn: <strong>Anthony Gualdi</strong>) and we’ll coordinate selections and availability:
         <a href="https://greenpointseeds.com/contact-us/" target="_blank" rel="noopener">greenpointseeds.com/contact-us</a>.
       </p>
 
       <p style="margin-top:.6rem">
         <a class="btn" href="https://greenpointseeds.com" target="_blank" rel="noopener">Visit Greenpoint Seeds</a>
-        <a class="btn" href="https://greenpointseeds.com/contact-us/" target="_blank" rel="noopener">Contact Gu</a>
+        <a class="btn" href="https://greenpointseeds.com/contact-us/" target="_blank" rel="noopener">Contact Anthony</a>
       </p>
     </section>
     <!-- /About Our Genetics -->
