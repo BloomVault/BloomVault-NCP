@@ -4,7 +4,7 @@
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://fonts.googleapis.com/css2?family/Bebas+Neue&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
   <link rel="stylesheet" href="assets/css/overrides.css">
 </head>
@@ -29,11 +29,16 @@
       <p>Our mission is to provide healthy, vigorous, flower-ready hemp plants to Virginia commercial growers with dependable service, transparent compliance, and fair pricing — so you can focus on delivering great harvests.</p>
     </section>
 
-    <!-- Featured Strain (simple image, no frame) -->
+    <!-- Featured Strain (photo size unchanged; frame overlays on top) -->
     <section class="card" style="margin-top:16px">
       <h2>Featured Strain</h2>
       <div class="featured">
-        <img src="assets/img/sticky-icky.jpg" alt="Sticky Icky" style="max-width:520px;width:100%;height:auto;border-radius:12px;display:block">
+        <!-- Image + overlay frame -->
+        <div class="featured-media">
+          <img class="featured-photo" src="assets/img/sticky-icky.jpg" alt="Sticky Icky">
+          <img class="featured-frame" src="assets/img/featured-frame.png" alt="" aria-hidden="true">
+        </div>
+
         <div>
           <h3>Sticky Icky — Farmer's Favorites</h3>
           <p class="small">Gorilla Glue #4 X Animal Cookies.</p>
