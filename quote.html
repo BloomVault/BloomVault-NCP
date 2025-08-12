@@ -7,34 +7,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
   <link rel="stylesheet" href="assets/css/overrides.css">
-
-  <!-- "SENT" bubble style (matches +1 look) -->
-  <style>
-    #quote-submit { position: relative; }
-    .sent-bubble {
-      position: absolute;
-      top: 100%;
-      left: 50%;
-      transform: translate(-50%, 6px) scale(.9);
-      font-size: 12px;
-      font-weight: 700;
-      opacity: 0;
-      pointer-events: none;
-      background: linear-gradient(#caa95a,#b58c2b);
-      color: #111;
-      border: 1px solid #8b6b18;
-      padding: 2px 8px;
-      border-radius: 9999px;
-      white-space: nowrap;
-      box-shadow: 0 1px 2px rgba(0,0,0,.25);
-      animation: popFade .85s ease-out forwards;
-    }
-    @keyframes popFade {
-      0%   { opacity: 0; transform: translate(-50%, 6px) scale(.9); }
-      20%  { opacity: 1; transform: translate(-50%, 0) scale(1); }
-      100% { opacity: 0; transform: translate(-50%, -8px) scale(1); }
-    }
-  </style>
 </head>
 <body>
 <div class="wrapper">
@@ -63,6 +35,26 @@
             Orders are at a <b>50 plant minimum</b>. Quantities reflect how many times you pressed
             “<b>Add to Quote +1</b>” in the catalogue (1 = 50, 2 = 100, etc.).
           </div>
+
+          <!-- ▼▼ ADDED: Legal & Compliance block ▼▼ -->
+          <hr class="gold-rule" style="margin-top:14px">
+
+          <section class="compliance">
+            <h4 class="subhead" style="margin:.25rem 0 .35rem">Legal &amp; Compliance (Virginia)</h4>
+            <ul class="compliance-list">
+              <li><strong>Eligibility.</strong> We supply plants only to licensed Virginia commercial growers and may request documentation before confirming an order.</li>
+              <li><strong>Intended use.</strong> Plants are sold for lawful hemp cultivation. No resale to unlicensed parties; not for home grow or retail.</li>
+              <li><strong>Regulatory compliance.</strong> Buyer is responsible for meeting all state and federal requirements (registration, reporting, transport paperwork, and compliance testing).</li>
+              <li><strong>THC compliance.</strong> Buyer is responsible for ensuring crops remain within legal THC limits and for any actions required if a lot tests over the limit.</li>
+              <li><strong>Transport &amp; records.</strong> We provide invoices/labels; buyer must carry any required documents during transport and maintain records as required by Virginia rules.</li>
+              <li><strong>Availability.</strong> Cultivars and timelines depend on propagation success and seasonality. We’ll communicate any changes promptly.</li>
+            </ul>
+            <p class="small" style="margin-top:.5rem">
+              This information is provided for convenience and is not legal advice. By requesting a quote, you acknowledge these requirements and agree to follow all applicable laws.
+            </p>
+          </section>
+          <!-- ▲▲ ADDED: Legal & Compliance block ▲▲ -->
+
         </div>
 
         <!-- Request form (right column) -->
@@ -121,10 +113,9 @@
   </main>
 </div>
 
-<!-- Keep cart.js if needed elsewhere -->
+<!-- Optional: keep your modules if used elsewhere -->
 <script type="module" src="assets/js/cart.js"></script>
-<!-- REMOVED: old mailto handler -->
-<!-- <script type="module" src="assets/js/quote.js"></script> -->
+<script type="module" src="assets/js/quote.js"></script>
 
 <!-- Cart render (no sliders) + per-row "Remove -1" + hidden fields sync -->
 <script>
@@ -144,7 +135,6 @@
   function updateHidden(items) {
     if (hiddenJson) hiddenJson.value = JSON.stringify(items);
 
-    // Human-friendly summary for emails
     if (hiddenReadable) {
       if (!items.length) {
         hiddenReadable.value = "Cart: (empty)";
@@ -195,7 +185,7 @@
     updateHidden(items);
 
     if (!items.length) {
-      mount.innerHTML = ''; // no default message when empty
+      mount.innerHTML = '<p class="small">Your cart is empty. Go back to the <a href="catalogue.html">catalogue</a> to add strains.</p>';
       return;
     }
 
@@ -244,7 +234,7 @@
 <!-- EmailJS SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
-<!-- Anti-spam + EmailJS submit (no redirect) + success reset + SENT bubble -->
+<!-- Anti-spam + EmailJS submit (no redirect) + success reset -->
 <script>
 (function () {
   const STORAGE_KEY = "quoteCart";
@@ -254,13 +244,11 @@
   const msField = form.querySelector('input[name="submit_ms"]');
   const human = form.querySelector('#human-check');
 
-  /* ====== EmailJS values (filled) ====== */
+  /* EmailJS values */
   const EMAILJS_PUBLIC_KEY = "Iph-DFQJujXfJ_gni";
   const EMAILJS_SERVICE_ID = "service_5n04n5s";
   const EMAILJS_TEMPLATE_ID = "template_sujzntx";
-  /* ===================================== */
 
-  // init EmailJS
   emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
 
   const START = Date.now();
@@ -283,10 +271,7 @@
 
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
-    e.stopPropagation();
-    e.stopImmediatePropagation(); // ensure no other handler runs
 
-    // time-on-form & human checks
     const elapsed = Date.now() - START;
     if (msField) msField.value = String(elapsed);
 
@@ -304,23 +289,15 @@
       return;
     }
 
-    // Only show empty-cart message on submit
+    // Prevent sending empty carts
     const items = readCart();
     if (!items.length) {
-      result.textContent = "Your cart is empty. Please add strains from the catalogue first.";
-      document.querySelector(".card.cart")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      result.textContent = "Your cart is empty. Please add cultivars from the catalogue before submitting.";
       return;
     }
 
+    // Build payload
     const fd = new FormData(form);
-
-    // Honeypot
-    if (fd.get("bot-field")) {
-      result.textContent = "Submission blocked.";
-      return;
-    }
-
-    // Build payload for EmailJS
     const payload = {
       to_email: "bloomvaultfarms@gmail.com",
       submitted_at: new Date().toLocaleString(),
@@ -340,23 +317,22 @@
       cart_json: JSON.stringify(items)
     };
 
+    if (fd.get("bot-field")) {
+      result.textContent = "Submission blocked.";
+      return;
+    }
+
     try {
       submitBtn.disabled = true;
       result.textContent = "Sending your request…";
       await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, payload);
 
-      // Success: clear + hide cart panel, reset form, show success + "SENT" bubble
+      // Success: clear cart + form, show confirmation
       localStorage.removeItem(STORAGE_KEY);
       form.reset();
       result.textContent = "Thanks! Your quote request has been sent. We’ll be in touch soon.";
-      const cartCard = document.querySelector(".card.cart");
-      if (cartCard) cartCard.style.display = "none";
-
-      const tag = document.createElement("span");
-      tag.className = "sent-bubble";
-      tag.textContent = "SENT";
-      submitBtn.appendChild(tag);
-      setTimeout(() => tag.remove(), 900);
+      const cartMount = document.getElementById("quote-cart");
+      if (cartMount) cartMount.innerHTML = '<p class="small">Your cart is empty. Go back to the <a href="catalogue.html">catalogue</a> to add cultivars.</p>';
     } catch (err) {
       console.error(err);
       result.textContent = "Sorry—couldn’t send just now. Please try again.";
