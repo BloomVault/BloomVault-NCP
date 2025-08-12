@@ -182,3 +182,17 @@
   box-shadow: 0 0 0 1px #8b6b18;
 }
 .specs li span{ color:#eee; }
+
+/* Subtle elevation on cards everywhere EXCEPT the catalogue page */
+.main:not(#catalog) .card{
+  border-radius: 14px;
+  border: 1px solid rgba(202,169,90,.12);
+  box-shadow: 0 8px 24px rgba(0,0,0,.18);
+}
+
+/* Optional: a touch more lift on hover (keeps it classy) */
+@media (hover:hover){
+  .main:not(#catalog) .card:hover{
+    box-shadow: 0 12px 28px rgba(0,0,0,.22);
+  }
+}
