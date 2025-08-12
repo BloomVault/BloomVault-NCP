@@ -25,15 +25,13 @@
       100% { opacity: 0; transform: translateY(-50%) translateY(-12px) scale(1); }
     }
 
-    /* FIX: make spacing inside cards consistent */
+    /* Consistent spacing inside cards */
     #catalog .catalog-grid .card .content{
       display:flex; flex-direction:column; gap:.5rem;
     }
-    /* override earlier rule that pinned buttons to the bottom */
     #catalog .catalog-grid .card .actions{
-      margin-top:.5rem; /* was auto in overrides.css */
+      margin-top:.5rem; /* keep buttons close to title even without extra text */
     }
-    /* safety: images don’t add inline gap */
     #catalog .catalog-grid .card img{ display:block; }
   </style>
 </head>
@@ -69,11 +67,10 @@
                 <a class="btn" href="strain.html?id=1">Details</a>
                 <button type="button" class="btn add-to-quote" data-id="1" data-name="Sticky Icky">Add to Quote +1</button>
               </div>
-              <p class="small">Image &amp; details are placeholders.</p>
             </div>
           </article>
 
-          <!-- Card 2 (added the small note to match others) -->
+          <!-- Card 2 -->
           <article class="card">
             <div class="media">
               <img src="assets/img/strain_2.jpg" alt="Placeholder Strain #2" onerror="this.style.opacity=.3" />
@@ -84,7 +81,6 @@
                 <a class="btn" href="strain.html?id=2">Details</a>
                 <button type="button" class="btn add-to-quote" data-id="2" data-name="Placeholder Strain #2">Add to Quote +1</button>
               </div>
-              <p class="small">Image &amp; details are placeholders.</p>
             </div>
           </article>
 
@@ -99,7 +95,6 @@
                 <a class="btn" href="strain.html?id=3">Details</a>
                 <button type="button" class="btn add-to-quote" data-id="3" data-name="Placeholder Strain #3">Add to Quote +1</button>
               </div>
-              <p class="small">Image &amp; details are placeholders.</p>
             </div>
           </article>
 
@@ -114,7 +109,6 @@
                 <a class="btn" href="strain.html?id=4">Details</a>
                 <button type="button" class="btn add-to-quote" data-id="4" data-name="Placeholder Strain #4">Add to Quote +1</button>
               </div>
-              <p class="small">Image &amp; details are placeholders.</p>
             </div>
           </article>
 
@@ -129,7 +123,6 @@
                 <a class="btn" href="strain.html?id=5">Details</a>
                 <button type="button" class="btn add-to-quote" data-id="5" data-name="Placeholder Strain #5">Add to Quote +1</button>
               </div>
-              <p class="small">Image &amp; details are placeholders.</p>
             </div>
           </article>
 
@@ -144,7 +137,6 @@
                 <a class="btn" href="strain.html?id=6">Details</a>
                 <button type="button" class="btn add-to-quote" data-id="6" data-name="Placeholder Strain #6">Add to Quote +1</button>
               </div>
-              <p class="small">Image &amp; details are placeholders.</p>
             </div>
           </article>
 
@@ -159,7 +151,6 @@
                 <a class="btn" href="strain.html?id=7">Details</a>
                 <button type="button" class="btn add-to-quote" data-id="7" data-name="Placeholder Strain #7">Add to Quote +1</button>
               </div>
-              <p class="small">Image &amp; details are placeholders.</p>
             </div>
           </article>
 
@@ -174,7 +165,6 @@
                 <a class="btn" href="strain.html?id=8">Details</a>
                 <button type="button" class="btn add-to-quote" data-id="8" data-name="Placeholder Strain #8">Add to Quote +1</button>
               </div>
-              <p class="small">Image &amp; details are placeholders.</p>
             </div>
           </article>
 
@@ -189,7 +179,6 @@
                 <a class="btn" href="strain.html?id=9">Details</a>
                 <button type="button" class="btn add-to-quote" data-id="9" data-name="Placeholder Strain #9">Add to Quote +1</button>
               </div>
-              <p class="small">Image &amp; details are placeholders.</p>
             </div>
           </article>
 
@@ -204,7 +193,6 @@
                 <a class="btn" href="strain.html?id=10">Details</a>
                 <button type="button" class="btn add-to-quote" data-id="10" data-name="Placeholder Strain #10">Add to Quote +1</button>
               </div>
-              <p class="small">Image &amp; details are placeholders.</p>
             </div>
           </article>
 
