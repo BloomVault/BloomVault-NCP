@@ -4,36 +4,9 @@
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family/Bebas+Neue&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
   <link rel="stylesheet" href="assets/css/overrides.css">
-
-  <!-- Minimal Featured CSS to ensure it renders correctly on desktop -->
-  <style>
-    .featured { display:grid; gap:1rem; align-items:center; grid-template-columns:1fr; }
-    @media (min-width:780px){ .featured{ grid-template-columns:auto 1fr; } }
-    .featured-media{
-      width: min(100%, var(--frame-max, 420px));
-      aspect-ratio: 1 / 1;
-      margin: 0 auto;
-      position: relative;
-    }
-    .featured-media .featured-photo{
-      position: absolute; top: 50%; left: 50%;
-      width: calc(100% - (var(--inner-pad, 19%) * 2));
-      height: calc(100% - (var(--inner-pad, 19%) * 2));
-      transform: translate(-50%,-50%);
-      object-fit: cover; border-radius: 12px;
-      box-shadow: 0 6px 16px rgba(0,0,0,.25);
-      z-index: 1;
-    }
-    .featured-media .featured-frame{
-      position: absolute; inset: 0;
-      width: 100%; height: 100%;
-      object-fit: contain; pointer-events: none;
-      z-index: 2;
-    }
-  </style>
 </head>
 <body>
 <div class="wrapper">
@@ -56,20 +29,11 @@
       <p>Our mission is to provide healthy, vigorous, flower-ready hemp plants to Virginia commercial growers with dependable service, transparent compliance, and fair pricing — so you can focus on delivering great harvests.</p>
     </section>
 
-    <!-- Featured Strain -->
+    <!-- Featured Strain (simple image, no frame) -->
     <section class="card" style="margin-top:16px">
       <h2>Featured Strain</h2>
       <div class="featured">
-        <!-- Image + overlay frame -->
-        <div class="featured-media" style="--frame-max:clamp(320px, 46vw, 520px); --inner-pad:19%;">
-          <!-- IMPORTANT: data-base is the logical name we’ll try in multiple variants -->
-          <img class="featured-photo"
-               data-base="sticky-icky"
-               data-dir="assets/img/"
-               alt="Sticky Icky">
-          <img class="featured-frame" src="assets/img/featured-frame.png" alt="" aria-hidden="true">
-        </div>
-
+        <img src="assets/img/sticky-icky.jpg" alt="Sticky Icky" style="max-width:520px;width:100%;height:auto;border-radius:12px;display:block">
         <div>
           <h3>Sticky Icky — Farmer's Favorites</h3>
           <p class="small">Gorilla Glue #4 X Animal Cookies.</p>
@@ -114,48 +78,5 @@
 
 <script type="module" src="assets/js/app.js"></script>
 <script type="module" src="assets/js/cart.js"></script>
-
-<!-- Robust image source resolver: tries common case/extension variants automatically -->
-<script>
-(function(){
-  const img = document.querySelector('.featured-photo');
-  if (!img) return;
-
-  const dir = img.dataset.dir || 'assets/img/';
-  const base = img.dataset.base || 'sticky-icky';
-
-  // Try common file name spellings and extensions (case-sensitive hosting)
-  const bases = [base, base.replace(/-/g,''), base.replace(/-/g,'').toUpperCase(), base.replace(/(^|-)([a-z])/g,(_,p1,p2)=>p2.toUpperCase()).replace(/-/g,'')];
-  const exts  = ['jpg','jpeg','png','JPG','JPEG','PNG'];
-
-  const candidates = [];
-  // also try a TitleCase-with-dash variant like "Sticky-Icky"
-  const titleDashed = base.split('-').map(s=>s.charAt(0).toUpperCase()+s.slice(1)).join('-');
-  bases.unshift(titleDashed, titleDashed.replace(/-/g,''));
-
-  // Build candidate list (unique order)
-  const seen = new Set();
-  for (const b of bases) {
-    for (const e of exts) {
-      const rel = `${dir}${b}.${e}`;
-      if (!seen.has(rel)) { seen.add(rel); candidates.push(rel); }
-    }
-  }
-
-  let i = 0;
-  function tryNext(){
-    if (i >= candidates.length) {
-      // graceful placeholder if nothing loads
-      img.removeAttribute('src');
-      img.style.background = '#ddd';
-      return;
-    }
-    img.onerror = () => { i++; tryNext(); };
-    img.src = candidates[i];
-  }
-  tryNext();
-})();
-</script>
-
 </body>
 </html>
