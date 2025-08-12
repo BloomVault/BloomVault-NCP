@@ -9,16 +9,19 @@
   --radius:14px;
   --radius-sm:10px;
   --space:1rem;
-  /* moved here from bottom so it’s defined once */
-  --bv-gold: rgba(202,169,90,.08);
+}
+
+/* ===================== */
+/* Site Background (reset) */
+/* ===================== */
+body{
+  background-color: var(--bg);
+  background-image: none; /* old background removed */
 }
 
 /* ===================== */
 /* General / Utilities   */
 /* ===================== */
-
-/* Lift content above background overlays */
-.wrapper{ position: relative; z-index: 1; }
 
 /* Hide the spam honeypot */
 .hp { position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }
@@ -36,13 +39,13 @@
 /* Mission (home hero)   */
 /* ===================== */
 
-/* Add subtle gold side glow on desktop without changing layout */
 .mission{
   position: relative;
-  overflow: hidden; /* keep glow inside card */
+  overflow: hidden;
 }
 @media (min-width: 900px){
   .mission{
+    /* subtle side glows; keep or remove as you like */
     background:
       radial-gradient(60% 80% at -10% 50%, rgba(202,169,90,.12) 0%, rgba(202,169,90,0) 70%),
       radial-gradient(60% 80% at 110% 50%, rgba(202,169,90,.12) 0%, rgba(202,169,90,0) 70%);
@@ -76,12 +79,12 @@
 
 /* Card media sizing: medium and consistent on desktop */
 #catalog .card .media{
-  height: clamp(180px, 24vw, 240px);       /* phone -> desktop */
-  aspect-ratio: auto;                      /* height controls box */
+  height: clamp(180px, 24vw, 240px);
+  aspect-ratio: auto;
   overflow:hidden; background:transparent;
 }
 #catalog .card .media > img,
-#catalog .card > img{                      /* also catches any bare <img> cards */
+#catalog .card > img{
   width:100%; height:100%; object-fit:cover; display:block;
 }
 
@@ -119,24 +122,21 @@
 /* Featured Hero (Home)  */
 /* ===================== */
 
-/* Card with a soft, premium gradient */
 .featured-hero{
   background: linear-gradient(135deg, rgba(255,255,255,.02) 0%, rgba(202,169,90,.08) 38%, rgba(0,0,0,.12) 100%);
   border: 1px solid rgba(202,169,90,.18);
   border-radius: 14px;
 }
 
-/* Split layout: image left, details right on desktop */
 .featured { display:grid; gap:1.25rem; align-items:center; grid-template-columns:1fr; }
 @media (min-width:780px){ .featured{ grid-template-columns:auto 1fr; } }
 
-/* Polaroid photo card (no ribbon/trophy) */
 .polaroid{
   position: relative;
   width: min(100%, 520px);
   margin: 0 auto;
-  background: #fff;                 /* polaroid border */
-  padding: 12px 12px 18px;          /* extra bottom like a real polaroid */
+  background: #fff;
+  padding: 12px 12px 18px;
   border-radius: 12px;
   box-shadow: 0 18px 38px rgba(0,0,0,.28), 0 2px 6px rgba(0,0,0,.25);
   overflow: visible;
@@ -147,7 +147,6 @@
   border-radius: 8px;
 }
 
-/* Luxe details panel */
 .lux-details { padding: .25rem 0 0; }
 .lux-details .kicker{
   font-size:.85rem; letter-spacing:.14em; text-transform:uppercase;
@@ -163,13 +162,11 @@
   color: #ddd;
 }
 
-/* Thin gold divider */
 .gold-rule{
   height: 2px; border: 0; margin: .6rem 0 .8rem;
   background: linear-gradient(90deg, rgba(202,169,90,0), rgba(202,169,90,.85), rgba(202,169,90,0));
 }
 
-/* Minimal, elegant specs list */
 .specs{
   list-style: none; padding: 0; margin: 0;
   display: grid; gap: .45rem;
@@ -194,8 +191,6 @@
   border: 1px solid rgba(202,169,90,.12);
   box-shadow: 0 8px 24px rgba(0,0,0,.18);
 }
-
-/* Optional: a touch more lift on hover (keeps it classy) */
 @media (hover:hover){
   .main:not(#catalog) .card:hover{
     box-shadow: 0 12px 28px rgba(0,0,0,.22);
@@ -211,129 +206,63 @@
 .btn:active{ transform: translateY(1px); box-shadow: 0 2px 8px rgba(0,0,0,.25); }
 .btn[disabled]{ opacity:.6; cursor:not-allowed; }
 
-/* Gold-accent heading treatment (for About sections using .heading-brand) */
+/* Branded heading underline */
 .heading-brand{
   position: relative;
   display: inline-block;
   margin: 0 0 .6rem;
   letter-spacing: .02em;
 }
-
-/* Thin gradient underline */
 .heading-brand::after{
   content: "";
   position: absolute;
   left: 0; bottom: -6px;
-  width: 84px; height: 2px;
+  width: 100%; height: 2px;
   background: linear-gradient(90deg, rgba(202,169,90,0), rgba(202,169,90,.9), rgba(202,169,90,0));
   border-radius: 2px;
 }
 
-/* Mission tagline + paragraph: match Featured style */
+/* Mission tagline to match Featured style */
 .mission .tagline{
   display: inline-block;
-  font-size: clamp(1.4rem, 2.6vw, 2.2rem); /* like .lux-title */
-  line-height: 1.1;
+  font-family: 'Bebas Neue', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight: 700;
   letter-spacing: .02em;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  line-height: 1.1;
   margin: .25rem 0 .6rem;
   position: relative;
 }
-
-/* Gold accent underline under the tagline (like .heading-brand) */
 .mission .tagline::after{
   content:"";
   position:absolute;
-  left:50%; transform:translateX(-50%);
-  bottom:-8px; height:2px; width:96px;
+  left: 0; bottom:-8px; height:2px; width:100%;
   background: linear-gradient(90deg, rgba(202,169,90,0), rgba(202,169,90,.9), rgba(202,169,90,0));
   border-radius: 2px;
 }
-
-/* Mission paragraph styled like Featured .lead */
-.mission p{
-  max-width: 62ch;
-  margin: .9rem auto 0;
-  font-size: 1.05rem;
-  color: #ddd;
-}
-
-/* Remove the gold dot on branded headings */
-.heading-brand::before{ content: none !important; }
-
-/* Make the gold line run the full text width */
-.heading-brand{
-  display: inline-block; /* ensures ::after matches the text width */
-  position: relative;
-}
-.heading-brand::after{
-  left: 0 !important;
-  right: 0;
-  width: 100% !important;
-  bottom: -6px;
-  height: 2px;
-  background: linear-gradient(90deg, rgba(202,169,90,0), rgba(202,169,90,.9), rgba(202,169,90,0));
-}
-
-/* Mission tagline line: full width under the tagline text */
-.mission .tagline{
-  display: inline-block; /* same reason as above */
-  position: relative;
-}
-.mission .tagline::after{
-  left: 0 !important;
-  transform: none !important;
-  width: 100% !important;
-  bottom: -8px;
-  height: 2px;
-  background: linear-gradient(90deg, rgba(202,169,90,0), rgba(202,169,90,.9), rgba(202,169,90,0));
-}
-
-/* Tagline: use logo font + bolder look */
-.mission .tagline{
-  font-family: 'Bebas Neue', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  font-weight: 700;              /* Bebas has one weight, but this helps on fallbacks */
-  letter-spacing: .02em;         /* tiny tracking for clarity */
-  font-size: clamp(1.6rem, 3vw, 2.4rem); /* a touch bigger than before */
-}
-
-/* Optional: subtle thickness boost where supported (keeps it crisp) */
 @supports (-webkit-text-stroke: 1px black){
-  .mission .tagline{
-    -webkit-text-stroke: 0.35px currentColor; /* tiny stroke = visually bolder */
-  }
+  .mission .tagline{ -webkit-text-stroke: 0.35px currentColor; }
 }
 
-/* Featured hero title: bigger, bolder, same gold as "Farmer’s Favorites" */
+/* Featured hero title: bigger, bolder, same gold as kicker */
 .featured-hero > h2{
-  color: #caa95a;                 /* matches .kicker */
+  color: #caa95a;
   font-weight: 800;
-  font-size: clamp(1.4rem, 3vw, 2rem);  /* a bit larger */
+  font-size: clamp(1.4rem, 3vw, 2rem);
   letter-spacing: .02em;
   margin: 0 0 .6rem;
 }
-
-/* (Optional) use the logo font for this title too */
-/* 
-.featured-hero > h2{
-  font-family: 'Bebas Neue', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  font-weight: 700;
-}
-*/
 
 /* Catalog card spacing reset + empty-node guard */
 #catalog .catalog-grid .card .content{
   display: flex;
   flex-direction: column;
-  gap: .5rem;            /* consistent spacing */
+  gap: .5rem;
 }
 #catalog .catalog-grid .card .content > :where(h3,p,.small){ margin: 0; }
-#catalog .catalog-grid .card .content > :empty{ display: none; }  /* hide empty <p> etc. */
+#catalog .catalog-grid .card .content > :empty{ display: none; }
 #catalog .catalog-grid .card .actions{ margin-top: .5rem; }
-
-/* Ensure image area has no extra margin */
 #catalog .catalog-grid .card .media{ margin: 0; }
-
-/* Safety: images don’t add baseline gap */
 #catalog .catalog-grid .card img{ display:block; }
 
 /* Catalogue page title -> match home tagline style */
@@ -348,84 +277,22 @@
 
 /* ========= Quote page: mobile stacking + no overlap ========= */
 
-/* Make the two-column wrapper become one column on phones */
 .main .grid{
   display: grid;
-  grid-template-columns: 1fr;   /* stack */
+  grid-template-columns: 1fr;
   gap: 1rem;
 }
-
-/* From tablet/desktop up, go back to two columns */
 @media (min-width: 900px){
   .main .grid{
-    grid-template-columns: 1fr 1fr;  /* cart | form */
-    align-items: start;              /* prevent overlay */
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
   }
 }
-
-/* Prevent children from overflowing and overlaying each other */
 .main .grid > .card{
   position: relative;
-  min-width: 0;   /* allow content to shrink */
+  min-width: 0;
   min-height: 0;
 }
-
-/* Cart table: allow sideways scroll on small screens instead of spilling */
-#quote-cart{
-  overflow-x: auto;
-}
-#quote-cart table{
-  min-width: 520px;   /* so columns don't crush; scrolls if viewport is narrower */
-}
-
-/* Just in case any earlier styles made these sticky/absolute */
-.card.cart,
-#quote-form{
-  position: static;
-}
-
-/* ========== Background: Leaf silhouettes + gentle gold shimmer ========== */
-/* A) Gold shimmer: slow diagonal sweep (behind content) */
-body::before{
-  content:"";
-  position: fixed; inset: 0; pointer-events: none; z-index: 0;
-  background:
-    linear-gradient(115deg,
-      transparent 0%,
-      var(--bv-gold) 35%,
-      transparent 70%
-    );
-  background-size: 200% 200%;
-  animation: bvShimmer 22s linear infinite;
-}
-
-/* Respect users who prefer less motion */
-@media (prefers-reduced-motion: reduce){
-  body::before{ animation: none; }
-}
-
-@keyframes bvShimmer{
-  0%   { background-position: 120% -20%; }
-  100% { background-position: -20% 120%; }
-}
-
-/* C) Leaf silhouettes layer: under shimmer, behind content (no negative z-index) */
-.leaf-overlay{
-  position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='rgba(202,169,90,0.06)'%3E%3Cpath d='M60 12c-3 9-7 14-16 19 11 1 16 5 22 14 6-9 11-13 22-14-9-5-13-10-16-19-3 9-7 14-12 18-5-4-9-9-12-18z'/%3E%3C/g%3E%3C/svg%3E");
-  background-size: 120px 120px;
-  background-repeat: repeat;
-  opacity: .35; /* tweak .25–.5 to taste */
-}
-
-/* ===== Site background: deep green foliage (inline SVG) + soft vignettes ===== */
-body{
-  background-color: var(--bg); /* #0f0f0f from your vars */
-  background-image:
-    radial-gradient(1000px 700px at 15% -10%, rgba(0,0,0,.38), transparent 60%),
-    radial-gradient(1000px 700px at 85% 110%, rgba(0,0,0,.38), transparent 60%),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Crect width='160' height='160' fill='%230f0f0f'/%3E%3Cg fill='%23193621' fill-opacity='.22'%3E%3Cg transform='translate(20 16) scale(.9)'%3E%3Cpath d='M60 12c-3 9-7 14-16 19 11 1 16 5 22 14 6-9 11-13 22-14-9-5-13-10-16-19-3 9-7 14-12 18-5-4-9-9-12-18z'/%3E%3C/g%3E%3Cg transform='translate(92 20) rotate(18) scale(.85)'%3E%3Cpath d='M60 12c-3 9-7 14-16 19 11 1 16 5 22 14 6-9 11-13 22-14-9-5-13-10-16-19-3 9-7 14-12 18-5-4-9-9-12-18z'/%3E%3C/g%3E%3Cg transform='translate(18 88) rotate(-16) scale(.8)'%3E%3Cpath d='M60 12c-3 9-7 14-16 19 11 1 16 5 22 14 6-9 11-13 22-14-9-5-13-10-16-19-3 9-7 14-12 18-5-4-9-9-12-18z'/%3E%3C/g%3E%3Cg transform='translate(96 92) rotate(10) scale(.95)'%3E%3Cpath d='M60 12c-3 9-7 14-16 19 11 1 16 5 22 14 6-9 11-13 22-14-9-5-13-10-16-19-3 9-7 14-12 18-5-4-9-9-12-18z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-  background-repeat: no-repeat, no-repeat, repeat;
-  background-size: auto, auto, 160px 160px; /* change 160->200 for bigger leaves */
-  background-attachment: fixed, fixed, fixed; /* subtle parallax feel */
-}
+#quote-cart{ overflow-x: auto; }
+#quote-cart table{ min-width: 520px; }
+.card.cart, #quote-form{ position: static; }
