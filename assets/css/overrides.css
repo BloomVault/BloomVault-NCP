@@ -205,3 +205,57 @@
 .btn:hover{ filter: brightness(1.05); box-shadow: 0 6px 16px rgba(0,0,0,.25); }
 .btn:active{ transform: translateY(1px); box-shadow: 0 2px 8px rgba(0,0,0,.25); }
 .btn[disabled]{ opacity:.6; cursor:not-allowed; }
+
+/* Gold-accent heading treatment (for About sections using .heading-brand) */
+.heading-brand{
+  position: relative;
+  display: inline-block;
+  margin: 0 0 .6rem;
+  letter-spacing: .02em;
+}
+
+/* Thin gradient underline + tiny gold marker */
+.heading-brand::after{
+  content: "";
+  position: absolute;
+  left: 0; bottom: -6px;
+  width: 84px; height: 2px;
+  background: linear-gradient(90deg, rgba(202,169,90,0), rgba(202,169,90,.9), rgba(202,169,90,0));
+  border-radius: 2px;
+}
+.heading-brand::before{
+  content: "";
+  position: absolute;
+  left: 0; bottom: -9px;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #ffe9a8, #caa95a);
+  box-shadow: 0 0 0 1px #8b6b18;
+}
+
+/* Mission tagline + paragraph: match Featured style */
+.mission .tagline{
+  display: inline-block;
+  font-size: clamp(1.4rem, 2.6vw, 2.2rem); /* like .lux-title */
+  line-height: 1.1;
+  letter-spacing: .02em;
+  margin: .25rem 0 .6rem;
+  position: relative;
+}
+
+/* Gold accent underline under the tagline (like .heading-brand) */
+.mission .tagline::after{
+  content:"";
+  position:absolute;
+  left:50%; transform:translateX(-50%);
+  bottom:-8px; height:2px; width:96px;
+  background: linear-gradient(90deg, rgba(202,169,90,0), rgba(202,169,90,.9), rgba(202,169,90,0));
+  border-radius: 2px;
+}
+
+/* Mission paragraph styled like Featured .lead */
+.mission p{
+  max-width: 62ch;
+  margin: .9rem auto 0;
+  font-size: 1.05rem;
+  color: #ddd;
+}
