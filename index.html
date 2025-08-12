@@ -31,7 +31,36 @@
 
     <!-- Featured Strain (Gold ribbon + Polaroid photo + split hero + luxe details) -->
 <section class="card featured-hero" style="margin-top:16px">
-  <h2>Featured Strain</h2>
+  <h2 class="featured-heading">
+  <svg class="trophy" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="gold-grad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%"  stop-color="#fff3c4"/>
+        <stop offset="35%" stop-color="#f1d27a"/>
+        <stop offset="70%" stop-color="#d2a843"/>
+        <stop offset="100%" stop-color="#9b741b"/>
+      </linearGradient>
+      <linearGradient id="gold-shine" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="rgba(255,255,255,.6)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+      </linearGradient>
+    </defs>
+    <!-- Cup -->
+    <path d="M16 8h32v10c0 10-8 18-16 18s-16-8-16-18V8z" fill="url(#gold-grad)"/>
+    <!-- Handles -->
+    <path d="M16 12c-6 0-10 3-10 8 0 5 4 8 9 8 1.4 0 2.6-.2 3.7-.6-1.7-2.6-2.7-5.8-2.7-9.4V12z"
+          fill="url(#gold-grad)"/>
+    <path d="M48 12c6 0 10 3 10 8 0 5-4 8-9 8-1.4 0-2.6-.2-3.7-.6 1.7-2.6 2.7-5.8 2.7-9.4V12z"
+          fill="url(#gold-grad)"/>
+    <!-- Stem + base -->
+    <rect x="28" y="36" width="8" height="8" rx="2" fill="url(#gold-grad)"/>
+    <rect x="22" y="44" width="20" height="6" rx="2" fill="url(#gold-grad)"/>
+    <rect x="18" y="50" width="28" height="6" rx="3" fill="url(#gold-grad)"/>
+    <!-- Soft highlight -->
+    <ellipse cx="32" cy="18" rx="14" ry="6" fill="url(#gold-shine)"/>
+  </svg>
+  <span>Featured Strain</span>
+</h2>
   <div class="featured">
     <!-- Left: Polaroid-style photo with glossy gold corner ribbon -->
     <figure class="polaroid">
