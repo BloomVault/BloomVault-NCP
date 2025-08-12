@@ -320,3 +320,19 @@
 //   font-family: 'Bebas Neue', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 //   font-weight: 700;
 // }
+
+/* Catalog card spacing reset + empty-node guard */
+#catalog .catalog-grid .card .content{
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;            /* consistent spacing */
+}
+#catalog .catalog-grid .card .content > :where(h3,p,.small){ margin: 0; }
+#catalog .catalog-grid .card .content > :empty{ display: none; }  /* hide empty <p> etc. */
+#catalog .catalog-grid .card .actions{ margin-top: .5rem; }
+
+/* Ensure image area has no extra margin */
+#catalog .catalog-grid .card .media{ margin: 0; }
+
+/* Safety: images don’t add baseline gap */
+#catalog .catalog-grid .card img{ display:block; }
