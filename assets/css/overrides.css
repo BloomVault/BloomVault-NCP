@@ -296,3 +296,57 @@ body{
 #quote-cart{ overflow-x: auto; }
 #quote-cart table{ min-width: 520px; }
 .card.cart, #quote-form{ position: static; }
+
+/* === Mission section background image (logo/tagline block only) === */
+.card.mission{
+  /* make the card's own background transparent so the photo shows */
+  background-color: transparent !important;
+  position: relative;
+  overflow: hidden;
+
+  /* background image */
+  background-image: image-set(
+    url("../img/mission-bg.webp") type("image/webp"),
+    url("../img/mission-bg.jpg") type("image/jpeg")
+  );
+  background-size: cover;
+  background-position: center 55%;     /* show a bit more plants than sky */
+  background-repeat: no-repeat;
+
+  /* give it some height so the image reads behind the logo/text */
+  min-height: clamp(360px, 42vw, 560px);
+}
+
+/* readability overlay (keeps logo/tagline legible) */
+.card.mission::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
+  /* soft dark gradient; tweak the alphas if you want more/less fade */
+  background: linear-gradient(
+    to bottom,
+    rgba(15,15,15,.60) 0%,
+    rgba(15,15,15,.38) 35%,
+    rgba(15,15,15,.62) 100%
+  );
+}
+
+/* ensure the actual content sits above the overlay */
+.card.mission > *{
+  position: relative;
+  z-index: 1;
+}
+
+/* optional: tighten the logo a touch on big screens so the image shows */
+@media (min-width: 900px){
+  .card.mission img[alt="BloomVault Farms"]{
+    max-width: 480px;
+  }
+}
+
+/* optional: tiny text shadow for extra clarity on the image */
+.card.mission .tagline,
+.card.mission p{
+  text-shadow: 0 1px 2px rgba(0,0,0,.45);
+}
