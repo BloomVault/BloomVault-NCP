@@ -24,6 +24,17 @@
       20%  { opacity: 1; transform: translateY(-50%) translateY(-2px) scale(1); }
       100% { opacity: 0; transform: translateY(-50%) translateY(-12px) scale(1); }
     }
+
+    /* FIX: make spacing inside cards consistent */
+    #catalog .catalog-grid .card .content{
+      display:flex; flex-direction:column; gap:.5rem;
+    }
+    /* override earlier rule that pinned buttons to the bottom */
+    #catalog .catalog-grid .card .actions{
+      margin-top:.5rem; /* was auto in overrides.css */
+    }
+    /* safety: images don’t add inline gap */
+    #catalog .catalog-grid .card img{ display:block; }
   </style>
 </head>
 <body>
@@ -62,7 +73,7 @@
             </div>
           </article>
 
-          <!-- Card 2 -->
+          <!-- Card 2 (added the small note to match others) -->
           <article class="card">
             <div class="media">
               <img src="assets/img/strain_2.jpg" alt="Placeholder Strain #2" onerror="this.style.opacity=.3" />
@@ -73,6 +84,7 @@
                 <a class="btn" href="strain.html?id=2">Details</a>
                 <button type="button" class="btn add-to-quote" data-id="2" data-name="Placeholder Strain #2">Add to Quote +1</button>
               </div>
+              <p class="small">Image &amp; details are placeholders.</p>
             </div>
           </article>
 
@@ -238,6 +250,7 @@
       e.preventDefault();
       addOne(btn.dataset.id, btn.dataset.name);
       plusOneBubble(btn);
+      if (window.showToast) showToast(`Added “${btn.dataset.name}” +1`);
     });
   })();
   </script>
