@@ -417,3 +417,15 @@ body::before{
   background-repeat: repeat;
   opacity: .35; /* tweak .25–.5 to taste */
 }
+
+/* ===== Site background: deep green foliage (inline SVG) + soft vignettes ===== */
+body{
+  background-color: var(--bg); /* #0f0f0f from your vars */
+  background-image:
+    radial-gradient(1000px 700px at 15% -10%, rgba(0,0,0,.38), transparent 60%),
+    radial-gradient(1000px 700px at 85% 110%, rgba(0,0,0,.38), transparent 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Crect width='160' height='160' fill='%230f0f0f'/%3E%3Cg fill='%23193621' fill-opacity='.22'%3E%3Cg transform='translate(20 16) scale(.9)'%3E%3Cpath d='M60 12c-3 9-7 14-16 19 11 1 16 5 22 14 6-9 11-13 22-14-9-5-13-10-16-19-3 9-7 14-12 18-5-4-9-9-12-18z'/%3E%3C/g%3E%3Cg transform='translate(92 20) rotate(18) scale(.85)'%3E%3Cpath d='M60 12c-3 9-7 14-16 19 11 1 16 5 22 14 6-9 11-13 22-14-9-5-13-10-16-19-3 9-7 14-12 18-5-4-9-9-12-18z'/%3E%3C/g%3E%3Cg transform='translate(18 88) rotate(-16) scale(.8)'%3E%3Cpath d='M60 12c-3 9-7 14-16 19 11 1 16 5 22 14 6-9 11-13 22-14-9-5-13-10-16-19-3 9-7 14-12 18-5-4-9-9-12-18z'/%3E%3C/g%3E%3Cg transform='translate(96 92) rotate(10) scale(.95)'%3E%3Cpath d='M60 12c-3 9-7 14-16 19 11 1 16 5 22 14 6-9 11-13 22-14-9-5-13-10-16-19-3 9-7 14-12 18-5-4-9-9-12-18z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: no-repeat, no-repeat, repeat;
+  background-size: auto, auto, 160px 160px; /* change 160->200 for bigger leaves */
+  background-attachment: fixed, fixed, fixed; /* subtle parallax feel */
+}
