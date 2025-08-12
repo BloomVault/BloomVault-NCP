@@ -1,110 +1,10 @@
-/* Hide the spam honeypot */
-.hp { position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }
-.hp input, .hp textarea, .hp select { pointer-events:none; }
-
-/* Quote cart table + qty number */
-.table { width:100%; border-collapse:collapse; margin:.5rem 0 1rem; }
-.table th, .table td { padding:.5rem .6rem; border-bottom:1px solid rgba(0,0,0,.1); }
-.qty-wrap { display:flex; align-items:center; gap:.75rem; }
-.qty-wrap input[type="range"] { width:220px; }
-.qty-num { min-width:2ch; text-align:right; font-variant-numeric:tabular-nums; }
-.small { font-size:.9rem; color:#666; }
-
-/* ===== Strain Catalog: medium cards, 2 per row ===== */
-
-#catalog .container { max-width: 1100px; margin: 0 auto; padding: 1rem; }
-#catalog { background: transparent; }
-
-/* Grid: 1 per row on phones, 2 per row from 760px up */
-#catalog .catalog-grid {
-  display: grid;
-  gap: 1.2rem;
-  grid-template-columns: 1fr;
-  align-items: start;
-}
-@media (min-width: 760px) {
-  #catalog .catalog-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-/* Cards match page background (no box shadow) */
-#catalog .card {
-  background: transparent;       /* was #fff */
-  border: none;                  /* remove outline to fully blend */
-  border-radius: 14px;
-  box-shadow: none;              /* no drop shadow */
-  display: flex;
-  flex-direction: column;
-}
-
-/* Consistent, smaller images that fit the card */
-#catalog .card .media {
-  position: relative;
-  aspect-ratio: 4 / 3;           /* tweak to 16/9 if you prefer */
-  overflow: hidden;
-  background: transparent;       /* was #eee */
-}
-#catalog .card .media > img,
-#catalog .card > img {           /* also catches bare <img> if any remain */
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-/* Content + actions */
-#catalog .card .content { padding: .9rem; }
-#catalog .card .actions {
-  display: flex;
-  gap: .6rem;
-  margin-top: .6rem;
-  flex-wrap: wrap;
-}
-
-#catalog .catalog-grid { align-items: stretch; }
-#catalog .card { height: 100%; display: flex; flex-direction: column; }
-#catalog .card .content { flex: 1; display: flex; flex-direction: column; }
-#catalog .card .actions { margin-top: auto; }
-
-/* Add-to-Quote badge (catalog only) */
-#catalog .add-to-quote { position: relative; }
-#catalog .add-to-quote .count-badge {
-  position: absolute; top: -8px; right: -8px;
-  min-width: 20px; height: 20px; padding: 0 6px;
-  border-radius: 9999px; display: none; align-items: center; justify-content: center;
-  font-size: 12px; line-height: 1; font-weight: 700;
-  /* matches your gold buttons */
-  background: linear-gradient(#caa95a,#b58c2b); color: #111; border: 1px solid #8b6b18;
-  box-shadow: 0 1px 2px rgba(0,0,0,.25);
-}
-/* show badge when count > 0 */
-#catalog .add-to-quote[data-count]:not([data-count="0"]) .count-badge { display: inline-flex; }
-
-/* "+1" bubble for Add to Quote buttons */
-.add-to-quote { position: relative; }
-.add-to-quote .plus-one {
-  position: absolute; left: 100%; margin-left: 6px; top: 50%;
-  transform: translateY(-50%) translateY(6px);
-  font-size: 12px; font-weight: 700; opacity: 0; pointer-events: none;
-  background: linear-gradient(#caa95a,#b58c2b); color:#111; border:1px solid #8b6b18;
-  padding: 2px 6px; border-radius: 9999px; white-space: nowrap;
-  animation: popFade .8s ease-out forwards;
-  box-shadow: 0 1px 2px rgba(0,0,0,.25);
-}
-@keyframes popFade {
-  0%   { opacity: 0; transform: translateY(-50%) translateY(6px) scale(.9); }
-  20%  { opacity: 1; transform: translateY(-50%) translateY(-2px) scale(1); }
-  100% { opacity: 0; transform: translateY(-50%) translateY(-12px) scale(1); }
-}
-
 /* ===== Featured (Home) ===== */
 
-/* Featured layout (unchanged) */
+/* Featured layout */
 .featured { display:grid; gap:1rem; align-items:center; grid-template-columns:1fr; }
 @media (min-width:780px){ .featured{ grid-template-columns:auto 1fr; } }
 
-/* Framed media wrapper — frame ON TOP of the photo */
+/* Frame wrapper — square area, children absolutely positioned */
 .featured-media{
   width: min(100%, var(--frame-max, 420px));
   aspect-ratio: 1 / 1;              /* frame is square */
@@ -112,18 +12,20 @@
   position: relative;               /* enable absolute children */
 }
 
-/* Photo sits underneath and is inset so the frame doesn’t crowd it */
+/* Photo: explicitly sized via calc + centered; always visible on desktop */
 .featured-media .featured-photo{
   position: absolute;
-  inset: var(--inner-pad, 19%);     /* tweak this value for tighter/looser fit */
-  width: auto; height: auto;
+  top: 50%; left: 50%;
+  width: calc(100% - (var(--inner-pad, 19%) * 2));
+  height: calc(100% - (var(--inner-pad, 19%) * 2));
+  transform: translate(-50%, -50%);
   object-fit: cover;
   border-radius: 12px;
   box-shadow: 0 6px 16px rgba(0,0,0,.25);
   z-index: 1;
 }
 
-/* Frame overlays ABOVE the photo */
+/* Frame overlay on top of the photo */
 .featured-media .featured-frame{
   position: absolute;
   inset: 0;
