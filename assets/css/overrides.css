@@ -346,3 +346,41 @@
   line-height: 1.1;
   margin: 0 0 .6rem;
 }
+
+/* ========= Quote page: mobile stacking + no overlap ========= */
+
+/* Make the two-column wrapper become one column on phones */
+.main .grid{
+  display: grid;
+  grid-template-columns: 1fr;   /* stack */
+  gap: 1rem;
+}
+
+/* From tablet/desktop up, go back to two columns */
+@media (min-width: 900px){
+  .main .grid{
+    grid-template-columns: 1fr 1fr;  /* cart | form */
+    align-items: start;              /* prevent overlay */
+  }
+}
+
+/* Prevent children from overflowing and overlaying each other */
+.main .grid > .card{
+  position: relative;
+  min-width: 0;   /* allow content to shrink */
+  min-height: 0;
+}
+
+/* Cart table: allow sideways scroll on small screens instead of spilling */
+#quote-cart{
+  overflow-x: auto;
+}
+#quote-cart table{
+  min-width: 520px;   /* so columns don't crush; scrolls if viewport is narrower */
+}
+
+/* Just in case any earlier styles made these sticky/absolute */
+.card.cart,
+#quote-form{
+  position: static;
+}
