@@ -140,32 +140,3 @@
   pointer-events: none;  /* clicks pass through */
 }
 
-/* Image-filled, outlined "Featured Strain" title */
-.featured-title{
-  /* big but responsive */
-  font-size: clamp(42px, 9vw, 112px);
-  line-height: .9;
-  margin: 0 0 .5rem;
-  display: inline-block;
-
-  /* photo fill */
-  background-image: var(--title-image, url('assets/img/sticky-icky.jpg'));
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-
-  /* transparent text so background shows through */
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  -webkit-background-clip: text;   /* Safari/Chrome */
-          background-clip: text;    /* Others that support it */
-
-  /* black outline */
-  -webkit-text-stroke: 2px #000;   /* Safari/Chrome */
-  /* fallback outline for other browsers */
-  text-shadow:
-    -1px -1px 0 #000,
-     1px -1px 0 #000,
-    -1px  1px 0 #000,
-     1px  1px 0 #000;
-}
