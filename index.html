@@ -8,8 +8,20 @@
   <link rel="stylesheet" href="assets/css/styles.css">
   <link rel="stylesheet" href="assets/css/overrides.css">
 
-  <!-- Featured framed photo (frame layered on top; desktop-safe sizing) -->
-  <style>
+  <!-- Replace your current Featured image block with this -->
+<div class="featured-media" style="--frame-max:clamp(320px, 46vw, 520px); --inner-pad:19%;">
+  <img
+    class="featured-photo"
+    src="assets/img/sticky-icky.jpg"
+    alt="Sticky Icky"
+    onerror="
+      if (!this.dataset.triedPng) { this.dataset.triedPng=1; this.src='assets/img/sticky-icky.png'; }
+      else { this.style.background='#ddd'; this.style.width='100%'; this.style.height='100%'; this.style.objectFit='cover'; this.src=''; }
+    "
+  >
+  <img class="featured-frame" src="assets/img/featured-frame.png" alt="" aria-hidden="true">
+</div>
+
     /* Featured layout */
     .featured { display:grid; gap:1rem; align-items:center; grid-template-columns:1fr; }
     @media (min-width:780px){ .featured{ grid-template-columns:auto 1fr; } }
