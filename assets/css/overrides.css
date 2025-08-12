@@ -113,3 +113,29 @@
   width:100%; height:100%; object-fit:contain;
   pointer-events:none; z-index:2;
 }
+
+/* Featured media: keep the same size as before (max 520px, width:100%) */
+.featured-media{
+  position: relative;
+  max-width: 520px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* The photo still defines the height; no aspect-ratio tricks */
+.featured-media .featured-photo{
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+/* Gold frame overlays on top, doesn’t affect layout size */
+.featured-media .featured-frame{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;   /* keep frame’s proportions */
+  pointer-events: none;  /* clicks pass through */
+}
