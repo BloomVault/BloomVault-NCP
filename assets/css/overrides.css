@@ -140,3 +140,88 @@
   pointer-events: none;  /* clicks pass through */
 }
 
+/* ===== Featured Hero (Home) ===== */
+
+/* Card with a soft, premium gradient */
+.featured-hero{
+  background: linear-gradient(135deg, rgba(255,255,255,.02) 0%, rgba(202,169,90,.08) 38%, rgba(0,0,0,.12) 100%);
+  border: 1px solid rgba(202,169,90,.18);
+  border-radius: 14px;
+}
+
+/* Split layout: image left, details right on desktop */
+.featured { display:grid; gap:1.25rem; align-items:center; grid-template-columns:1fr; }
+@media (min-width:780px){ .featured{ grid-template-columns:auto 1fr; } }
+
+/* Polaroid photo card */
+.polaroid{
+  position: relative;
+  width: min(100%, 520px);
+  margin: 0 auto;
+  background: #fff;                 /* polaroid border */
+  padding: 12px 12px 18px;          /* extra bottom like a real polaroid */
+  border-radius: 12px;
+  box-shadow: 0 18px 38px rgba(0,0,0,.28), 0 2px 6px rgba(0,0,0,.25);
+  overflow: visible;
+}
+.polaroid > img{
+  display:block;
+  width:100%; height:auto;
+  border-radius: 8px;
+}
+
+/* Glossy gold corner ribbon (diagonal) */
+.ribbon{
+  position: absolute;
+  top: 14px; left: -14px;
+  transform: rotate(-45deg);
+  transform-origin: left top;
+  padding: 6px 28px;
+  font: 800 12px/1.1 system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: #111;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.85), rgba(255,255,255,0) 40%),
+    linear-gradient(180deg, #f8e8b2 0%, #e2c35a 38%, #f3d982 58%, #b98a2a 100%);
+  border: 1px solid #8b6b18;
+  box-shadow:
+    0 2px 6px rgba(0,0,0,.35),
+    inset 0 1px 0 rgba(255,255,255,.7),
+    inset 0 -1px 0 rgba(0,0,0,.18);
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+/* Luxe details panel */
+.lux-details { padding: .25rem 0 0; }
+.lux-details .kicker{
+  font-size:.85rem; letter-spacing:.14em; text-transform:uppercase;
+  color:#caa95a; font-weight:700; opacity:.95; margin-bottom:.25rem;
+}
+.lux-details .lux-title{
+  font-size: clamp(1.4rem, 2.6vw, 2.2rem);
+  line-height: 1.1; margin: 0 0 .25rem;
+}
+.lux-details .lead{
+  margin: .25rem 0 .75rem;
+  font-size: 1.05rem;
+  color: #ddd;
+}
+
+/* Thin gold divider */
+.gold-rule{
+  height: 2px; border: 0; margin: .6rem 0 .8rem;
+  background: linear-gradient(90deg, rgba(202,169,90,0), rgba(202,169,90,.85), rgba(202,169,90,0));
+}
+
+/* Minimal, elegant specs list */
+.specs{
+  list-style: none; padding: 0; margin: 0;
+  display: grid; gap: .45rem;
+}
+.specs li{
+  display: flex; align-items: center; gap: .6rem;
+  padding: .35rem .6rem;
+  background: rgba(0,0,0,.22
+
