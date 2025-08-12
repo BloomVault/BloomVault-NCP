@@ -8,31 +8,32 @@
   <link rel="stylesheet" href="assets/css/styles.css">
   <link rel="stylesheet" href="assets/css/overrides.css">
 
-  <!-- Featured framed photo styles -->
+  <!-- Featured framed photo (frame layered on top; desktop-safe sizing) -->
   <style>
     /* Featured layout */
     .featured { display:grid; gap:1rem; align-items:center; grid-template-columns:1fr; }
     @media (min-width:780px){ .featured{ grid-template-columns:auto 1fr; } }
 
-    /* Frame wrapper: uses absolute children and z-index to put frame above photo */
+    /* Frame wrapper — square area, absolutely-positioned children */
     .featured-media{
       width: min(100%, var(--frame-max, 420px));
-      aspect-ratio: 1 / 1; /* frame is square */
+      aspect-ratio: 1 / 1;      /* frame is square */
       margin: 0 auto;
       position: relative;
     }
-    /* Photo area inset so the frame isn’t crowded */
+    /* Photo: explicit size + centering for desktop reliability */
     .featured-media .featured-photo{
       position: absolute;
-      inset: var(--inner-pad, 19%);
+      top: 50%; left: 50%;
       width: calc(100% - (var(--inner-pad, 19%) * 2));
       height: calc(100% - (var(--inner-pad, 19%) * 2));
+      transform: translate(-50%, -50%);
       object-fit: cover;
       border-radius: 12px;
       box-shadow: 0 6px 16px rgba(0,0,0,.25);
       z-index: 1;
     }
-    /* Frame sits on top */
+    /* Frame overlays above the photo */
     .featured-media .featured-frame{
       position: absolute;
       inset: 0;
