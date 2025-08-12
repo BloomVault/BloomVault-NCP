@@ -1,3 +1,16 @@
+:root{
+  --gold-1:#f3d982;
+  --gold-2:#caa95a;
+  --gold-3:#8b6b18;
+  --bg:#0f0f0f;
+  --text:#e8e8e8;
+  --muted:#bdbdbd;
+  --ring: 2px solid rgba(243,217,130,.85);
+  --radius:14px;
+  --radius-sm:10px;
+  --space:1rem;
+}
+
 /* ===================== */
 /* General / Utilities   */
 /* ===================== */
