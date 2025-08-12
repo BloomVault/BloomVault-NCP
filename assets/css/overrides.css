@@ -38,21 +38,6 @@
   flex-direction: column;
 }
 
-/* Default media box (kept light) */
-#catalog .card .media {
-  position: relative;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  background: transparent;
-}
-#catalog .card .media > img,
-#catalog .card > img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
 /* Content + actions */
 #catalog .card .content { padding: .9rem; }
 #catalog .card .actions {
@@ -61,12 +46,25 @@
   margin-top: .6rem;
   flex-wrap: wrap;
 }
-
-/* Stretch cards to equal heights */
 #catalog .catalog-grid { align-items: stretch; }
 #catalog .card { height: 100%; display: flex; flex-direction: column; }
 #catalog .card .content { flex: 1; display: flex; flex-direction: column; }
 #catalog .card .actions { margin-top: auto; }
+
+/* Catalogue: card image sizing (keeps images medium on desktop) */
+#catalog .card .media{
+  height: clamp(180px, 24vw, 240px); /* phone -> desktop */
+  aspect-ratio: auto;                /* height controls box */
+  overflow: hidden;
+  background: transparent;
+}
+#catalog .card .media > img,
+#catalog .card > img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
 
 /* Add-to-Quote badge (catalog only) */
 #catalog .add-to-quote { position: relative; }
@@ -99,19 +97,19 @@
 
 /* ===== Featured (Home) ===== */
 
-/* Featured layout */
+/* Layout */
 .featured { display:grid; gap:1rem; align-items:center; grid-template-columns:1fr; }
 @media (min-width:780px){ .featured{ grid-template-columns:auto 1fr; } }
 
-/* Frame wrapper — frame ON TOP of the photo, desktop-safe */
+/* Wrapper — square area, absolutely-positioned children (frame on top) */
 .featured-media{
   width: min(100%, var(--frame-max, 420px));
-  aspect-ratio: 1 / 1;           /* frame is square */
+  aspect-ratio: 1 / 1;
   margin: 0 auto;
-  position: relative;            /* absolute children */
+  position: relative;
 }
 
-/* Photo explicitly sized + centered so it always renders */
+/* Photo: explicit size + centering (desktop-safe) */
 .featured-media .featured-photo{
   position: absolute;
   top: 50%; left: 50%;
@@ -124,7 +122,7 @@
   z-index: 1;
 }
 
-/* Frame overlays above the photo */
+/* Frame overlay */
 .featured-media .featured-frame{
   position: absolute;
   inset: 0;
@@ -132,20 +130,4 @@
   object-fit: contain;
   pointer-events: none;
   z-index: 2;
-}
-
-/* === Catalogue: card image sizing (new) ===
-   Keeps card images medium and consistent on desktop */
-#catalog .card .media{
-  height: clamp(180px, 24vw, 240px); /* phone -> desktop */
-  aspect-ratio: auto;                /* override any 4/3 from elsewhere */
-  overflow: hidden;
-  background: transparent;
-}
-#catalog .card .media > img,
-#catalog .card > img{
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
 }
