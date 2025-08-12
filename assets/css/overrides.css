@@ -259,3 +259,34 @@
   font-size: 1.05rem;
   color: #ddd;
 }
+
+/* Remove the gold dot on branded headings */
+.heading-brand::before{ content: none !important; }
+
+/* Make the gold line run the full text width */
+.heading-brand{
+  display: inline-block; /* ensures ::after matches the text width */
+  position: relative;
+}
+.heading-brand::after{
+  left: 0 !important;
+  right: 0;
+  width: 100% !important;
+  bottom: -6px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(202,169,90,0), rgba(202,169,90,.9), rgba(202,169,90,0));
+}
+
+/* Mission tagline line: full width under the tagline text */
+.mission .tagline{
+  display: inline-block; /* same reason as above */
+  position: relative;
+}
+.mission .tagline::after{
+  left: 0 !important;
+  transform: none !important;
+  width: 100% !important;
+  bottom: -8px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(202,169,90,0), rgba(202,169,90,.9), rgba(202,169,90,0));
+}
