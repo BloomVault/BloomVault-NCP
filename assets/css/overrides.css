@@ -1022,3 +1022,87 @@ body::before{
   0%   { transform: translateY(0px); }
   100% { transform: translateY(-6px); }
 }
+
+/* === BloomVault tie-dye gradient (sitewide) === */
+:root{
+  /* Pulling from your current theme vibe */
+  --td-deep-1: #0d0f12;   /* charcoal base */
+  --td-deep-2: #0b0f14;   /* deeper charcoal */
+  --td-gold-1: #caa95a;   /* luxe gold */
+  --td-gold-2: #b58c2b;   /* darker gold */
+  --td-moss-1: #3f6f54;   /* mossy green accent */
+  --td-moss-2: #2e5b44;   /* deeper moss */
+}
+
+/* Neutralize any legacy page backgrounds */
+html, body, .wrapper, .main, .sidebar {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+/* Base gradient */
+body::after{
+  content:"";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 90% at 50% 0%, var(--td-deep-2) 0%, transparent 60%),
+    linear-gradient(180deg, var(--td-deep-2) 0%, var(--td-deep-1) 100%);
+}
+
+/* Tie-dye swirl + soft blobs */
+body::before{
+  content:"";
+  position: fixed;
+  inset: -2px;           /* avoids 1px seams on some GPUs */
+  z-index: -1;
+  pointer-events: none;
+
+  /* Layered look: conic swirl + color blobs */
+  background:
+    /* conic swirl (tie-dye spokes) */
+    conic-gradient(
+      from 0deg at 50% 60%,
+      rgba(202,169,90,0.16) 0deg,  rgba(202,169,90,0.16) 30deg,
+      transparent 42deg,          transparent 70deg,
+      rgba(181,140,43,0.15) 90deg, rgba(181,140,43,0.15) 118deg,
+      transparent 130deg,         transparent 160deg,
+      rgba(63,111,84,0.16) 180deg, rgba(63,111,84,0.16) 208deg,
+      transparent 220deg,         transparent 250deg,
+      rgba(46,91,68,0.16) 270deg, rgba(46,91,68,0.16) 298deg,
+      transparent 310deg,         transparent 340deg
+    ),
+    /* soft moss/gold clouds */
+    radial-gradient(40% 35% at 20% 25%, rgba(63,111,84,0.18), transparent 65%),
+    radial-gradient(45% 40% at 80% 20%, rgba(181,140,43,0.16), transparent 65%),
+    radial-gradient(55% 45% at 30% 85%, rgba(202,169,90,0.14), transparent 70%),
+    radial-gradient(50% 40% at 75% 80%, rgba(46,91,68,0.16), transparent 70%);
+
+  background-blend-mode: screen, screen, screen, screen, screen;
+  filter: saturate(1.05);
+
+  /* Movement */
+  animation:
+    bv-td-spin 90s linear infinite,
+    bv-td-drift 36s ease-in-out infinite alternate;
+  will-change: transform, background-position, filter;
+  transform-origin: 50% 60%;
+}
+
+/* Gentle rotation (swirl) */
+@keyframes bv-td-spin {
+  to { transform: rotate(360deg) scale(1.02); }
+}
+
+/* Slow wave-like drift */
+@keyframes bv-td-drift {
+  0%   { background-position:   0%   0%,  0%  0%,  0%  0%,  0%  0%,  0%  0%; }
+  100% { background-position:  12% -6%, -6%  8%,  6% -8%, -10% 6%,  8%  10%; }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce){
+  body::before{ animation: none; }
+}
