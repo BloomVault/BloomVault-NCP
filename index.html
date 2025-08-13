@@ -14,13 +14,15 @@
   
   <div class="sidebar">
     <div class="brand"><img src="assets/img/logo.png" alt="BloomVault Farms"></div>
-    <nav class="tabs">
+    <!-- ADDED tabs--gold for luxe buttons -->
+    <nav class="tabs tabs--gold">
       <a class="tab" href="index.html">Home</a>
       <a class="tab" href="catalogue.html">Cultivar Catalogue</a>
-      <a class="tab" href="quote.html">Get a Quote</a>
+      <!-- ADDED live cart badge -->
+      <a class="tab" href="quote.html">Get a Quote <span class="nav-badge" id="cart-count" hidden>0</span></a>
       <a class="tab" href="contact.html">Contact Us</a>
     </nav>
-    <div class="badge small">Serving Virginia commercial growers only</div>
+    <!-- REMOVED: <div class="badge small">Serving Virginia commercial growers only</div> -->
   </div>
 
   <main class="main">
@@ -117,5 +119,37 @@
 
 <script type="module" src="assets/js/app.js"></script>
 <script type="module" src="assets/js/cart.js"></script>
+
+<!-- Live cart badge + active tab highlight -->
+<script>
+(function(){
+  const badge = document.getElementById('cart-count');
+
+  function readCart(){
+    try { return JSON.parse(localStorage.getItem('quoteCart') || '[]'); }
+    catch { return []; }
+  }
+  function totalQty(items){ return items.reduce((n,it)=> n + (it.qty || 0), 0); }
+
+  function updateBadge(){
+    if(!badge) return;
+    const q = totalQty(readCart());
+    badge.textContent = q;
+    badge.hidden = (q <= 0);
+  }
+
+  // Initial + on focus/storage changes
+  updateBadge();
+  window.addEventListener('storage', updateBadge);
+  window.addEventListener('focus', updateBadge);
+
+  // Set aria-current on the active tab
+  const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+  document.querySelectorAll('.tabs a').forEach(a=>{
+    const href = (a.getAttribute('href') || '').toLowerCase();
+    if (href.endsWith(here)) a.setAttribute('aria-current','page');
+  });
+})();
+</script>
 </body>
 </html>
