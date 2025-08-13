@@ -1,42 +1,52 @@
 <!doctype html>
-<html lang="en"><head>
+<html lang="en">
+<head>
   <title>BloomVault Farms</title>
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+
+  <!-- Base styles -->
   <link rel="stylesheet" href="assets/css/styles.css">
-  <link rel="stylesheet" href="assets/css/overrides.css">
+
+  <!-- Luxe overrides (cache-busted so the sidebar styles refresh) -->
+  <link rel="stylesheet" href="assets/css/overrides.css?v=navsync1">
 </head>
 <body>
 <div class="wrapper">
   
   <div class="sidebar">
     <div class="brand"><img src="assets/img/logo.png" alt="BloomVault Farms"></div>
-    <nav class="tabs" aria-label="Primary">
-      <a class="tab" href="index.html" aria-current="page">Home</a>
+
+    <!-- Left nav (now picks up luxe styles + active state) -->
+    <nav class="tabs">
+      <a class="tab" href="index.html">Home</a>
       <a class="tab" href="catalogue.html">Cultivar Catalogue</a>
       <a class="tab" href="quote.html">Get a Quote</a>
       <a class="tab" href="contact.html">Contact Us</a>
     </nav>
+    <!-- removed: <div class="badge small">Serving Virginia commercial growers only</div> -->
   </div>
 
   <main class="main">
-    <!-- Mission -->
+    <!-- Mission (kept; side-glow applies via .mission class) -->
     <section class="card mission" style="text-align:center">
       <img src="assets/img/logo.png" alt="BloomVault Farms" style="max-width:520px;width:90%;height:auto;display:block;margin:0 auto 8px">
       <div class="tagline">"Unlock Premium Hemp for Consistent Growth"</div>
       <p>Our mission is to provide healthy, vigorous, flower-ready hemp plants to Virginia commercial growers with dependable service, transparent compliance, and fair pricing — so you can focus on delivering great harvests.</p>
     </section>
 
-    <!-- Featured Cultivar -->
+    <!-- Featured Cultivar (polaroid + luxe details) -->
     <section class="card featured-hero" style="margin-top:16px">
       <h2>Featured Cultivar</h2>
       <div class="featured">
+        <!-- Left: Polaroid-style photo -->
         <figure class="polaroid">
           <img src="assets/img/sticky-icky.jpg" alt="Sticky Icky">
         </figure>
 
+        <!-- Right: Luxe details -->
         <div class="lux-details">
           <div class="kicker">Farmer’s Favorites</div>
           <h3 class="lux-title">Sticky Icky</h3>
@@ -102,18 +112,16 @@
         <a href="https://greenpointseeds.com/contact-us/" target="_blank" rel="noopener">greenpointseeds.com/contact-us</a>.
       </p>
 
-      <p class="partner-cta" style="margin-top:.6rem">
-        <a class="btn" href="https://greenpointseeds.com" target="_blank" rel="noopener">
-          Visit Greenpoint Seeds
-        </a>
-        <a href="https://greenpointseeds.com" target="_blank" rel="noopener" aria-label="Greenpoint Seeds">
-          <img class="partner-logo" src="assets/img/greenpoint-logo.svg" alt="Greenpoint Seeds">
-        </a>
+      <p style="margin-top:.6rem">
+        <a class="btn" href="https://greenpointseeds.com" target="_blank" rel="noopener">Visit Greenpoint Seeds</a>
       </p>
     </section>
     <!-- /About Our Genetics -->
   </main>
 </div>
+
+<!-- Active tab highlighter (ensures luxe active state on the left nav) -->
+<script defer src="assets/js/active-nav.js"></script>
 
 <script type="module" src="assets/js/app.js"></script>
 <script type="module" src="assets/js/cart.js"></script>
