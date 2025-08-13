@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
-  <link rel="stylesheet" href="assets/css/overrides.css?v=navsync1">
+  <link rel="stylesheet" href="assets/css/overrides.css">
 </head>
 <body>
 <div class="wrapper">
@@ -15,7 +15,7 @@
   <div class="sidebar">
     <div class="brand"><img src="assets/img/logo.png" alt="BloomVault Farms"></div>
 
-    <!-- Gold-styled tabs (badge removed) -->
+    <!-- Gold-styled tabs (unified) -->
     <nav class="tabs tabs--gold">
       <a class="tab" href="index.html">Home</a>
       <a class="tab" href="catalogue.html">Cultivar Catalogue</a>
@@ -29,7 +29,7 @@
       <h1>Contact Us</h1>
       <form id="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
         <input type="hidden" name="form-name" value="contact">
-
+        <!-- Honeypot -->
         <p style="display:none"><label>Don’t fill this out: <input name="bot-field"></label></p>
 
         <div class="form-row">
@@ -51,24 +51,20 @@
       <p><b>Steven Reddick</b> — Owner &amp; Founder</p>
       <p>Email: <a href="mailto:BloomVaultFarms@gmail.com">BloomVaultFarms@gmail.com</a></p>
       <p>Phone: <a href="tel:+1417360xxxx">(417) 360-xxxx</a></p>
-      <p><a class="btn" href="https://www.instagram.com/bloomvaultfarms/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:.5rem">
-        <img src="assets/img/instagram.svg" alt="" aria-hidden="true" style="height:20px;width:20px;display:inline-block"> Follow us on Instagram
-      </a></p>
+
+      <!-- Instagram link + icon (kept simple and robust) -->
+      <p style="display:flex;align-items:center;gap:.6rem">
+        <a class="btn" href="https://www.instagram.com/bloomvaultfarms/" target="_blank" rel="noopener">Instagram</a>
+        <img src="assets/img/instagram.svg" alt="Instagram" style="height:36px; width:auto;">
+      </p>
     </section>
   </main>
 </div>
 
+<!-- Your existing handler (if used) -->
 <script type="module" src="assets/js/contact.js"></script>
 
-<!-- Current tab highlighter (no badge logic) -->
-<script>
-  (function(){
-    const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
-    document.querySelectorAll('.tabs a').forEach(a=>{
-      const href = (a.getAttribute('href') || '').toLowerCase();
-      if (href.endsWith(here)) a.setAttribute('aria-current','page');
-    });
-  })();
-</script>
+<!-- Step 2: shared active-tab highlighter -->
+<script defer src="assets/js/active-nav.js"></script>
 </body>
 </html>
