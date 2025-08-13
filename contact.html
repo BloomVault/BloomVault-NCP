@@ -8,6 +8,20 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
   <link rel="stylesheet" href="assets/css/overrides.css">
+
+  <!-- Small style for the Instagram row + icon -->
+  <style>
+    .social-row{ display:flex; align-items:center; gap:.6rem; }
+    .social-icon{
+      color: var(--gold-2);              /* luxe gold */
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,.25));
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      height: 38px; width: 38px;         /* roughly button height */
+    }
+    .social-icon svg{ height: 100%; width: 100%; display:block; }
+  </style>
 </head>
 <body>
 <div class="wrapper">
@@ -15,24 +29,19 @@
   <div class="sidebar">
     <div class="brand"><img src="assets/img/logo.png" alt="BloomVault Farms"></div>
 
-    <!-- Luxe tabs + shared cart badge (matches other pages) -->
-    <nav class="tabs">
+    <!-- Gold-styled tabs + cart badge -->
+    <nav class="tabs tabs--gold">
       <a class="tab" href="index.html">Home</a>
       <a class="tab" href="catalogue.html">Cultivar Catalogue</a>
-      <a class="tab" href="quote.html" id="nav-quote">
-        Get a Quote
-        <span class="nav-count" id="nav-quote-count" aria-label="Items in quote cart"></span>
-      </a>
+      <a class="tab" href="quote.html">Get a Quote <span class="nav-badge" id="cart-count" hidden>0</span></a>
       <a class="tab" href="contact.html">Contact Us</a>
     </nav>
-    <!-- /tabs -->
+    <!-- removed: Serving Virginia commercial growers only -->
   </div>
 
   <main class="main">
     <section class="card">
       <h1>Contact Us</h1>
-
-      <!-- Note: Netlify forms work only when deployed on Netlify -->
       <form id="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
         <input type="hidden" name="form-name" value="contact">
 
@@ -50,7 +59,6 @@
           <input class="input" name="subject" placeholder="Subject">
         </div>
         <textarea class="input" name="message" rows="6" placeholder="Your message" required></textarea>
-
         <button class="btn" type="submit" style="margin-top:10px">Send Message</button>
         <div class="small" id="contact-result" style="margin-top:8px"></div>
       </form>
@@ -61,16 +69,58 @@
       <p><b>Steven Reddick</b> — Owner &amp; Founder</p>
       <p>Email: <a href="mailto:BloomVaultFarms@gmail.com">BloomVaultFarms@gmail.com</a></p>
       <p>Phone: <a href="tel:+1417360xxxx">(417) 360-xxxx</a></p>
-      <p class="small">On mobile, the button below opens your texting app with a prefilled message.</p>
-      <p><a class="btn" href="sms:+14173606048?&body=Hello%20BloomVault%2C%20I%27d%20like%20to%20inquire%20about%20hemp%20starts.">Text Us</a></p>
+
+      <!-- Replaced mobile-text + button with Instagram link & icon -->
+      <div class="social-row" style="margin-top:.5rem">
+        <a class="btn" href="https://www.instagram.com/bloomvaultfarms/" target="_blank" rel="noopener">
+          Follow us on Instagram
+        </a>
+        <a class="social-icon" href="https://www.instagram.com/bloomvaultfarms/" target="_blank" rel="noopener" aria-label="BloomVault Farms on Instagram">
+          <!-- Minimal Instagram glyph (inherits gold color) -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+            <circle cx="12" cy="12" r="4.5"></circle>
+            <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"></circle>
+          </svg>
+        </a>
+      </div>
     </section>
   </main>
 </div>
 
-<!-- Your existing handler (optional) -->
+<!-- Optional: your existing handler (keep if you use it) -->
 <script type="module" src="assets/js/contact.js"></script>
 
-<!-- Shared active tab + cart badge updater -->
-<script defer src="assets/js/active-nav.js"></script>
+<!-- Sidebar cart badge + current tab highlight -->
+<script>
+(function(){
+  const badge = document.getElementById('cart-count');
+
+  function readCart(){
+    try { return JSON.parse(localStorage.getItem('quoteCart') || '[]'); }
+    catch { return []; }
+  }
+  function totalQty(items){ return items.reduce((n,it)=> n + (it.qty || 0), 0); }
+
+  function updateBadge(){
+    if(!badge) return;
+    const q = totalQty(readCart());
+    badge.textContent = q;
+    badge.hidden = (q <= 0);
+  }
+
+  // Initial + keep in sync
+  updateBadge();
+  window.addEventListener('storage', updateBadge);
+  window.addEventListener('focus', updateBadge);
+
+  // Highlight the current tab
+  const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+  document.querySelectorAll('.tabs a').forEach(a=>{
+    const href = (a.getAttribute('href') || '').toLowerCase();
+    if (href.endsWith(here)) a.setAttribute('aria-current','page');
+  });
+})();
+</script>
 </body>
 </html>
