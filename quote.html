@@ -113,9 +113,8 @@
   </main>
 </div>
 
-<!-- Optional: keep your modules if used elsewhere -->
+<!-- Global cart handler -->
 <script type="module" src="assets/js/cart.js"></script>
-<script type="module" src="assets/js/quote.js"></script>
 
 <!-- Live cart render + hidden fields sync (auto-updates on add/remove and across tabs) -->
 <script>
@@ -136,8 +135,7 @@
   const hiddenCart = form?.querySelector('input[name="cart"]');
   const hiddenReadable = form?.querySelector('input[name="cart_readable"]');
 
-  function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
-
+  function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&gt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
   function toReadable(cart){
     if (!Array.isArray(cart) || !cart.length) return "";
     return cart.map(it => `${it.name ?? 'Item'} x ${Number(it.qty||1)}`).join(', ');
@@ -179,7 +177,7 @@
     `;
   }
 
-  // Handle remove -1 on this page only (optional convenience)
+  // Handle remove -1 on this page
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('button[data-remove="1"]');
     if (!btn) return;
@@ -191,7 +189,7 @@
     if (i >= 0) {
       cart[i].qty = Math.max(0, Number(cart[i].qty||1) - 1);
       if (cart[i].qty === 0) cart.splice(i,1);
-      writeCart(cart);  // will also emit cart:updated
+      writeCart(cart);
       render(cart);
     }
   });
@@ -199,7 +197,7 @@
   // Initial paint
   render();
 
-  // Same-tab updates (from assets/js/cart.js add-to-quote clicks)
+  // Same-tab updates
   document.addEventListener('cart:updated', (e) => render(e.detail?.cart));
 
   // Cross-tab/window updates
@@ -207,12 +205,100 @@
 })();
 </script>
 
-<!-- EmailJS SDK -->
+<!-- EmailJS SDK (must load before the form handler below) -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
-<!-- Anti-spam + EmailJS submit (no redirect) + success reset -->
+<!-- Intercept submit, send via EmailJS (no redirect), then clear form/cart -->
 <script>
-/* ... (unchanged JS from your current file) ... */
+(function () {
+  const STORAGE_KEY = "quoteCart";
+  const TO_EMAIL = "bloomvaultfarms@gmail.com"; // recipient in your template
+
+  // Your EmailJS credentials
+  const EMAILJS_PUBLIC_KEY = "Iph-DFQJujXfJ_gni";
+  const EMAILJS_SERVICE_ID = "service_5n04n5s";
+  const EMAILJS_TEMPLATE_ID = "template_sujzntx";
+
+  const form = document.getElementById("quote-form");
+  const submitBtn = document.getElementById("quote-submit");
+  const result = document.getElementById("quote-result");
+  const hp = form.querySelector('[name="bot-field"]');
+  const submitMs = form.querySelector('[name="submit_ms"]');
+  const start = performance.now();
+
+  // Initialize EmailJS
+  try { emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY }); } catch(e) { console.warn("EmailJS init warning:", e); }
+
+  function readCart() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); }
+    catch { return []; }
+  }
+  function cartReadable(cart){
+    return (cart||[]).map(it => `${it.name ?? 'Item'} x ${Number(it.qty||1)}`).join(', ') || "—";
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault(); // prevent default POST (avoids 405)
+
+    // Honeypot check
+    if (hp && hp.value) return;
+
+    // Time-on-form
+    if (submitMs) submitMs.value = String(Math.round(performance.now() - start));
+
+    const cart = readCart();
+
+    // Build data for EmailJS template variables
+    const data = {
+      to_email: TO_EMAIL,
+      businessName: form.businessName.value,
+      contactName: form.contactName.value,
+      email: form.email.value,
+      phone: form.phone.value,
+      street: form.street.value,
+      city: form.city.value,
+      state: form.state.value,
+      zip: form.zip.value,
+      license: form.license.value,
+      resale: form.resale.value,
+      notes: form.notes.value,
+      cart_json: JSON.stringify(cart),
+      cart_readable: cartReadable(cart),
+      submit_ms: submitMs ? submitMs.value : "",
+      // Helpful extras commonly used in templates:
+      reply_to: form.email.value,
+      from_name: form.contactName.value
+    };
+
+    // UI: sending…
+    submitBtn.disabled = true;
+    const oldLabel = submitBtn.textContent;
+    submitBtn.textContent = "Sending…";
+    result.textContent = "";
+
+    try {
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, data);
+      result.textContent = "Thanks! Your quote request has been sent.";
+
+      // Clear cart + UI
+      localStorage.setItem(STORAGE_KEY, "[]");
+      document.dispatchEvent(new CustomEvent("cart:updated", { detail: { cart: [] } }));
+
+      // Reset form + hidden fields
+      form.reset();
+      const hiddenCart = form.querySelector('input[name="cart"]');
+      const hiddenReadable = form.querySelector('input[name="cart_readable"]');
+      if (hiddenCart) hiddenCart.value = "[]";
+      if (hiddenReadable) hiddenReadable.value = "";
+    } catch (err) {
+      console.error(err);
+      result.textContent = "Sorry—there was a problem sending. Please try again in a moment.";
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = oldLabel;
+    }
+  });
+})();
 </script>
 
 </body></html>
