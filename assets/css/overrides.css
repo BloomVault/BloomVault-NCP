@@ -927,3 +927,16 @@ body{
   outline: 2px solid rgba(202,169,90,.55);
   outline-offset: 2px;
 }
+
+/* ========== Remove cart counter badge everywhere ========== */
+.nav-badge,
+.tabs .tab .nav-badge {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  pointer-events: none !important;
+  content: none !important;
+}
