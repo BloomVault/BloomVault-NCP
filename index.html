@@ -19,14 +19,17 @@
   <div class="sidebar">
     <div class="brand"><img src="assets/img/logo.png" alt="BloomVault Farms"></div>
 
-    <!-- Left nav (now picks up luxe styles + active state) -->
+    <!-- Luxe tabs + shared cart badge (same markup as other pages) -->
     <nav class="tabs">
       <a class="tab" href="index.html">Home</a>
       <a class="tab" href="catalogue.html">Cultivar Catalogue</a>
-      <a class="tab" href="quote.html">Get a Quote</a>
+      <a class="tab" href="quote.html" id="nav-quote">
+        Get a Quote
+        <span class="nav-count" id="nav-quote-count" aria-label="Items in quote cart"></span>
+      </a>
       <a class="tab" href="contact.html">Contact Us</a>
     </nav>
-    <!-- removed: <div class="badge small">Serving Virginia commercial growers only</div> -->
+    <!-- /tabs -->
   </div>
 
   <main class="main">
@@ -120,7 +123,7 @@
   </main>
 </div>
 
-<!-- Active tab highlighter (ensures luxe active state on the left nav) -->
+<!-- Shared active tab + cart badge updater -->
 <script defer src="assets/js/active-nav.js"></script>
 
 <script type="module" src="assets/js/app.js"></script>
