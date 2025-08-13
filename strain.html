@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/styles.css" />
-  <link rel="stylesheet" href="assets/css/overrides.css?v=navsync1" />
+  <link rel="stylesheet" href="assets/css/overrides.css" />
   <style>
     .container { max-width: 1000px; margin: 0 auto; padding: 1rem; }
     .detail-wrap { display: grid; gap: 2rem; grid-template-columns: 1fr; }
@@ -14,6 +14,7 @@
     .detail-meta { line-height: 1.8 }
     @media (min-width: 800px) { .detail-wrap { grid-template-columns: 1fr 1fr; } }
 
+    /* "+1" bubble (scoped to this page) */
     .add-to-quote { position: relative; }
     .add-to-quote .plus-one {
       position: absolute; left: 100%; margin-left: 6px; top: 50%;
@@ -35,7 +36,7 @@
   <div class="wrapper">
     <div class="sidebar">
       <div class="brand"><img src="assets/img/logo.png" alt="BloomVault Farms" /></div>
-      <!-- Gold-styled nav (badge removed) -->
+      <!-- Gold-styled tabs (shared across site) -->
       <nav class="tabs tabs--gold">
         <a class="tab" href="index.html">Home</a>
         <a class="tab" href="catalogue.html">Cultivar Catalogue</a>
@@ -60,6 +61,7 @@
       const FALLBACK_IMG = "assets/img/strain-placeholder.svg";
       const id = (new URLSearchParams(location.search).get("id") || "1").trim();
 
+      // -------- Data --------
       const STRAINS = {
         "1": {
           name: "Sticky Icky",
@@ -80,6 +82,7 @@
 
       const imgSrc = (data.image && data.image.trim()) ? data.image : FALLBACK_IMG;
 
+      // -------- Render --------
       el.innerHTML = `
         <div class="detail-wrap">
           <img class="detail-img" src="${imgSrc}" alt="${data.name}"
@@ -104,18 +107,23 @@
         </div>
       `;
 
-      // Cart helpers
+      // -------- Cart helpers (shared pattern) --------
       const STORAGE_KEY = "quoteCart";
-      function readCart(){ try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); } catch { return []; } }
-      function writeCart(cart){ localStorage.setItem(STORAGE_KEY, JSON.stringify(cart)); }
-      function addOne(itemId, name){
+      function readCart() {
+        try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); }
+        catch (e) { return []; }
+      }
+      function writeCart(cart) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+      }
+      function addOne(itemId, name) {
         let cart = readCart();
         const i = cart.findIndex(it => String(it.id) === String(itemId) && it.name === name);
         if (i >= 0) cart[i].qty = (cart[i].qty || 0) + 1;
         else cart.push({ id: String(itemId), name, qty: 1 });
         writeCart(cart);
       }
-      function plusOneBubble(btn){
+      function plusOneBubble(btn) {
         const b = document.createElement("span");
         b.className = "plus-one";
         b.textContent = "+1";
@@ -132,14 +140,6 @@
           if (window.showToast) showToast(`Added “${this.dataset.name}” +1`);
         });
       }
-
-      // Highlight current tab
-      const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
-      document.querySelectorAll('.tabs a').forEach(a=>{
-        const href = (a.getAttribute('href') || '').toLowerCase();
-        if (href.endsWith(here)) a.setAttribute('aria-current','page');
-      });
-
     } catch (e) {
       (document.getElementById("strain-detail") || document.body)
         .innerHTML = '<div style="background:#fee;color:#900;padding:1rem;border-radius:8px">Error rendering details.</div>';
