@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Instagram">
+  <defs>
+    <linearGradient id="bvGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f3d982"/>
+      <stop offset="100%" stop-color="#caa95a"/>
+    </linearGradient>
+  </defs>
+  <!-- rounded square frame -->
+  <rect x="64" y="64" width="384" height="384" rx="96"
+        fill="none" stroke="url(#bvGold)" stroke-width="28"/>
+  <!-- lens -->
+  <circle cx="256" cy="256" r="88"
+          fill="none" stroke="url(#bvGold)" stroke-width="28"/>
+  <!-- viewfinder dot -->
+  <circle cx="352" cy="160" r="20" fill="url(#bvGold)"/>
+</svg>
