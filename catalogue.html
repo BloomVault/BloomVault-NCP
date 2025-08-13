@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Cultivar Catalogue · BloomVault Farms</title>
   <link rel="stylesheet" href="assets/css/styles.css" />
-  <link rel="stylesheet" href="assets/css/overrides.css" />
+  <link rel="stylesheet" href="assets/css/overrides.css?v=navsync1" />
 
   <!-- +1 bubble styling (scoped to catalog) -->
   <style>
@@ -26,12 +26,8 @@
     }
 
     /* Consistent spacing inside cards */
-    #catalog .catalog-grid .card .content{
-      display:flex; flex-direction:column; gap:.5rem;
-    }
-    #catalog .catalog-grid .card .actions{
-      margin-top:.5rem;
-    }
+    #catalog .catalog-grid .card .content{ display:flex; flex-direction:column; gap:.5rem; }
+    #catalog .catalog-grid .card .actions{ margin-top:.5rem; }
     #catalog .catalog-grid .card img{ display:block; }
   </style>
 </head>
@@ -40,26 +36,20 @@
     <div class="sidebar">
       <div class="brand"><img src="assets/img/logo.png" alt="BloomVault Farms" /></div>
 
-      <!-- Luxe tabs + shared cart badge (matches other pages) -->
-      <nav class="tabs">
+      <!-- GOLD TABS (badge removed) -->
+      <nav class="tabs tabs--gold">
         <a class="tab" href="index.html">Home</a>
         <a class="tab" href="catalogue.html">Cultivar Catalogue</a>
-        <a class="tab" href="quote.html" id="nav-quote">
-          My Cart
-          <span class="nav-count" id="nav-quote-count" aria-label="Items in quote cart"></span>
-        </a>
+        <a class="tab" href="quote.html">Get a Quote</a>
         <a class="tab" href="contact.html">Contact Us</a>
       </nav>
-      <!-- /tabs -->
     </div>
 
     <main class="main" id="catalog">
       <section class="container">
         <h1>Cultivar Catalogue</h1>
 
-        <!-- Uniform grid wrapper -->
         <div class="catalog-grid">
-
           <!-- Card 1 -->
           <article class="card">
             <div class="media">
@@ -201,7 +191,7 @@
             </div>
           </article>
 
-        </div><!-- /.catalog-grid -->
+        </div>
       </section>
     </main>
   </div>
@@ -209,47 +199,39 @@
   <!-- Optional: only needed if other pages use it -->
   <script type="module" src="assets/js/cart.js"></script>
 
-  <!-- Add-to-Quote (no redirect) + persist to localStorage + "+1" bubble -->
+  <!-- Add-to-Quote (no redirect) + persist + "+1" bubble -->
   <script>
   (function () {
     const STORAGE_KEY = "quoteCart";
-
-    function readCart() {
-      try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); }
-      catch { return []; }
-    }
-    function writeCart(cart) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
-    }
-    function addOne(id, name) {
+    function readCart(){ try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); } catch { return []; } }
+    function writeCart(cart){ localStorage.setItem(STORAGE_KEY, JSON.stringify(cart)); }
+    function addOne(id, name){
       let cart = readCart();
       const i = cart.findIndex(it => String(it.id) === String(id) && it.name === name);
-      if (i >= 0) cart[i].qty = (cart[i].qty || 0) + 1;
-      else cart.push({ id: String(id), name, qty: 1 });
+      if (i >= 0) cart[i].qty = (cart[i].qty || 0) + 1; else cart.push({ id: String(id), name, qty: 1 });
       writeCart(cart);
     }
-    function plusOneBubble(btn) {
-      const b = document.createElement("span");
-      b.className = "plus-one";
-      b.textContent = "+1";
-      btn.appendChild(b);
-      setTimeout(() => b.remove(), 850);
+    function plusOneBubble(btn){
+      const b = document.createElement("span"); b.className = "plus-one"; b.textContent = "+1";
+      btn.appendChild(b); setTimeout(() => b.remove(), 850);
     }
-
-    // Handle clicks (no redirect)
     document.addEventListener("click", function (e) {
-      const btn = e.target.closest(".add-to-quote");
-      if (!btn) return;
-      e.preventDefault();
-      addOne(btn.dataset.id, btn.dataset.name);
-      plusOneBubble(btn);
+      const btn = e.target.closest(".add-to-quote"); if (!btn) return;
+      e.preventDefault(); addOne(btn.dataset.id, btn.dataset.name); plusOneBubble(btn);
       if (window.showToast) showToast(`Added “${btn.dataset.name}” +1`);
-      // active-nav.js will notice localStorage.setItem and refresh the badge
     });
   })();
   </script>
 
-  <!-- Shared active tab + cart badge updater -->
-  <script defer src="assets/js/active-nav.js"></script>
+  <!-- Current tab highlighter (no badge logic) -->
+  <script>
+    (function(){
+      const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+      document.querySelectorAll('.tabs a').forEach(a=>{
+        const href = (a.getAttribute('href') || '').toLowerCase();
+        if (href.endsWith(here)) a.setAttribute('aria-current','page');
+      });
+    })();
+  </script>
 </body>
 </html>
