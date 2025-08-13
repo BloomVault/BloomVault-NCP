@@ -36,13 +36,14 @@
   <div class="wrapper">
     <div class="sidebar">
       <div class="brand"><img src="assets/img/logo.png" alt="BloomVault Farms" /></div>
-      <nav class="tabs">
+      <!-- Gold-styled nav with live cart badge -->
+      <nav class="tabs tabs--gold">
         <a class="tab" href="index.html">Home</a>
         <a class="tab" href="catalogue.html">Cultivar Catalogue</a>
-        <a class="tab" href="quote.html">Get a Quote</a>
+        <a class="tab" href="quote.html">Get a Quote <span class="nav-badge" id="cart-count" hidden>0</span></a>
         <a class="tab" href="contact.html">Contact Us</a>
       </nav>
-      <div class="badge small">Serving Virginia commercial growers only</div>
+      <!-- removed the old “Serving Virginia…” tag -->
     </div>
 
     <main class="main">
@@ -70,9 +71,9 @@
           flowering: "—",
           yield: "—",
           terpenes: "—",
-          desc: "Gorilla Glue #4 X Animal Cookies."
+          desc: "Gorilla Glue #4 × Animal Cookies."
         }
-        // Add more entries as needed, keyed by id: { name, image, ... }
+        // Add more entries keyed by id if needed
       };
 
       const data = STRAINS[id];
@@ -87,7 +88,7 @@
       el.innerHTML = `
         <div class="detail-wrap">
           <img class="detail-img" src="${imgSrc}" alt="${data.name}"
-               onerror="this.src='${FALLBACK_IMG}'">
+               onerror="this.src='${FALLBACK_IMG}'" loading="lazy">
           <div>
             <h1 class="heading-brand" style="margin:0 0 .5rem">${data.name}</h1>
             <p>${data.desc}</p>
@@ -108,7 +109,7 @@
         </div>
       `;
 
-      // -------- Cart helpers (shared with catalogue) --------
+      // -------- Cart helpers (shared pattern) --------
       const STORAGE_KEY = "quoteCart";
       function readCart() {
         try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); }
@@ -132,14 +133,37 @@
         setTimeout(() => b.remove(), 850);
       }
 
+      // -------- Sidebar badge helpers --------
+      const badge = document.getElementById('cart-count');
+      function totalQty(items){ return items.reduce((n,it)=> n + (it.qty || 0), 0); }
+      function updateBadge(){
+        if(!badge) return;
+        const q = totalQty(readCart());
+        badge.textContent = q;
+        badge.hidden = (q <= 0);
+      }
+
       // -------- Wire button (no redirect) --------
       const btn = el.querySelector(".add-to-quote");
       if (btn) {
         btn.addEventListener("click", function () {
           addOne(this.dataset.id, this.dataset.name);
           plusOneBubble(this);
+          updateBadge();
+          if (window.showToast) showToast(`Added “${this.dataset.name}” +1`);
         });
       }
+
+      // Init / keep badge current; highlight current tab
+      updateBadge();
+      window.addEventListener('storage', updateBadge);
+      window.addEventListener('focus', updateBadge);
+      const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+      document.querySelectorAll('.tabs a').forEach(a=>{
+        const href = (a.getAttribute('href') || '').toLowerCase();
+        if (href.endsWith(here)) a.setAttribute('aria-current','page');
+      });
+
     } catch (e) {
       (document.getElementById("strain-detail") || document.body)
         .innerHTML = '<div style="background:#fee;color:#900;padding:1rem;border-radius:8px">Error rendering details.</div>';
