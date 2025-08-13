@@ -1,32 +1,41 @@
 <!doctype html>
-<html lang="en"><head>
-<title>Contact Us · BloomVault Farms</title>
+<html lang="en">
+<head>
+  <title>Contact Us · BloomVault Farms</title>
 
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css">
-<link rel="stylesheet" href="assets/css/overrides.css">
-</head><body>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/overrides.css">
+</head>
+<body>
 <div class="wrapper">
   
-<div class="sidebar">
-  <div class="brand"><img src="assets/img/logo.png" alt="BloomVault Farms"></div>
-  <nav class="tabs">
-    <a class="tab" href="index.html">Home</a>
-    <a class="tab" href="catalogue.html">Cultivar Catalogue</a>
-    <a class="tab" href="quote.html">Get a Quote</a>
-    <a class="tab" href="contact.html">Contact Us</a>
-  </nav>
-  <div class="badge small">Serving Virginia commercial growers only</div>
-</div>
+  <div class="sidebar">
+    <div class="brand"><img src="assets/img/logo.png" alt="BloomVault Farms"></div>
+
+    <!-- Gold-styled tabs + cart badge -->
+    <nav class="tabs tabs--gold">
+      <a class="tab" href="index.html">Home</a>
+      <a class="tab" href="catalogue.html">Cultivar Catalogue</a>
+      <a class="tab" href="quote.html">Get a Quote <span class="nav-badge" id="cart-count" hidden>0</span></a>
+      <a class="tab" href="contact.html">Contact Us</a>
+    </nav>
+    <!-- removed: Serving Virginia commercial growers only -->
+  </div>
 
   <main class="main">
     <section class="card">
       <h1>Contact Us</h1>
       <form id="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
         <input type="hidden" name="form-name" value="contact">
-        <p style="display:none"><label>Don’t fill this out: <input name="bot-field"></label></p>
+
+        <!-- Honeypot -->
+        <p style="display:none">
+          <label>Don’t fill this out: <input name="bot-field"></label>
+        </p>
+
         <div class="form-row">
           <input class="input" name="name" placeholder="Your Name*" required>
           <input class="input" type="email" name="email" placeholder="Email*" required>
@@ -40,15 +49,51 @@
         <div class="small" id="contact-result" style="margin-top:8px"></div>
       </form>
     </section>
+
     <section class="card" style="margin-top:16px">
       <h2>Reach Us</h2>
-      <p><b>Steven Reddick</b> — Owner & Founder</p>
+      <p><b>Steven Reddick</b> — Owner &amp; Founder</p>
       <p>Email: <a href="mailto:BloomVaultFarms@gmail.com">BloomVaultFarms@gmail.com</a></p>
-      <p>Phone: <a href="tel:+1417360xxxx">(417) 360‑xxxx</a></p>
+      <p>Phone: <a href="tel:+1417360xxxx">(417) 360-xxxx</a></p>
       <p class="small">On mobile, the button below opens your texting app with a prefilled message.</p>
       <p><a class="btn" href="sms:+14173606048?&body=Hello%20BloomVault%2C%20I%27d%20like%20to%20inquire%20about%20hemp%20starts.">Text Us</a></p>
     </section>
   </main>
 </div>
+
+<!-- Optional: your existing handler (keep if you use it) -->
 <script type="module" src="assets/js/contact.js"></script>
-</body></html>
+
+<!-- Sidebar cart badge + current tab highlight -->
+<script>
+(function(){
+  const badge = document.getElementById('cart-count');
+
+  function readCart(){
+    try { return JSON.parse(localStorage.getItem('quoteCart') || '[]'); }
+    catch { return []; }
+  }
+  function totalQty(items){ return items.reduce((n,it)=> n + (it.qty || 0), 0); }
+
+  function updateBadge(){
+    if(!badge) return;
+    const q = totalQty(readCart());
+    badge.textContent = q;
+    badge.hidden = (q <= 0);
+  }
+
+  // Initial + keep in sync
+  updateBadge();
+  window.addEventListener('storage', updateBadge);
+  window.addEventListener('focus', updateBadge);
+
+  // Highlight the current tab
+  const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+  document.querySelectorAll('.tabs a').forEach(a=>{
+    const href = (a.getAttribute('href') || '').toLowerCase();
+    if (href.endsWith(here)) a.setAttribute('aria-current','page');
+  });
+})();
+</script>
+</body>
+</html>
