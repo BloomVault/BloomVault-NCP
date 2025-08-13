@@ -5,30 +5,13 @@
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
 
-  <!-- Base styles -->
+  <!-- Base + overrides -->
   <link rel="stylesheet" href="assets/css/styles.css">
-  <!-- Luxe overrides (cache-busted so the sidebar styles refresh) -->
-  <link rel="stylesheet" href="assets/css/overrides.css?v=navsync1">
-
-  <!-- TM position + partner image slot -->
-  <style>
-    /* TM positioned in the lower-right corner of the mission logo */
-    .logo-with-tm { position: relative; display: inline-block; }
-    .logo-with-tm .tm {
-      position: absolute;
-      right: 1.5%;
-      bottom: 3%;
-      font-size: clamp(10px, 1.6vw, 14px);
-      font-weight: 700;
-      color: var(--gold-2, #caa95a);
-      text-shadow: 0 1px 2px rgba(0,0,0,.35);
-      letter-spacing: .02em;
-    }
-    /* Hide partner link until image loads */
-    #gp-partner { display: none; }
-  </style>
+  <link rel="stylesheet" href="assets/css/overrides.css">
 </head>
 <body>
 <div class="wrapper">
@@ -36,7 +19,7 @@
   <div class="sidebar">
     <div class="brand"><img src="assets/img/logo.png" alt="BloomVault Farms"></div>
 
-    <!-- Left nav (match other pages) -->
+    <!-- Luxe gold tabs (matches other pages) -->
     <nav class="tabs tabs--gold">
       <a class="tab" href="index.html">Home</a>
       <a class="tab" href="catalogue.html">Cultivar Catalogue</a>
@@ -46,12 +29,13 @@
   </div>
 
   <main class="main">
-    <!-- Mission -->
+    <!-- Mission (unchanged layout, TM overlays the logo image) -->
     <section class="card mission" style="text-align:center">
-      <span class="logo-with-tm">
-        <img src="assets/img/logo.png" alt="BloomVault Farms" style="max-width:520px;width:90%;height:auto;display:block;margin:0 auto 8px">
+      <div class="logo-stack">
+        <img src="assets/img/logo.png" alt="BloomVault Farms">
         <span class="tm">TM</span>
-      </span>
+      </div>
+
       <div class="tagline">"Unlock Premium Hemp for Consistent Growth"</div>
       <p>Our mission is to provide healthy, vigorous, flower-ready hemp plants to Virginia commercial growers with dependable service, transparent compliance, and fair pricing — so you can focus on delivering great harvests.</p>
     </section>
@@ -63,6 +47,7 @@
         <figure class="polaroid">
           <img src="assets/img/sticky-icky.jpg" alt="Sticky Icky">
         </figure>
+
         <div class="lux-details">
           <div class="kicker">Farmer’s Favorites</div>
           <h3 class="lux-title">Sticky Icky</h3>
@@ -126,36 +111,16 @@
         <a href="https://greenpointseeds.com/contact-us/" target="_blank" rel="noopener">greenpointseeds.com/contact-us</a>.
       </p>
 
-      <!-- Partner image slot (appears only if the image exists) -->
       <p style="margin-top:.6rem">
-        <a id="gp-partner" href="https://greenpointseeds.com" target="_blank" rel="noopener" aria-label="Greenpoint Seeds">
-          <img src="assets/img/greenpoint-partner.png" alt="Greenpoint Seeds"
-               style="height:48px;width:auto;vertical-align:middle;border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,.25)">
-        </a>
+        <a class="btn" href="https://greenpointseeds.com" target="_blank" rel="noopener">Visit Greenpoint Seeds</a>
       </p>
     </section>
-    <!-- /About Our Genetics -->
   </main>
 </div>
 
-<!-- Show partner image only if it loads successfully -->
-<script>
-(function(){
-  const link = document.getElementById('gp-partner');
-  if(!link) return;
-  const img = link.querySelector('img');
-  if(!img) return;
-  img.addEventListener('load', () => { link.style.display = 'inline-block'; });
-  img.addEventListener('error', () => { link.remove(); });
-  if (img.complete) {
-    if (img.naturalWidth > 0) link.style.display = 'inline-block';
-    else link.remove();
-  }
-})();
-</script>
-
-<!-- Active tab highlighter (keeps luxe active state consistent) -->
+<!-- (Optional) active tab highlighter if you use it on other pages -->
 <script defer src="assets/js/active-nav.js"></script>
+
 <script type="module" src="assets/js/app.js"></script>
 <script type="module" src="assets/js/cart.js"></script>
 </body>
