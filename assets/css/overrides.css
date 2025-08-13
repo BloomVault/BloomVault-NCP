@@ -940,3 +940,28 @@ body{
   pointer-events: none !important;
   content: none !important;
 }
+
+/* ===== Logo TM overlay (keeps the exact previous layout) ===== */
+.logo-stack{
+  position: relative;
+  max-width: 520px;   /* same as your old inline style */
+  width: 90%;
+  margin: 0 auto 8px; /* same spacing below the logo */
+}
+.logo-stack > img{
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.logo-stack .tm{
+  position: absolute;
+  /* Tweak these two variables if you want to nudge it later */
+  right: var(--tm-right, 7%);
+  bottom: var(--tm-bottom, 14%);
+  font-size: clamp(10px, 1.6vw, 14px);
+  font-weight: 700;
+  color: var(--gold-2, #caa95a);
+  text-shadow: 0 1px 2px rgba(0,0,0,.35);
+  letter-spacing: .02em;
+  line-height: 1;
+}
