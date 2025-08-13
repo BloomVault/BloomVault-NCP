@@ -19,8 +19,8 @@
   <div class="sidebar">
     <div class="brand"><img src="assets/img/logo.png" alt="BloomVault Farms"></div>
 
-    <!-- Gold-styled tabs (shared across site) -->
-    <nav class="tabs tabs--gold">
+    <!-- Left nav (picks up luxe styles + active state) -->
+    <nav class="tabs">
       <a class="tab" href="index.html">Home</a>
       <a class="tab" href="catalogue.html">Cultivar Catalogue</a>
       <a class="tab" href="quote.html">Get a Quote</a>
@@ -31,7 +31,14 @@
   <main class="main">
     <!-- Mission (kept; side-glow applies via .mission class) -->
     <section class="card mission" style="text-align:center">
-      <img src="assets/img/logo.png" alt="BloomVault Farms" style="max-width:520px;width:90%;height:auto;display:block;margin:0 auto 8px">
+      <!-- Logo with ™ overlay -->
+      <div class="logo-wrap" style="position:relative;max-width:520px;width:90%;margin:0 auto 8px">
+        <img src="assets/img/logo.png" alt="BloomVault Farms"
+             style="display:block;width:100%;height:auto">
+        <span class="tm" aria-hidden="true"
+              style="position:absolute;top:6px;right:10px;font-size:clamp(12px,2.4vw,18px);font-weight:700;color:#caa95a;text-shadow:0 1px 2px rgba(0,0,0,.55)">™</span>
+      </div>
+
       <div class="tagline">"Unlock Premium Hemp for Consistent Growth"</div>
       <p>Our mission is to provide healthy, vigorous, flower-ready hemp plants to Virginia commercial growers with dependable service, transparent compliance, and fair pricing — so you can focus on delivering great harvests.</p>
     </section>
@@ -111,8 +118,29 @@
         <a href="https://greenpointseeds.com/contact-us/" target="_blank" rel="noopener">greenpointseeds.com/contact-us</a>.
       </p>
 
-      <p style="margin-top:.6rem">
+      <!-- Button + inline SVG mark side-by-side -->
+      <p style="margin-top:.6rem;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap">
         <a class="btn" href="https://greenpointseeds.com" target="_blank" rel="noopener">Visit Greenpoint Seeds</a>
+
+        <!-- Inline, brand-safe gold leaf mark (not trademark art) -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 36"
+             role="img" aria-label="Greenpoint Seeds"
+             style="height:36px;width:auto;flex:none">
+          <defs>
+            <linearGradient id="gp-gold" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#f3d982"/>
+              <stop offset="50%" stop-color="#caa95a"/>
+              <stop offset="100%" stop-color="#8b6b18"/>
+            </linearGradient>
+          </defs>
+          <!-- Simple gold leaf + word stripe to suggest a logo without copying -->
+          <g fill="url(#gp-gold)">
+            <!-- stylized leaf -->
+            <path d="M22 2c-3.5 7.5-9.5 11.5-18 14 10.5 0.5 17 3.5 22 10 5-6.5 11.5-9.5 22-10-8.5-2.5-14.5-6.5-18-14-3.5 7.5-8 11.5-16 14-6-2.5-9.5-6.5-12-14z"/>
+            <!-- rounded pill (suggests wordmark block) -->
+            <rect x="56" y="8" width="112" height="20" rx="10" />
+          </g>
+        </svg>
       </p>
     </section>
     <!-- /About Our Genetics -->
