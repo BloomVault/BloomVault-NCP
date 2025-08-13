@@ -117,9 +117,94 @@
 <script type="module" src="assets/js/cart.js"></script>
 <script type="module" src="assets/js/quote.js"></script>
 
-<!-- Cart render (no sliders) + per-row "Remove -1" + hidden fields sync -->
+<!-- Live cart render + hidden fields sync (auto-updates on add/remove and across tabs) -->
 <script>
-/* ... (unchanged JS from your current file) ... */
+(function () {
+  const STORAGE_KEY = "quoteCart";
+
+  function readCart() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); }
+    catch { return []; }
+  }
+  function writeCart(cart) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+    document.dispatchEvent(new CustomEvent("cart:updated", { detail: { cart } }));
+  }
+
+  const cartContainer = document.getElementById("quote-cart");
+  const form = document.getElementById("quote-form");
+  const hiddenCart = form?.querySelector('input[name="cart"]');
+  const hiddenReadable = form?.querySelector('input[name="cart_readable"]');
+
+  function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+
+  function toReadable(cart){
+    if (!Array.isArray(cart) || !cart.length) return "";
+    return cart.map(it => `${it.name ?? 'Item'} x ${Number(it.qty||1)}`).join(', ');
+  }
+
+  function render(cart = readCart()) {
+    if (!cartContainer) return;
+
+    // Update hidden fields for submit payloads
+    if (hiddenCart) hiddenCart.value = JSON.stringify(cart);
+    if (hiddenReadable) hiddenReadable.value = toReadable(cart);
+
+    // Build simple table
+    if (!cart.length) {
+      cartContainer.innerHTML = '<p class="small">Your quote cart is empty.</p>';
+      return;
+    }
+
+    const rows = cart.map((it, idx) => {
+      const name = esc(it.name ?? 'Item');
+      const qty = Number(it.qty || 1);
+      const id = esc(String(it.id ?? idx));
+      return `
+        <tr>
+          <td>${name}</td>
+          <td class="qty-num">${qty}</td>
+          <td style="text-align:right">
+            <button class="btn" data-remove="1" data-id="${id}" data-name="${name}" style="padding:.25rem .5rem">Remove -1</button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    cartContainer.innerHTML = `
+      <table class="table">
+        <thead><tr><th>Item</th><th>Qty</th><th></th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    `;
+  }
+
+  // Handle remove -1 on this page only (optional convenience)
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-remove="1"]');
+    if (!btn) return;
+    e.preventDefault();
+    const id = String(btn.dataset.id || "");
+    const name = btn.dataset.name || "";
+    let cart = readCart();
+    const i = cart.findIndex(it => String(it.id) === id && it.name === name);
+    if (i >= 0) {
+      cart[i].qty = Math.max(0, Number(cart[i].qty||1) - 1);
+      if (cart[i].qty === 0) cart.splice(i,1);
+      writeCart(cart);  // will also emit cart:updated
+      render(cart);
+    }
+  });
+
+  // Initial paint
+  render();
+
+  // Same-tab updates (from assets/js/cart.js add-to-quote clicks)
+  document.addEventListener('cart:updated', (e) => render(e.detail?.cart));
+
+  // Cross-tab/window updates
+  window.addEventListener('storage', (e) => { if (e.key === STORAGE_KEY) render(); });
+})();
 </script>
 
 <!-- EmailJS SDK -->
