@@ -1,25 +1,12 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <title>My Cart · BloomVault Farms</title>
+<html lang="en"><head>
+  <title>Get a Quote · BloomVault Farms</title>
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
-  <!-- pull the same version as Home so styles match -->
-  <link rel="stylesheet" href="assets/css/overrides.css?v=navsync1">
-
-  <!-- Normalize Quote-page sidebar spacing + active style -->
-  <style>
-    .sidebar .tabs { display: flex; flex-direction: column; gap: .5rem; }
-    .tabs--gold .tab { padding: .55rem .75rem; border-radius: 10px; }
-    /* Softer active highlight to match the luxe look */
-    .tabs--gold .tab[aria-current="page"] {
-      box-shadow: inset 0 0 0 1px rgba(202,169,90,.28);
-      filter: none;
-    }
-  </style>
+  <link rel="stylesheet" href="assets/css/overrides.css">
 </head>
 <body>
 <div class="wrapper">
@@ -27,11 +14,11 @@
   <div class="sidebar">
     <div class="brand"><img src="assets/img/logo.png" alt="BloomVault Farms"></div>
 
-    <!-- Gold-styled nav (badge removed on this page) -->
+    <!-- Gold-styled tabs (shared across site) -->
     <nav class="tabs tabs--gold">
       <a class="tab" href="index.html">Home</a>
       <a class="tab" href="catalogue.html">Cultivar Catalogue</a>
-      <a class="tab" href="quote.html">My Cart</a>
+      <a class="tab" href="quote.html">Get a Quote</a>
       <a class="tab" href="contact.html">Contact Us</a>
     </nav>
   </div>
@@ -50,8 +37,8 @@
             “<b>Add to Quote +1</b>” in the catalogue (1 = 50, 2 = 100, etc.).
           </div>
 
+          <!-- ▼▼ Legal & Compliance block ▼▼ -->
           <hr class="gold-rule" style="margin-top:14px">
-
           <section class="compliance">
             <h4 class="subhead" style="margin:.25rem 0 .35rem">Legal &amp; Compliance (Virginia)</h4>
             <ul class="compliance-list">
@@ -66,6 +53,8 @@
               This information is provided for convenience and is not legal advice. By requesting a quote, you acknowledge these requirements and agree to follow all applicable laws.
             </p>
           </section>
+          <!-- ▲▲ Legal & Compliance block ▲▲ -->
+
         </div>
 
         <!-- Request form (right column) -->
@@ -130,18 +119,15 @@
 
 <!-- Cart render (no sliders) + per-row "Remove -1" + hidden fields sync -->
 <script>
-/* ... your existing cart render script unchanged ... */
+/* ... (unchanged JS from your current file) ... */
 </script>
 
 <!-- EmailJS SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
-<!-- EmailJS submit logic -->
+<!-- Anti-spam + EmailJS submit (no redirect) + success reset -->
 <script>
-/* ... your existing EmailJS submit script unchanged ... */
+/* ... (unchanged JS from your current file) ... */
 </script>
 
-<!-- Active tab highlighter so the current-page style is consistent -->
-<script defer src="assets/js/active-nav.js"></script>
-</body>
-</html>
+</body></html>
