@@ -15,19 +15,24 @@
   <div class="sidebar">
     <div class="brand"><img src="assets/img/logo.png" alt="BloomVault Farms"></div>
 
-    <!-- Gold-styled tabs + cart badge -->
-    <nav class="tabs tabs--gold">
+    <!-- Luxe tabs + shared cart badge (matches other pages) -->
+    <nav class="tabs">
       <a class="tab" href="index.html">Home</a>
       <a class="tab" href="catalogue.html">Cultivar Catalogue</a>
-      <a class="tab" href="quote.html">Get a Quote <span class="nav-badge" id="cart-count" hidden>0</span></a>
+      <a class="tab" href="quote.html" id="nav-quote">
+        Get a Quote
+        <span class="nav-count" id="nav-quote-count" aria-label="Items in quote cart"></span>
+      </a>
       <a class="tab" href="contact.html">Contact Us</a>
     </nav>
-    <!-- removed: Serving Virginia commercial growers only -->
+    <!-- /tabs -->
   </div>
 
   <main class="main">
     <section class="card">
       <h1>Contact Us</h1>
+
+      <!-- Note: Netlify forms work only when deployed on Netlify -->
       <form id="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
         <input type="hidden" name="form-name" value="contact">
 
@@ -45,6 +50,7 @@
           <input class="input" name="subject" placeholder="Subject">
         </div>
         <textarea class="input" name="message" rows="6" placeholder="Your message" required></textarea>
+
         <button class="btn" type="submit" style="margin-top:10px">Send Message</button>
         <div class="small" id="contact-result" style="margin-top:8px"></div>
       </form>
@@ -61,39 +67,10 @@
   </main>
 </div>
 
-<!-- Optional: your existing handler (keep if you use it) -->
+<!-- Your existing handler (optional) -->
 <script type="module" src="assets/js/contact.js"></script>
 
-<!-- Sidebar cart badge + current tab highlight -->
-<script>
-(function(){
-  const badge = document.getElementById('cart-count');
-
-  function readCart(){
-    try { return JSON.parse(localStorage.getItem('quoteCart') || '[]'); }
-    catch { return []; }
-  }
-  function totalQty(items){ return items.reduce((n,it)=> n + (it.qty || 0), 0); }
-
-  function updateBadge(){
-    if(!badge) return;
-    const q = totalQty(readCart());
-    badge.textContent = q;
-    badge.hidden = (q <= 0);
-  }
-
-  // Initial + keep in sync
-  updateBadge();
-  window.addEventListener('storage', updateBadge);
-  window.addEventListener('focus', updateBadge);
-
-  // Highlight the current tab
-  const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
-  document.querySelectorAll('.tabs a').forEach(a=>{
-    const href = (a.getAttribute('href') || '').toLowerCase();
-    if (href.endsWith(here)) a.setAttribute('aria-current','page');
-  });
-})();
-</script>
+<!-- Shared active tab + cart badge updater -->
+<script defer src="assets/js/active-nav.js"></script>
 </body>
 </html>
