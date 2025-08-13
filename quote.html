@@ -252,7 +252,7 @@
 
     const cart = readCart();
 
-    // URL-encoded payload (avoids CORS preflight)
+    // URL-encoded payload (avoids preflight)
     const data = new URLSearchParams({
       businessName: form.businessName.value,
       contactName: form.contactName.value,
@@ -273,7 +273,7 @@
     const oldLabel = submitBtn.textContent;
     submitBtn.disabled = true;
     submitBtn.textContent = "Sending…";
-    result.textContent = "";
+    result.textContent = ""; // clear any previous text
 
     try {
       const res = await fetch(ENDPOINT, {
@@ -282,39 +282,55 @@
         body: data,
         mode: "cors"
       });
-      const json = await res.json().catch(()=> ({}));
 
-      if (json && json.ok) {
+      // Handle JSON OR text responses from Apps Script
+      let ok = res.ok;
+      const ct = (res.headers.get("content-type") || "").toLowerCase();
+      if (ct.includes("application/json")) {
+        const json = await res.json().catch(() => null);
+        ok = ok || !!(json && (json.ok === true || json.result === "success"));
+      } else {
+        const text = (await res.text().catch(() => "")) || "";
+        ok = ok || /(^|\b)(ok|success)(\b|$)/i.test(text.trim());
+      }
+
+      if (ok) {
         result.textContent = "Thanks! Your quote request has been sent.";
 
-        // Show quick “Sent” bubble beside the button
-        const b = document.createElement("span");
-        b.className = "sent-bubble";
-        b.textContent = "Sent";
-        submitBtn.appendChild(b);
-        setTimeout(() => b.remove(), 1000);
-
-        // Clear cart + UI
+        // Clear cart + notify renderers
         localStorage.setItem(STORAGE_KEY, "[]");
         document.dispatchEvent(new CustomEvent("cart:updated", { detail: { cart: [] } }));
+
+        // Reset form + hidden fields (no page reload)
         form.reset();
         const hiddenCart = form.querySelector('input[name="cart"]');
         const hiddenReadable = form.querySelector('input[name="cart_readable"]');
         if (hiddenCart) hiddenCart.value = "[]";
         if (hiddenReadable) hiddenReadable.value = "";
 
-        // Soft reset the page shortly after success
-        setTimeout(() => { location.reload(); }, 1200);
-      } else {
-        result.textContent = "Sorry—there was a problem sending. Please try again.";
-        console.error("Apps Script response:", json);
+        // Restore button, then flash “Sent” bubble
+        submitBtn.disabled = false;
+        submitBtn.textContent = oldLabel;
+        const bubble = document.createElement("span");
+        bubble.className = "sent-bubble";
+        bubble.textContent = "Sent";
+        submitBtn.appendChild(bubble);
+        setTimeout(() => bubble.remove(), 1100);
+
+        return; // done — no reload
       }
+
+      // Non-ok response (keep it minimal)
+      result.textContent = "Sorry—there was a problem sending. Please try again.";
+      console.error("Apps Script response not OK.");
     } catch (err) {
-      result.textContent = "Network error while sending. Please try again.";
-      console.error(err);
+      // Silenced per your request: no visible network error text
+      console.error("Send error:", err);
     } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = oldLabel;
+      if (submitBtn.disabled) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = oldLabel;
+      }
     }
   });
 })();
