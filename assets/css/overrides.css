@@ -883,3 +883,47 @@ body{
 
 /* Hide the old badge everywhere */
 .sidebar .badge.small{ display: none !important; }
+
+/* === Sidebar nav: tighter spacing + subtler active highlight === */
+.sidebar .tabs { 
+  display: flex; 
+  flex-direction: column; 
+  gap: .5rem;                 /* was too roomy */
+  margin-top: .25rem;         /* small top offset only */
+}
+
+/* Base pill look (keeps your luxe gold) */
+.sidebar .tabs .tab {
+  display: block;
+  padding: .55rem .9rem;      /* a hair slimmer */
+  border-radius: 9999px;
+  line-height: 1;
+}
+
+/* Gold variant (your current style) */
+.sidebar .tabs--gold .tab,
+.sidebar .tabs.tabs--gold .tab {
+  background: linear-gradient(#caa95a, #b58c2b);
+  color: #111;
+  border: 1px solid #8b6b18;
+  box-shadow: 0 1px 2px rgba(0,0,0,.18);   /* softer than before */
+  transition: filter .12s ease, box-shadow .12s ease, transform .06s ease;
+}
+
+.sidebar .tabs--gold .tab:hover {
+  filter: brightness(1.04);
+  box-shadow: 0 4px 10px rgba(0,0,0,.22);
+}
+
+/* Active tab: remove the loud glow; make it subtle */
+.sidebar .tabs--gold .tab[aria-current="page"] {
+  filter: brightness(0.98);                  /* tiny dim, not flashy */
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.28);  /* gentle inset line */
+  outline: none;                              /* kill any default focus ring overlap */
+}
+
+/* Keyboard focus stays visible but not overwhelming */
+.sidebar .tabs--gold .tab:focus-visible {
+  outline: 2px solid rgba(202,169,90,.55);
+  outline-offset: 2px;
+}
