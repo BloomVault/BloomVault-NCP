@@ -7,6 +7,25 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
   <link rel="stylesheet" href="assets/css/overrides.css">
+
+  <!-- Sent bubble beside the submit button -->
+  <style>
+    #quote-submit { position: relative; }
+    .sent-bubble{
+      position: absolute; left: 100%; margin-left: 6px; top: 50%;
+      transform: translateY(-50%) translateY(6px);
+      font-size: 12px; font-weight: 700; opacity: 0; pointer-events: none;
+      background: linear-gradient(#caa95a,#b58c2b); color:#111; border:1px solid #8b6b18;
+      padding: 2px 6px; border-radius: 9999px; white-space: nowrap;
+      animation: popFade .9s ease-out forwards;
+      box-shadow: 0 1px 2px rgba(0,0,0,.25);
+    }
+    @keyframes popFade{
+      0%   { opacity: 0; transform: translateY(-50%) translateY(6px) scale(.9); }
+      20%  { opacity: 1; transform: translateY(-50%) translateY(-2px) scale(1); }
+      100% { opacity: 0; transform: translateY(-50%) translateY(-14px) scale(1); }
+    }
+  </style>
 </head>
 <body>
 <div class="wrapper">
@@ -267,6 +286,14 @@
 
       if (json && json.ok) {
         result.textContent = "Thanks! Your quote request has been sent.";
+
+        // Show quick “Sent” bubble beside the button
+        const b = document.createElement("span");
+        b.className = "sent-bubble";
+        b.textContent = "Sent";
+        submitBtn.appendChild(b);
+        setTimeout(() => b.remove(), 1000);
+
         // Clear cart + UI
         localStorage.setItem(STORAGE_KEY, "[]");
         document.dispatchEvent(new CustomEvent("cart:updated", { detail: { cart: [] } }));
@@ -275,6 +302,9 @@
         const hiddenReadable = form.querySelector('input[name="cart_readable"]');
         if (hiddenCart) hiddenCart.value = "[]";
         if (hiddenReadable) hiddenReadable.value = "";
+
+        // Soft reset the page shortly after success
+        setTimeout(() => { location.reload(); }, 1200);
       } else {
         result.textContent = "Sorry—there was a problem sending. Please try again.";
         console.error("Apps Script response:", json);
