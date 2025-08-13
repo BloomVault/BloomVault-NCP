@@ -818,3 +818,68 @@ body{
 @media (prefers-reduced-motion: reduce){
   .card.mission::after { animation: none; }
 }
+
+/* ========== Luxe sidebar tabs (matches gold buttons) ========== */
+.sidebar .tabs{
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+  padding: .25rem 0;
+}
+
+.sidebar .tabs .tab{
+  display: block;
+  width: 100%;
+  text-decoration: none;
+  text-align: center;
+  padding: .65rem .9rem;
+  border-radius: var(--radius, 14px);
+
+  /* Gold button look */
+  background: linear-gradient(#caa95a, #b58c2b);
+  color: #111;
+  border: 1px solid #8b6b18;
+  box-shadow: 0 6px 16px rgba(0,0,0,.25);
+
+  font-weight: 700;
+  letter-spacing: .02em;
+
+  transition: transform .08s ease, box-shadow .12s ease, filter .12s ease;
+}
+
+.sidebar .tabs .tab:hover{
+  filter: brightness(1.05);
+  box-shadow: 0 10px 20px rgba(0,0,0,.28);
+}
+
+.sidebar .tabs .tab:active{
+  transform: translateY(1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,.25);
+}
+
+/* Active page (set aria-current="page" on that link in HTML) */
+.sidebar .tabs .tab[aria-current="page"]{
+  background: linear-gradient(#f3d982, #caa95a);
+  box-shadow:
+    0 0 0 2px rgba(202,169,90,.35),
+    0 10px 20px rgba(0,0,0,.30);
+}
+
+/* Keyboard focus ring */
+.sidebar .tabs .tab:focus-visible{
+  outline: none;
+  box-shadow:
+    0 0 0 3px rgba(243,217,130,.60),
+    0 6px 16px rgba(0,0,0,.35);
+}
+
+/* Brand image tidy */
+.sidebar .brand img{
+  max-width: 160px;
+  height: auto;
+  display: block;
+  margin: 0 auto 10px;
+}
+
+/* Hide the old badge everywhere */
+.sidebar .badge.small{ display: none !important; }
