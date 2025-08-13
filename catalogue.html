@@ -211,46 +211,12 @@
     </main>
   </div>
 
-  <!-- Optional: only needed if other pages use it -->
+  <!-- Global cart handler (adds +1 per click sitewide) -->
   <script type="module" src="assets/js/cart.js"></script>
 
-  <!-- Add-to-Quote (no redirect) + persist to localStorage + "+1" bubble -->
+  <!-- Keep ONLY the active-tab highlighter (removed local Add-to-Quote wiring) -->
   <script>
   (function () {
-    const STORAGE_KEY = "quoteCart";
-
-    function readCart() {
-      try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); }
-      catch { return []; }
-    }
-    function writeCart(cart) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
-    }
-    function addOne(id, name) {
-      let cart = readCart();
-      const i = cart.findIndex(it => String(it.id) === String(id) && it.name === name);
-      if (i >= 0) cart[i].qty = (cart[i].qty || 0) + 1;
-      else cart.push({ id: String(id), name, qty: 1 });
-      writeCart(cart);
-    }
-    function plusOneBubble(btn) {
-      const b = document.createElement("span");
-      b.className = "plus-one";
-      b.textContent = "+1";
-      btn.appendChild(b);
-      setTimeout(() => b.remove(), 850);
-    }
-
-    document.addEventListener("click", function (e) {
-      const btn = e.target.closest(".add-to-quote");
-      if (!btn) return;
-      e.preventDefault();
-      addOne(btn.dataset.id, btn.dataset.name);
-      plusOneBubble(btn);
-      if (window.showToast) showToast(`Added “${btn.dataset.name}” +1`);
-    });
-
-    // Highlight current tab
     const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
     document.querySelectorAll('.tabs a').forEach(a=>{
       const href = (a.getAttribute('href') || '').toLowerCase();
