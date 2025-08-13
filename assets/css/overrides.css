@@ -786,7 +786,7 @@ body{
 
 /* Gentle collective shimmer (kept subtle) */
 @keyframes bvTwinkle{
-  0%,100% { opacity: .30; }
+  0%,100% { opacity: .55; }
   50%     { opacity: .55; }
 }
 
