@@ -14,7 +14,7 @@
     .detail-meta { line-height: 1.8 }
     @media (min-width: 800px) { .detail-wrap { grid-template-columns: 1fr 1fr; } }
 
-    /* "+1" bubble (scoped to this page) */
+    /* "+1" bubble (scoped here) */
     .add-to-quote { position: relative; }
     .add-to-quote .plus-one {
       position: absolute; left: 100%; margin-left: 6px; top: 50%;
@@ -36,14 +36,15 @@
   <div class="wrapper">
     <div class="sidebar">
       <div class="brand"><img src="assets/img/logo.png" alt="BloomVault Farms" /></div>
-      <!-- Gold-styled nav with live cart badge -->
+
+      <!-- Luxe gold nav + live cart badge -->
       <nav class="tabs tabs--gold">
         <a class="tab" href="index.html">Home</a>
         <a class="tab" href="catalogue.html">Cultivar Catalogue</a>
         <a class="tab" href="quote.html">Get a Quote <span class="nav-badge" id="cart-count" hidden>0</span></a>
         <a class="tab" href="contact.html">Contact Us</a>
       </nav>
-      <!-- removed the old “Serving Virginia…” tag -->
+      <!-- (Serving VA only tag removed sitewide) -->
     </div>
 
     <main class="main">
@@ -109,7 +110,7 @@
         </div>
       `;
 
-      // -------- Cart helpers (shared pattern) --------
+      // -------- Cart helpers --------
       const STORAGE_KEY = "quoteCart";
       function readCart() {
         try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); }
@@ -117,6 +118,8 @@
       }
       function writeCart(cart) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+        // keep sidebar badge in sync (use global helper if present)
+        if (window.bvUpdateCartBadge) window.bvUpdateCartBadge();
       }
       function addOne(itemId, name) {
         let cart = readCart();
@@ -133,10 +136,10 @@
         setTimeout(() => b.remove(), 850);
       }
 
-      // -------- Sidebar badge helpers --------
+      // -------- Local badge fallback (if global not loaded) --------
       const badge = document.getElementById('cart-count');
       function totalQty(items){ return items.reduce((n,it)=> n + (it.qty || 0), 0); }
-      function updateBadge(){
+      function updateBadgeLocal(){
         if(!badge) return;
         const q = totalQty(readCart());
         badge.textContent = q;
@@ -149,15 +152,19 @@
         btn.addEventListener("click", function () {
           addOne(this.dataset.id, this.dataset.name);
           plusOneBubble(this);
-          updateBadge();
+          // Update badge (global helper first, fallback otherwise)
+          if (window.bvUpdateCartBadge) window.bvUpdateCartBadge(); else updateBadgeLocal();
           if (window.showToast) showToast(`Added “${this.dataset.name}” +1`);
+          // Cross-tab sync
+          window.dispatchEvent(new Event('storage'));
         });
       }
 
-      // Init / keep badge current; highlight current tab
-      updateBadge();
-      window.addEventListener('storage', updateBadge);
-      window.addEventListener('focus', updateBadge);
+      // Init badge + active tab
+      if (window.bvUpdateCartBadge) window.bvUpdateCartBadge(); else updateBadgeLocal();
+      window.addEventListener('storage', () => { if (window.bvUpdateCartBadge) window.bvUpdateCartBadge(); else updateBadgeLocal(); });
+      window.addEventListener('focus',  () => { if (window.bvUpdateCartBadge) window.bvUpdateCartBadge(); else updateBadgeLocal(); });
+
       const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
       document.querySelectorAll('.tabs a').forEach(a=>{
         const href = (a.getAttribute('href') || '').toLowerCase();
