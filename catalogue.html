@@ -30,7 +30,7 @@
       display:flex; flex-direction:column; gap:.5rem;
     }
     #catalog .catalog-grid .card .actions{
-      margin-top:.5rem; /* keep buttons close to title even without extra text */
+      margin-top:.5rem;
     }
     #catalog .catalog-grid .card img{ display:block; }
   </style>
@@ -40,14 +40,17 @@
     <div class="sidebar">
       <div class="brand"><img src="assets/img/logo.png" alt="BloomVault Farms" /></div>
 
-      <!-- GOLD TABS + CART BADGE -->
-      <nav class="tabs tabs--gold">
+      <!-- Luxe tabs + shared cart badge (matches other pages) -->
+      <nav class="tabs">
         <a class="tab" href="index.html">Home</a>
         <a class="tab" href="catalogue.html">Cultivar Catalogue</a>
-        <a class="tab" href="quote.html">Get a Quote <span class="nav-badge" id="cart-count" hidden>0</span></a>
+        <a class="tab" href="quote.html" id="nav-quote">
+          Get a Quote
+          <span class="nav-count" id="nav-quote-count" aria-label="Items in quote cart"></span>
+        </a>
         <a class="tab" href="contact.html">Contact Us</a>
       </nav>
-      <!-- /GOLD TABS -->
+      <!-- /tabs -->
     </div>
 
     <main class="main" id="catalog">
@@ -241,43 +244,12 @@
       addOne(btn.dataset.id, btn.dataset.name);
       plusOneBubble(btn);
       if (window.showToast) showToast(`Added “${btn.dataset.name}” +1`);
-      // ping sidebar badge if present
-      const evt = new Event('storage'); // triggers our badge updater below to re-run
-      window.dispatchEvent(evt);
+      // active-nav.js will notice localStorage.setItem and refresh the badge
     });
   })();
   </script>
 
-  <!-- Sidebar cart badge + current tab highlight -->
-  <script>
-  (function(){
-    const badge = document.getElementById('cart-count');
-
-    function readCart(){
-      try { return JSON.parse(localStorage.getItem('quoteCart') || '[]'); }
-      catch { return []; }
-    }
-    function totalQty(items){ return items.reduce((n,it)=> n + (it.qty || 0), 0); }
-
-    function updateBadge(){
-      if(!badge) return;
-      const q = totalQty(readCart());
-      badge.textContent = q;
-      badge.hidden = (q <= 0);
-    }
-
-    // Initial + keep in sync (also fired when addOne dispatches a storage event)
-    updateBadge();
-    window.addEventListener('storage', updateBadge);
-    window.addEventListener('focus', updateBadge);
-
-    // Highlight current tab for accessibility
-    const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
-    document.querySelectorAll('.tabs a').forEach(a=>{
-      const href = (a.getAttribute('href') || '').toLowerCase();
-      if (href.endsWith(here)) a.setAttribute('aria-current','page');
-    });
-  })();
-  </script>
+  <!-- Shared active tab + cart badge updater -->
+  <script defer src="assets/js/active-nav.js"></script>
 </body>
 </html>
