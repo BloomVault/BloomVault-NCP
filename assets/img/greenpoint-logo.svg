@@ -1,8 +1,0 @@
-<!-- assets/img/greenpoint-logo.svg -->
-<svg xmlns="http://www.w3.org/2000/svg"
-     viewBox="0 0 500 500" width="500" height="500" role="img"
-     aria-label="Greenpoint Seeds logo">
-  <!-- The PNG is referenced inside the SVG so you can scale this file like a vector -->
-  <image href="greenpoint-logo.png" x="0" y="0" width="500" height="500"
-         preserveAspectRatio="xMidYMid meet" />
-</svg>
