@@ -15,11 +15,11 @@
   <div class="sidebar">
     <div class="brand"><img src="assets/img/logo.png" alt="BloomVault Farms"></div>
 
-    <!-- Gold-styled nav + live cart badge -->
+    <!-- Gold-styled nav (badge removed on this page) -->
     <nav class="tabs tabs--gold">
       <a class="tab" href="index.html">Home</a>
       <a class="tab" href="catalogue.html">Cultivar Catalogue</a>
-      <a class="tab" href="quote.html">Get a Quote <span class="nav-badge" id="cart-count" hidden>0</span></a>
+      <a class="tab" href="quote.html">Get a Quote</a>
       <a class="tab" href="contact.html">Contact Us</a>
     </nav>
   </div>
@@ -114,26 +114,6 @@
   </main>
 </div>
 
-<!-- Global: live cart badge helper (call from anywhere) -->
-<script>
-(function(){
-  function readCart(){
-    try { return JSON.parse(localStorage.getItem('quoteCart') || '[]'); }
-    catch { return []; }
-  }
-  function totalQty(items){ return items.reduce((n,it)=> n + (it.qty || 0), 0); }
-  window.bvUpdateCartBadge = function(){
-    const badge = document.getElementById('cart-count');
-    if(!badge) return;
-    const q = totalQty(readCart());
-    badge.textContent = q;
-    badge.hidden = (q <= 0);
-  };
-  // run once
-  window.bvUpdateCartBadge();
-})();
-</script>
-
 <!-- Optional: keep your modules if used elsewhere -->
 <script type="module" src="assets/js/cart.js"></script>
 <script type="module" src="assets/js/quote.js"></script>
@@ -172,8 +152,6 @@
   function writeCart(cart) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
     updateHidden(cart);
-    // <-- update the left badge immediately (same-tab)
-    if (window.bvUpdateCartBadge) window.bvUpdateCartBadge();
   }
 
   // Support old ?add=Name links: add one, then clean the URL once
@@ -198,7 +176,7 @@
       const next = (cart[i].qty || 0) - 1;
       if (next <= 0) cart.splice(i, 1);
       else cart[i].qty = next;
-      writeCart(cart);        // updates badge too
+      writeCart(cart);
     }
   }
 
@@ -243,7 +221,7 @@
     const tr = btn.closest("tr");
     const id = tr.getAttribute("data-id");
     const name = tr.getAttribute("data-name");
-    decOne(id, name);  // this also updates the badge
+    decOne(id, name);
     render();
   });
 
@@ -353,14 +331,8 @@
       localStorage.removeItem(STORAGE_KEY);
       form.reset();
       result.textContent = "Thanks! Your quote request has been sent. We’ll be in touch soon.";
-
-      // Empty cart UI
       const cartMount = document.getElementById("quote-cart");
       if (cartMount) cartMount.innerHTML = '<p class="small">Your cart is empty. Go back to the <a href="catalogue.html">catalogue</a> to add cultivars.</p>';
-
-      // Update the left nav badge immediately after clearing cart
-      if (window.bvUpdateCartBadge) window.bvUpdateCartBadge();
-
     } catch (err) {
       console.error(err);
       result.textContent = "Sorry—couldn’t send just now. Please try again.";
@@ -371,7 +343,7 @@
 })();
 </script>
 
-<!-- Current tab highlighter (kept; badge now handled globally) -->
+<!-- Active tab highlighter (badge logic removed) -->
 <script>
 (function(){
   const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
