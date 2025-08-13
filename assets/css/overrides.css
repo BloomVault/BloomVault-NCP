@@ -965,3 +965,60 @@ body{
   letter-spacing: .02em;
   line-height: 1;
 }
+
+/* === Sitewide ocean-gradient background (non-destructive) === */
+:root{
+  /* Dark luxe palette (tweak if desired) */
+  --deep-1: #0b0f14;   /* base */
+  --deep-2: #0d131b;   /* top */
+  --wave-1: rgba(22, 52, 78, 0.18);  /* teal glow */
+  --wave-2: rgba(16, 40, 62, 0.14);  /* deeper teal */
+  --ripple: rgba(40, 90, 120, 0.10); /* faint ripples */
+}
+
+/* Neutralize any old page-wide background images/effects */
+html, body {
+  background: none !important;
+  background-image: none !important;
+}
+
+/* Base gradient (fixed so content scrolls over it) */
+body::after{
+  content:"";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background: linear-gradient(180deg, var(--deep-2) 0%, var(--deep-1) 100%);
+}
+
+/* Wave layers (gentle movement) */
+body::before{
+  content:"";
+  position: fixed;
+  inset: -2px;                 /* avoid hairline gaps on some GPUs */
+  z-index: -1;
+  pointer-events: none;
+  background:
+    /* soft glow sweeping up from bottom-left */
+    radial-gradient(65% 45% at 10% 120%, var(--wave-1) 0%, transparent 60%),
+    /* soft glow sweeping down from top-right */
+    radial-gradient(65% 45% at 90% -20%, var(--wave-2) 0%, transparent 60%),
+    /* subtle ripples */
+    repeating-radial-gradient(circle at 50% 120%, var(--ripple) 0 8px, transparent 8px 16px);
+  background-blend-mode: screen, screen, normal;
+  background-size: 160% 160%, 140% 140%, 200% 120%;
+  animation: bv-wave-a 28s ease-in-out infinite alternate,
+             bv-wave-b 46s ease-in-out infinite alternate;
+  will-change: transform, background-position;
+}
+
+/* Horizontal + vertical drift (ocean-like) */
+@keyframes bv-wave-a{
+  0%   { background-position:   0%   0%, 100%   0%,   0%   0%; }
+  100% { background-position: 100% 50%,   0% 50%,  20%  10%; }
+}
+@keyframes bv-wave-b{
+  0%   { transform: translateY(0px); }
+  100% { transform: translateY(-6px); }
+}
