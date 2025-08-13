@@ -790,6 +790,30 @@ body{
   50%     { opacity: .55; }
 }
 
+/* Button + logo row */
+.partner-cta{
+  display: inline-flex;           /* sits nicely after paragraphs */
+  align-items: center;
+  gap: .6rem;
+  flex-wrap: wrap;
+  margin-top: .6rem;
+}
+
+/* Match the button’s visual height; tweak if your .btn height differs */
+.partner-logo{
+  height: 40px;
+  width: auto;
+  display: block;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,.25));
+  transition: filter .15s ease, transform .08s ease;
+}
+.partner-logo:hover{
+  filter: brightness(1.05) drop-shadow(0 3px 8px rgba(0,0,0,.35));
+}
+.partner-logo:active{
+  transform: translateY(1px);
+}
+
 /* Respect motion preferences */
 @media (prefers-reduced-motion: reduce){
   .card.mission::after { animation: none; }
