@@ -732,3 +732,65 @@ body{
   background:#111; color:var(--gold-1); border:1px solid var(--gold-3);
   box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--gold-2) 35%, transparent);
 }
+
+/* ===================== */
+/* Mission: gold twinkles */
+/* ===================== */
+
+/* Ensure content sits above effects */
+.card.mission { position: relative; overflow: hidden; }
+.card.mission > * { position: relative; z-index: 2; }
+
+/* Existing darkening overlay stays under twinkles */
+.card.mission::before {
+  content:"";
+  position:absolute; inset:0; z-index: 0; pointer-events:none;
+  background: linear-gradient(
+    to bottom,
+    rgba(15,15,15,.60) 0%,
+    rgba(15,15,15,.38) 35%,
+    rgba(15,15,15,.62) 100%
+  );
+}
+
+/* Twinkle layer (faint gold dots) */
+.card.mission::after{
+  content:"";
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+
+  /* scatter of tiny gold dots using multiple radial-gradients */
+  background:
+    radial-gradient(circle 1.8px at 8% 18%,  rgba(202,169,90,.42) 0, rgba(202,169,90,0) 60%),
+    radial-gradient(circle 1.6px at 18% 38%, rgba(202,169,90,.36) 0, rgba(202,169,90,0) 60%),
+    radial-gradient(circle 1.4px at 28% 24%, rgba(202,169,90,.34) 0, rgba(202,169,90,0) 60%),
+    radial-gradient(circle 1.8px at 35% 12%, rgba(202,169,90,.46) 0, rgba(202,169,90,0) 60%),
+    radial-gradient(circle 1.5px at 41% 32%, rgba(202,169,90,.40) 0, rgba(202,169,90,0) 60%),
+    radial-gradient(circle 1.7px at 52% 20%, rgba(202,169,90,.44) 0, rgba(202,169,90,0) 60%),
+    radial-gradient(circle 1.4px at 58% 36%, rgba(202,169,90,.33) 0, rgba(202,169,90,0) 60%),
+    radial-gradient(circle 1.6px at 66% 16%, rgba(202,169,90,.40) 0, rgba(202,169,90,0) 60%),
+    radial-gradient(circle 1.5px at 74% 30%, rgba(202,169,90,.38) 0, rgba(202,169,90,0) 60%),
+    radial-gradient(circle 1.9px at 82% 18%, rgba(202,169,90,.48) 0, rgba(202,169,90,0) 60%),
+    radial-gradient(circle 1.6px at 12% 62%, rgba(202,169,90,.36) 0, rgba(202,169,90,0) 60%),
+    radial-gradient(circle 1.8px at 24% 72%, rgba(202,169,90,.44) 0, rgba(202,169,90,0) 60%),
+    radial-gradient(circle 1.5px at 36% 58%, rgba(202,169,90,.35) 0, rgba(202,169,90,0) 60%),
+    radial-gradient(circle 1.7px at 48% 70%, rgba(202,169,90,.42) 0, rgba(202,169,90,0) 60%),
+    radial-gradient(circle 1.4px at 60% 60%, rgba(202,169,90,.32) 0, rgba(202,169,90,0) 60%),
+    radial-gradient(circle 1.8px at 72% 74%, rgba(202,169,90,.45) 0, rgba(202,169,90,0) 60%),
+    radial-gradient(circle 1.5px at 84% 62%, rgba(202,169,90,.36) 0, rgba(202,169,90,0) 60%),
+    radial-gradient(circle 1.6px at 92% 78%, rgba(202,169,90,.38) 0, rgba(202,169,90,0) 60%);
+
+  opacity: .45;                 /* overall faintness */
+  filter: drop-shadow(0 0 2px rgba(202,169,90,.25));
+  animation: bvTwinkle 5.5s ease-in-out infinite;
+}
+
+/* Gentle collective shimmer (kept subtle) */
+@keyframes bvTwinkle{
+  0%,100% { opacity: .30; }
+  50%     { opacity: .55; }
+}
+
+/* Respect motion preferences */
+@media (prefers-reduced-motion: reduce){
+  .card.mission::after { animation: none; }
+}
