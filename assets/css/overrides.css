@@ -1106,3 +1106,36 @@ body::before{
 @media (prefers-reduced-motion: reduce){
   body::before{ animation: none; }
 }
+
+/* === Sitewide plain gradient (remove all previous effects) === */
+
+/* Reset any backgrounds and pseudo-element layers */
+html, body, .wrapper, .main, .sidebar {
+  background: none !important;
+  background-image: none !important;
+}
+body::before,
+body::after {
+  content: none !important;
+  background: none !important;
+  animation: none !important;
+}
+
+/* Plain gradient using your dark palette with a soft gold hint */
+:root{
+  --bg-a: #0b0f14;               /* deep charcoal */
+  --bg-b: #0d0f12;               /* charcoal */
+  --bg-c: #151a22;               /* card dark */
+  --gold-hint: rgba(202,169,90,.06); /* luxe gold (very subtle) */
+}
+
+body{
+  /* one simple gradient only */
+  background: linear-gradient(
+    165deg,
+    var(--bg-a) 0%,
+    var(--gold-hint) 28%,
+    var(--bg-b) 55%,
+    var(--bg-c) 100%
+  ) fixed;
+}
