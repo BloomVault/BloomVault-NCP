@@ -205,29 +205,18 @@
 })();
 </script>
 
-<!-- EmailJS SDK (must load before the form handler below) -->
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-
-<!-- Intercept submit, send via EmailJS (no redirect), then clear form/cart -->
+<!-- Intercept submit, send to Google Apps Script (no redirect) -->
 <script>
 (function () {
   const STORAGE_KEY = "quoteCart";
-  const TO_EMAIL = "bloomvaultfarms@gmail.com"; // recipient in your template
-
-  // Your EmailJS credentials
-  const EMAILJS_PUBLIC_KEY = "Iph-DFQJujXfJ_gni";
-  const EMAILJS_SERVICE_ID = "service_5n04n5s";
-  const EMAILJS_TEMPLATE_ID = "template_sujzntx";
+  const ENDPOINT = "https://script.google.com/macros/s/AKfycbyKZunprDq3B1fV54gtS-VVky8XfGROwNQYbxlqcqfMXcOCrU6xYc2uxdJrZVItJis2eg/exec";
 
   const form = document.getElementById("quote-form");
   const submitBtn = document.getElementById("quote-submit");
   const result = document.getElementById("quote-result");
-  const hp = form.querySelector('[name="bot-field"]');
+  const hp = form.querySelector('[name="bot-field"]');  // honeypot
   const submitMs = form.querySelector('[name="submit_ms"]');
   const start = performance.now();
-
-  // Initialize EmailJS
-  try { emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY }); } catch(e) { console.warn("EmailJS init warning:", e); }
 
   function readCart() {
     try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); }
@@ -238,19 +227,14 @@
   }
 
   form.addEventListener("submit", async (e) => {
-    e.preventDefault(); // prevent default POST (avoids 405)
-
-    // Honeypot check
-    if (hp && hp.value) return;
-
-    // Time-on-form
+    e.preventDefault();
+    if (hp && hp.value) return; // bot check
     if (submitMs) submitMs.value = String(Math.round(performance.now() - start));
 
     const cart = readCart();
 
-    // Build data for EmailJS template variables
-    const data = {
-      to_email: TO_EMAIL,
+    // URL-encoded payload (avoids CORS preflight)
+    const data = new URLSearchParams({
       businessName: form.businessName.value,
       contactName: form.contactName.value,
       email: form.email.value,
@@ -264,35 +248,40 @@
       notes: form.notes.value,
       cart_json: JSON.stringify(cart),
       cart_readable: cartReadable(cart),
-      submit_ms: submitMs ? submitMs.value : "",
-      // Helpful extras commonly used in templates:
-      reply_to: form.email.value,
-      from_name: form.contactName.value
-    };
+      submit_ms: submitMs ? submitMs.value : ""
+    });
 
-    // UI: sending…
-    submitBtn.disabled = true;
     const oldLabel = submitBtn.textContent;
+    submitBtn.disabled = true;
     submitBtn.textContent = "Sending…";
     result.textContent = "";
 
     try {
-      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, data);
-      result.textContent = "Thanks! Your quote request has been sent.";
+      const res = await fetch(ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: data,
+        mode: "cors"
+      });
+      const json = await res.json().catch(()=> ({}));
 
-      // Clear cart + UI
-      localStorage.setItem(STORAGE_KEY, "[]");
-      document.dispatchEvent(new CustomEvent("cart:updated", { detail: { cart: [] } }));
-
-      // Reset form + hidden fields
-      form.reset();
-      const hiddenCart = form.querySelector('input[name="cart"]');
-      const hiddenReadable = form.querySelector('input[name="cart_readable"]');
-      if (hiddenCart) hiddenCart.value = "[]";
-      if (hiddenReadable) hiddenReadable.value = "";
+      if (json && json.ok) {
+        result.textContent = "Thanks! Your quote request has been sent.";
+        // Clear cart + UI
+        localStorage.setItem(STORAGE_KEY, "[]");
+        document.dispatchEvent(new CustomEvent("cart:updated", { detail: { cart: [] } }));
+        form.reset();
+        const hiddenCart = form.querySelector('input[name="cart"]');
+        const hiddenReadable = form.querySelector('input[name="cart_readable"]');
+        if (hiddenCart) hiddenCart.value = "[]";
+        if (hiddenReadable) hiddenReadable.value = "";
+      } else {
+        result.textContent = "Sorry—there was a problem sending. Please try again.";
+        console.error("Apps Script response:", json);
+      }
     } catch (err) {
+      result.textContent = "Network error while sending. Please try again.";
       console.error(err);
-      result.textContent = "Sorry—there was a problem sending. Please try again in a moment.";
     } finally {
       submitBtn.disabled = false;
       submitBtn.textContent = oldLabel;
