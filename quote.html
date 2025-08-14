@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="assets/css/styles.css">
   <link rel="stylesheet" href="assets/css/overrides.css">
 
-  <!-- Sent bubble beside the submit button -->
+  <!-- Sent bubble beside the submit button (kept; harmless if unused) -->
   <style>
     #quote-submit { position: relative; }
     .sent-bubble{
@@ -79,7 +79,7 @@
         <!-- Request form (right column) -->
         <div class="card">
           <h3>Request a Quote</h3>
-          <form id="quote-form" name="quote" method="POST">
+          <form id="quote-form" name="quote" method="POST" autocomplete="off">
             <!-- Honeypot (off-screen) -->
             <div class="hp" aria-hidden="true" tabindex="-1">
               <label>Don’t fill this out:
@@ -224,11 +224,30 @@
 })();
 </script>
 
-<!-- Intercept submit, send to Google Apps Script (no redirect) -->
+<!-- Intercept submit, send to Google Apps Script, then redirect to Thank You page -->
 <script>
 (function () {
-  const STORAGE_KEY = "quoteCart";
   const ENDPOINT = "https://script.google.com/macros/s/AKfycbyKZunprDq3B1fV54gtS-VVky8XfGROwNQYbxlqcqfMXcOCrU6xYc2uxdJrZVItJis2eg/exec";
+  const CART_KEY = "quoteCart";
+  const CLEAR_PREFIXES = ["bloomvault","bv_","cart","quote"]; // add more if needed
+
+  // Build a path-relative URL so it works under /BloomVaultFarms/ on GitHub Pages
+  function thankYouURL() {
+    const base = location.pathname.replace(/[^\/]+$/, ""); // strip filename
+    return base + "thank-you.html";
+  }
+
+  function clearAppStorage() {
+    try {
+      Object.keys(localStorage).forEach(k => {
+        const low = k.toLowerCase();
+        if (low === CART_KEY.toLowerCase() || CLEAR_PREFIXES.some(p => low.includes(p))) {
+          localStorage.removeItem(k);
+        }
+      });
+    } catch(_) {}
+    try { sessionStorage.clear(); } catch(_) {}
+  }
 
   const form = document.getElementById("quote-form");
   const submitBtn = document.getElementById("quote-submit");
@@ -238,7 +257,7 @@
   const start = performance.now();
 
   function readCart() {
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); }
+    try { return JSON.parse(localStorage.getItem(CART_KEY) || "[]"); }
     catch { return []; }
   }
   function cartReadable(cart){
@@ -295,36 +314,31 @@
       }
 
       if (ok) {
-        result.textContent = "Thanks! Your quote request has been sent.";
-
         // Clear cart + notify renderers
-        localStorage.setItem(STORAGE_KEY, "[]");
+        localStorage.setItem(CART_KEY, "[]");
         document.dispatchEvent(new CustomEvent("cart:updated", { detail: { cart: [] } }));
 
-        // Reset form + hidden fields (no page reload)
+        // Reset form + hidden fields (for good measure)
         form.reset();
         const hiddenCart = form.querySelector('input[name="cart"]');
         const hiddenReadable = form.querySelector('input[name="cart_readable"]');
         if (hiddenCart) hiddenCart.value = "[]";
         if (hiddenReadable) hiddenReadable.value = "";
 
-        // Restore button, then flash “Sent” bubble
-        submitBtn.disabled = false;
-        submitBtn.textContent = oldLabel;
-        const bubble = document.createElement("span");
-        bubble.className = "sent-bubble";
-        bubble.textContent = "Sent";
-        submitBtn.appendChild(bubble);
-        setTimeout(() => bubble.remove(), 1100);
+        // Drop query params and purge app storage
+        try { history.replaceState(null, "", location.pathname); } catch(_) {}
+        clearAppStorage();
 
-        return; // done — no reload
+        // Redirect to Thank You page
+        location.assign(thankYouURL());
+        return;
       }
 
-      // Non-ok response (keep it minimal)
+      // Non-ok response (minimal visible feedback; no bottom banner)
       result.textContent = "Sorry—there was a problem sending. Please try again.";
       console.error("Apps Script response not OK.");
     } catch (err) {
-      // Silenced per your request: no visible network error text
+      // No visible network error banner per your preference
       console.error("Send error:", err);
     } finally {
       if (submitBtn.disabled) {
