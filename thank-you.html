@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Thank You · BloomVault Farms</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/overrides.css">
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+  <meta http-equiv="Pragma" content="no-cache">
+  <style>
+    .wrap{min-height:100svh;display:grid;place-items:center;padding:24px}
+    .card{max-width:720px;margin:auto;text-align:center;padding:28px 24px;border-radius:14px;
+          background:#111;color:#fff;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+    .title{font-family:"Bebas Neue",system-ui,sans-serif;font-size:42px;letter-spacing:.5px;margin:0 0 8px}
+    .gold{background:linear-gradient(#caa95a,#b58c2b);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .cta{display:inline-block;margin-top:18px;padding:12px 18px;border-radius:8px;
+         background:linear-gradient(#caa95a,#b58c2b);color:#111;font-weight:700;text-decoration:none}
+    p{opacity:.9;line-height:1.5}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="card">
+      <h1 class="title"><span class="gold">Thank you!</span></h1>
+      <p>Your request was sent successfully. We’ve cleared your cart and form so everything’s fresh.</p>
+      <p>Questions? Email <strong>BloomVaultFarms@gmail.com</strong>.</p>
+      <a class="cta" href="./">Return to Home</a>
+    </section>
+  </main>
+  <script>
+    // Belt & suspenders: clear any lingering state if someone lands here directly
+    (function(){ try{localStorage.clear()}catch(_){} try{sessionStorage.clear()}catch(_){} })();
+  </script>
+</body>
+</html>
