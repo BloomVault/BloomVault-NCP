@@ -224,14 +224,14 @@
 })();
 </script>
 
-<!-- Intercept submit, send to Google Apps Script, then redirect to Thank You page -->
+<!-- MOBILE-SAFE: Intercept submit → send (fetch/beacon/iframe) → clear → redirect to Thank You -->
 <script>
 (function () {
   const ENDPOINT = "https://script.google.com/macros/s/AKfycbyKZunprDq3B1fV54gtS-VVky8XfGROwNQYbxlqcqfMXcOCrU6xYc2uxdJrZVItJis2eg/exec";
   const CART_KEY = "quoteCart";
   const CLEAR_PREFIXES = ["bloomvault","bv_","cart","quote"]; // add more if needed
 
-  // Build a path-relative URL so it works under /BloomVaultFarms/ on GitHub Pages
+  // Works whether you're at /quote.html or /folder/quote.html (GitHub Pages friendly)
   function thankYouURL() {
     const base = location.pathname.replace(/[^\/]+$/, ""); // strip filename
     return base + "thank-you.html";
@@ -249,30 +249,13 @@
     try { sessionStorage.clear(); } catch(_) {}
   }
 
-  const form = document.getElementById("quote-form");
-  const submitBtn = document.getElementById("quote-submit");
-  const result = document.getElementById("quote-result");
-  const hp = form.querySelector('[name="bot-field"]');  // honeypot
-  const submitMs = form.querySelector('[name="submit_ms"]');
-  const start = performance.now();
-
   function readCart() {
     try { return JSON.parse(localStorage.getItem(CART_KEY) || "[]"); }
     catch { return []; }
   }
-  function cartReadable(cart){
-    return (cart||[]).map(it => `${it.name ?? 'Item'} x ${Number(it.qty||1)}`).join(', ') || "—";
-  }
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    if (hp && hp.value) return; // bot check
-    if (submitMs) submitMs.value = String(Math.round(performance.now() - start));
-
-    const cart = readCart();
-
-    // URL-encoded payload (avoids preflight)
-    const data = new URLSearchParams({
+  function serialize(form, cart, submitMs) {
+    const p = new URLSearchParams({
       businessName: form.businessName.value,
       contactName: form.contactName.value,
       email: form.email.value,
@@ -284,25 +267,29 @@
       license: form.license.value,
       resale: form.resale.value,
       notes: form.notes.value,
-      cart_json: JSON.stringify(cart),
-      cart_readable: cartReadable(cart),
-      submit_ms: submitMs ? submitMs.value : ""
+      cart_json: JSON.stringify(cart || []),
+      cart_readable: (cart||[]).map(it => `${it.name ?? 'Item'} x ${Number(it.qty||1)}`).join(', ') || "—",
+      submit_ms: submitMs || ""
     });
+    return p.toString();
+  }
 
-    const oldLabel = submitBtn.textContent;
-    submitBtn.disabled = true;
-    submitBtn.textContent = "Sending…";
-    result.textContent = ""; // clear any previous text
-
+  // Attempt 1: fetch with timeout
+  async function tryFetch(payload, timeoutMs = 8000) {
+    const ctl = new AbortController();
+    const t = setTimeout(() => ctl.abort(), timeoutMs);
     try {
       const res = await fetch(ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: data,
-        mode: "cors"
+        body: payload,
+        mode: "cors",
+        signal: ctl.signal
       });
+      clearTimeout(t);
+      if (!res) return false;
 
-      // Handle JSON OR text responses from Apps Script
+      // Accept JSON ok or a text "ok/success"
       let ok = res.ok;
       const ct = (res.headers.get("content-type") || "").toLowerCase();
       if (ct.includes("application/json")) {
@@ -312,40 +299,110 @@
         const text = (await res.text().catch(() => "")) || "";
         ok = ok || /(^|\b)(ok|success)(\b|$)/i.test(text.trim());
       }
-
-      if (ok) {
-        // Clear cart + notify renderers
-        localStorage.setItem(CART_KEY, "[]");
-        document.dispatchEvent(new CustomEvent("cart:updated", { detail: { cart: [] } }));
-
-        // Reset form + hidden fields (for good measure)
-        form.reset();
-        const hiddenCart = form.querySelector('input[name="cart"]');
-        const hiddenReadable = form.querySelector('input[name="cart_readable"]');
-        if (hiddenCart) hiddenCart.value = "[]";
-        if (hiddenReadable) hiddenReadable.value = "";
-
-        // Drop query params and purge app storage
-        try { history.replaceState(null, "", location.pathname); } catch(_) {}
-        clearAppStorage();
-
-        // Redirect to Thank You page
-        location.assign(thankYouURL());
-        return;
-      }
-
-      // Non-ok response (minimal visible feedback; no bottom banner)
-      result.textContent = "Sorry—there was a problem sending. Please try again.";
-      console.error("Apps Script response not OK.");
-    } catch (err) {
-      // No visible network error banner per your preference
-      console.error("Send error:", err);
-    } finally {
-      if (submitBtn.disabled) {
-        submitBtn.disabled = false;
-        submitBtn.textContent = oldLabel;
-      }
+      return ok;
+    } catch (e) {
+      try { clearTimeout(t); } catch(_) {}
+      return false;
     }
+  }
+
+  // Attempt 2: sendBeacon (no CORS preflight; mobile-friendly)
+  function tryBeacon(payload) {
+    if (!("sendBeacon" in navigator)) return false;
+    try {
+      const blob = new Blob([payload], { type: "application/x-www-form-urlencoded" });
+      return navigator.sendBeacon(ENDPOINT, blob); // boolean
+    } catch {
+      return false;
+    }
+  }
+
+  // Attempt 3: hidden-iframe POST (bypasses strict CORS)
+  function tryIframePost(payload) {
+    try {
+      const iframe = document.createElement("iframe");
+      iframe.name = "bg-submit";
+      iframe.width = 0; iframe.height = 0;
+      iframe.style.display = "none";
+      iframe.setAttribute("aria-hidden","true");
+      document.body.appendChild(iframe);
+
+      const f = document.createElement("form");
+      f.method = "POST";
+      f.action = ENDPOINT;
+      f.target = "bg-submit";
+      f.style.display = "none";
+
+      // Rebuild inputs from URLSearchParams
+      payload.split("&").forEach(kv => {
+        const [k, v] = kv.split("=");
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = decodeURIComponent(k.replace(/\+/g, " "));
+        input.value = decodeURIComponent((v || "").replace(/\+/g, " "));
+        f.appendChild(input);
+      });
+
+      document.body.appendChild(f);
+      f.submit();
+
+      setTimeout(() => {
+        try { document.body.removeChild(f); } catch(_) {}
+        try { document.body.removeChild(iframe); } catch(_) {}
+      }, 300);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  const form = document.getElementById("quote-form");
+  const submitBtn = document.getElementById("quote-submit");
+  const result = document.getElementById("quote-result");
+  const hp = form.querySelector('[name="bot-field"]');  // honeypot
+  const submitMsEl = form.querySelector('[name="submit_ms"]');
+  const start = performance.now();
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (hp && hp.value) return; // bot check
+    if (submitMsEl) submitMsEl.value = String(Math.round(performance.now() - start));
+
+    const cart = readCart();
+    const payload = serialize(form, cart, submitMsEl ? submitMsEl.value : "");
+
+    const oldLabel = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Sending…";
+    result.textContent = "";
+
+    // Try the strategies in order
+    let sent = await tryFetch(payload);
+    if (!sent) sent = tryBeacon(payload);
+    if (!sent) sent = tryIframePost(payload);
+
+    if (sent) {
+      // Treat as success: clear UI + storage then redirect
+      try { localStorage.setItem(CART_KEY, "[]"); } catch(_) {}
+      document.dispatchEvent(new CustomEvent("cart:updated", { detail: { cart: [] } }));
+
+      try { form.reset(); } catch(_) {}
+      const hiddenCart = form.querySelector('input[name="cart"]');
+      const hiddenReadable = form.querySelector('input[name="cart_readable"]');
+      if (hiddenCart) hiddenCart.value = "[]";
+      if (hiddenReadable) hiddenReadable.value = "";
+
+      try { history.replaceState(null, "", location.pathname); } catch(_) {}
+      clearAppStorage();
+
+      location.assign(thankYouURL());
+      return;
+    }
+
+    // If none worked, show a tiny message (no bottom banner)
+    result.textContent = "Sorry—there was a problem sending. Please try again.";
+    submitBtn.disabled = false;
+    submitBtn.textContent = oldLabel;
   });
 })();
 </script>
